@@ -4,12 +4,100 @@ stationary problems in 1D}
 \section{A model boundary-value problem}
 
 \section{Second-order central difference}
+\begin{equation}\label{eq: model 1D linear system}
+\frac{1}{\Delta x^2}\begin{bmatrix}
+ 2&    -1&      &      &\\
+-1&     2&    -1&      &\\
+  &\ddots&\ddots&\ddots&\\
+  &      &    -1&     2&-1\\
+  &      &      &    -1& 2
+\end{bmatrix}
+\begin{bmatrix}U_1\\ U_2\\ \vdots\\ U_{P-2}\\ U_{P-1} \end{bmatrix}
+=\begin{bmatrix}f_1\\ f_2\\ \vdots\\ f_{P-2}\\ f_{P-1} \end{bmatrix}
++\frac{1}{\Delta x^2}
+\begin{bmatrix}\gamma_0\\ 0\\ \vdots\\ 0\\ \gamma_L \end{bmatrix}
+\end{equation}
+
 
 \section{Maximum principles}
 
 \section{Well-posedness}
 
 \section{Tridiagonal linear systems}
+How can we solve a symmetric, tridiagonal linear system such as the one
+\eqref{eq: model 1D linear system} arising from the finite difference 
+scheme~\eqref{}?  To discuss this problem, consider a $5\times5$ matrix of the 
+form
+\[
+\boldsymbol{A}=\begin{bmatrix}
+\alpha_1& \beta_1&        &        &\\
+ \beta_1&\alpha_1& \beta_2&        &\\
+        & \beta_2&\alpha_3&\beta_3 &\\
+        &        & \beta_3&\alpha_4&\beta_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}.
+\]
+A standard algorithm involves computing $5\times5$~matrices 
+$\boldsymbol{L}$~and $\boldsymbol{D}$ of the form
+\[
+\boldsymbol{L}=\begin{bmatrix}
+     1&      &      &      &\\
+\ell_1&     1&      &      &\\
+      &\ell_2&     1&      &\\
+      &      &\ell_3&     1&\\
+      &      &      &\ell_4&1
+  \end{bmatrix}
+\quad\text{and}\quad
+\boldsymbol{D}=\begin{bmatrix}
+d_1&   &   &   &\\
+   &d_2&   &   &\\
+   &   &d_3&   &\\
+   &   &   &d_4&\\
+   &   &   &   &d_5
+  \end{bmatrix}
+\]
+having the property that
+\[
+\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T.
+\]
+Given a right-hand side vector~$\boldsymbol{b}$, we can solve the linear system
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ by solving in sequence the three
+linear systems
+\begin{equation}\label{eq: LDLT systems}
+\boldsymbol{L}\boldsymbol{z}=\boldsymbol{b},\qquad
+\boldsymbol{D}\boldsymbol{y}=\boldsymbol{z},\qquad
+\boldsymbol{L}^T\boldsymbol{x}=\boldsymbol{y},
+\end{equation}
+because it will then follow that
+\[
+\boldsymbol{A}\boldsymbol{x}
+    =\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T\boldsymbol{x}
+    =\boldsymbol{L}\boldsymbol{D}\boldsymbol{y}
+    =\boldsymbol{L}\boldsymbol{z}=\boldsymbol{b}.
+\]
+Since $\boldsymbol{L}$ is lower triangular and $\boldsymbol{D}$ is diagonal,
+we can easily compute $\boldsymbol{z}$, $\boldsymbol{y}$ and finally 
+$\boldsymbol{x}$.  To see how, we write out the equations in the $5\times5$ 
+case:
+\begin{align*}
+      z_1    &=b_1,& d_1y_1&=z_1,& z_1+\ell_1 z_2&=y_1,\\
+\ell_1z_1+z_2&=b_2,& d_2y_2&=z_2,& z_2+\ell_2 z_3&=y_2,\\
+\ell_2z_2+z_3&=b_3,& d_3y_3&=z_3,& z_3+\ell_3 z_4&=y_3,\\
+\ell_3z_3+z_4&=b_4,& d_4y_4&=z_4,& z_4+\ell_4 z_5&=y_4,\\
+\ell_4z_4+z_5&=b_5,& d_5y_5&=z_5,& z_5           &=y_5.
+\end{align*}
+Thus,
+\begin{align*}
+z_1&=b_1,           & y_1&=z_1/d_1,& z_5&=y_5,\\
+z_2&=b_2-\ell_1 z_1,& y_2&=z_2/d_2,& z_4&=y_4-\ell_4z_5,\\
+z_3&=b_3-\ell_2 z_2,& y_3&=z_3/d_3,& z_3&=y_3-\ell_3z_4,\\
+z_4&=b_4-\ell_3 z_3,& y_4&=z_4/d_4,& z_2&=y_2-\ell_2z_3,\\
+z_5&=b_5-\ell_4 z_4,& y_5&=z_5/d_5,& z_1&=y_1-\ell_1z_2.\\
+\end{align*}
+
+
+
+
 
 \section{General two-point boundary-value problem}
 
