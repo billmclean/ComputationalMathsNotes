@@ -1,33 +1,166 @@
 \chapter[Finite differences in 1D]{Finite differences for \\ 
 stationary problems in 1D}
+We begin our study of numerical methods for partial differential equations 
+(PDEs) by treating the one-dimensional (1D) case, which means we deal only with 
+an \emph{ordinary} differential equation (ODE).  Moreover, in this chapter we 
+limit our attention to \emph{two-point boundary-value problems} for 
+\emph{second-order} ODEs.  In fact, we will focus mostly on the very simple 
+model problem on the interval~$[0,L]$,
+\begin{equation}\label{eq: model 1d}
+-u''=f(x)\quad\text{for $0<x<L$,}
+	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$,}
+\end{equation}
+in which the \emph{source term}~$f(x)$ and \emph{boundary data} $\gamma_0$, 
+$\gamma_L$ are given, and we seek the \emph{unknown solution}~$u(x)$.
 
-\section{A model boundary-value problem}
-
-\section{Second-order central difference}
-\begin{equation}\label{eq: model 1D linear system}
-\frac{1}{\Delta x^2}\begin{bmatrix}
- 2&    -1&      &      &\\
--1&     2&    -1&      &\\
-  &\ddots&\ddots&\ddots&\\
-  &      &    -1&     2&-1\\
-  &      &      &    -1& 2
-\end{bmatrix}
-\begin{bmatrix}U_1\\ U_2\\ \vdots\\ U_{P-2}\\ U_{P-1} \end{bmatrix}
-=\begin{bmatrix}f_1\\ f_2\\ \vdots\\ f_{P-2}\\ f_{P-1} \end{bmatrix}
-+\frac{1}{\Delta x^2}
-\begin{bmatrix}\gamma_0\\ 0\\ \vdots\\ 0\\ \gamma_L \end{bmatrix}
+One can easily verify that for a constant source term~$f(x)=c$, the solution is 
+given by
+\[
+u(x)=\frac{1}{L}\bigl((L-x)\gamma_0+x\gamma_L\bigr)+\frac{c}{2}\,x(L-x)
+	\quad\text{for $0\le x\le L$.}
+\]
+For a general~$f$, the variation-of-parameters technique can be used to show 
+that
+\begin{equation}\label{eq: model 1d exact soln}
+u(x)=\frac{L-x}{L}\biggl(\gamma_0+\int_0^x yf(y)\,dy\biggr)
+	+\frac{x}{L}\biggl(\gamma_L+\int_x^L(L-y)f(y)\,dy\biggr)
+	\quad\text{for $0\le x\le L$.}
 \end{equation}
 
+\begin{theorem}
 
-\section{Maximum principles}
+\end{theorem}
 
-\section{Well-posedness}
 
-\section{Tridiagonal linear systems}
+\section{Second-order central difference}
+To derive a finite difference approximation to the second derivative~$u''(x)$, 
+we will use Taylor's theorem in the following form.
+
+\begin{theorem}
+Let $h>0$. If $f$ is $C^{k+1}$ on the closed interval~$[x,x+h]$ then
+\[
+f(x+h)=\sum_{j=0}^k\frac{1}{j!}\,f^{(j)}(x)\,h^j+(R_kf)(x,h)
+\]
+where the remainder term is given by
+\[
+(R_kf)(x,h)=\frac{1}{k!}\int_x^{x+h}(x+h-y)^kf^{(k+1)}(y)\,dy
+\]
+and satisfies
+\[
+|(R_kf)(x,h)|\le\frac{h^{k+1}}{(k+1)!}\,\max_{x\le y\le x+h}|f^{(k+1)}(y)|.
+\]
+Similarly, if $f$ is $C^{k+1}$ on~$[x-h,x]$, then
+\[
+f(x-h)=\sum_{j=0}^k\frac{(-1)^j}{j!}\,f^{(j)}(x)\,h^j+(R_kf)(x,-h)
+\]
+where 
+\[
+(R_kf)(x,-h)=\frac{(-1)^{k+1}}{k!}\int_{x-h}^x(y+h-x)^kf^{(k+1)}(y)\,dy
+\]
+and
+\[
+|(R_kf)(x,-h)|\le\frac{h^{k+1}}{(k+1)!}\,\max_{x-h\le y\le x}|f^{(k+1)}(y)|.
+\]
+\end{theorem}
+
+In fact, a straight forward manipulation of such Taylor expansions shows that
+\[
+f''(x)=\frac{f(x+h)-2f(x)+f(x-h)}{h^2}+O(h^2)\quad\text{as $h\to0$;}
+\]
+more precisely, the following result holds.
+
+\begin{theorem}
+If $f$ is $C^4$ on the closed interval~$[x-h,x+h]$, then
+\[
+\biggl|f''(x)-\frac{f(x+h)-2f(x)+f(x-h)}{h^2}\biggr|\le\frac{h^2}{12}
+	\max_{x-h\le y\le x+h}|f^{(4)}(y)|.
+\]
+\end{theorem}
+\begin{proof}
+Since
+\[
+f(x+h)=f(x)+f'(x)h+\tfrac12f''(x)h^2+\tfrac{1}{3!}f'''(x)h^3+(R_3f)(x,h)
+\]
+and
+\[
+f(x-h)=f(x)-f'(x)h+\tfrac12f''(x)h^2-\tfrac{1}{3!}f'''(x)h^3+(R_3f)(x,-h)
+\]
+we see that
+\[
+f(x+h)+f(x-h)=2f(x)+f''(x)h^2+(R_3f)(x,h)+(R_3f)(x,-h).
+\]
+Thus,
+\[
+\frac{f(x+h)-2f(x)+f(x-h)}{h^2}-f''(x)=\frac{(R_3f)(x,h)+(R_3f)(x,-h)}{h^2}
+\]
+and since
+\begin{align*}
+|(R_3f)(x,h)+(R_3f)(x,-h)|&\le
+\frac{h^4}{4!}\max_{x\le y\le x+h}|f^{(4)}(y)|
++\frac{h^4}{4!}\max_{x-h\le y\le x}|f^{(4)}(y)|\\
+	&\le\frac{2h^4}{4!}\,\max_{x-h\le y\le x+h}|f^{(4)}(y)|
+\end{align*}
+the result follows.
+\end{proof}
+
+To set up our finite difference scheme for~\eqref{eq: model 1d}, we choose a 
+positive integer~$P$ and define a uniform grid on~$[0,L]$,
+\[
+x_p=p\,\Delta x\quad\text{for $0\le p\le P$,}
+	\quad\text{where $\Delta x=\frac{L}{P}$.}
+\]
+In this way, we divide $[0,L]$ into $P$~subintervals, namely $[x_{p-1},x_p]$
+for~$1\le p\le P$, each of length~$\Delta x$.  Our aim is to compute 
+approximate values of the solution at each of the grid points,
+\[
+U_p\approx u(x_p)\quad\text{for $0\le p\le P$.}
+\]
+The approximation
+\begin{equation}\label{eq: u'' approx}
+\frac{u(x_{p+1})-2u(x_p)+u(x_{p-1})}{\Delta x^2}
+	=\frac{u(x_p+\Delta x)-2u(x_p)+u(x_p-\Delta x)}{\Delta x^2}
+	\approx u''(x_p)
+\end{equation}
+suggests the following discrete approximation to the ODE $-u''=f(x)$,
+\begin{equation}\label{eq: model 1d discrete}
+-\frac{U_{p+1}-2U_p+U_{p-1}}{\Delta x^2}=f(x_p)\quad\text{for $1\le p\le P-1$.}
+\end{equation}
+We can satisfy the boundary conditions $u(x_0)=u(0)=\gamma_0$ and 
+$u(x_P)=u(L)=\gamma_L$ exactly, by putting
+\[
+U_0=\gamma_0\quad\text{and}\quad U_P=\gamma_L.
+\]
+When~$p=1$ in~\eqref{eq: model 1d discrete} we move $U_0=\gamma_0$ to the 
+right-hand side, 
+\[
+\frac{2U_1-U_2}{\Delta x^2}=f(x_1)+\frac{\gamma_0}{\Delta x^2},
+\]
+and similarly when $p=P-1$ we move $U_P=\gamma_L$ to the right-hand side,
+\[
+\frac{-U_{P-2}+2U_{P-1}}{\Delta x^2}=f(x_{P-1})+\frac{\gamma_L}{\Delta x^2}.
+\]
+For example, if $P=6$ then
+\begin{equation}\label{eq: model 1d linear system}
+\frac{1}{\Delta x^2}\begin{bmatrix}
+ 2&-1&  & &\\
+-1& 2&-1& &\\
+  &-1& 2&-1&\\
+  &  &-1& 2&-1\\
+  &  &  &-1& 2
+\end{bmatrix}
+\begin{bmatrix}U_1\\ U_2\\ U_3\\ U_4\\ U_5\end{bmatrix}
+=\begin{bmatrix}f_1\\ f_2\\ f_3\\ f_4\\ f_5 \end{bmatrix}
++\frac{1}{\Delta x^2}
+\begin{bmatrix}\gamma_0\\ 0\\ 0 \\ 0\\ \gamma_L \end{bmatrix},
+\end{equation}
+where, for brevity, we have written $f_p=f(x_p)$.
+
+
+\section{Symmetric tridiagonal linear systems}
 How can we solve a symmetric, tridiagonal linear system such as the one
-\eqref{eq: model 1D linear system} arising from the finite difference 
-scheme~\eqref{}?  To discuss this problem, consider a $5\times5$ matrix of the 
-form
+\eqref{eq: model 1d linear system} arising from the finite difference 
+scheme~\eqref{eq: model 1d discrete}?  To discuss this problem, consider a 
+$5\times5$ matrix of the form
 \[
 \boldsymbol{A}=\begin{bmatrix}
 \alpha_1& \beta_1&        &        &\\
@@ -57,9 +190,9 @@ d_1&   &   &   &\\
   \end{bmatrix}
 \]
 having the property that
-\[
+\begin{equation}\label{eq: L D LT}
 \boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T.
-\]
+\end{equation}
 Given a right-hand side vector~$\boldsymbol{b}$, we can solve the linear system
 $\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ by solving in sequence the three
 linear systems
@@ -76,29 +209,488 @@ because it will then follow that
     =\boldsymbol{L}\boldsymbol{z}=\boldsymbol{b}.
 \]
 Since $\boldsymbol{L}$ is lower triangular and $\boldsymbol{D}$ is diagonal,
-we can easily compute $\boldsymbol{z}$, $\boldsymbol{y}$ and finally 
+we can easily compute first $\boldsymbol{z}$, then $\boldsymbol{y}$ and finally 
 $\boldsymbol{x}$.  To see how, we write out the equations in the $5\times5$ 
 case:
 \begin{align*}
-      z_1    &=b_1,& d_1y_1&=z_1,& z_1+\ell_1 z_2&=y_1,\\
-\ell_1z_1+z_2&=b_2,& d_2y_2&=z_2,& z_2+\ell_2 z_3&=y_2,\\
-\ell_2z_2+z_3&=b_3,& d_3y_3&=z_3,& z_3+\ell_3 z_4&=y_3,\\
-\ell_3z_3+z_4&=b_4,& d_4y_4&=z_4,& z_4+\ell_4 z_5&=y_4,\\
-\ell_4z_4+z_5&=b_5,& d_5y_5&=z_5,& z_5           &=y_5.
+      z_1    &=b_1,& d_1y_1&=z_1,& x_1+\ell_1 x_2&=y_1,\\
+\ell_1z_1+z_2&=b_2,& d_2y_2&=z_2,& x_2+\ell_2 x_3&=y_2,\\
+\ell_2z_2+z_3&=b_3,& d_3y_3&=z_3,& x_3+\ell_3 x_4&=y_3,\\
+\ell_3z_3+z_4&=b_4,& d_4y_4&=z_4,& x_4+\ell_4 x_5&=y_4,\\
+\ell_4z_4+z_5&=b_5,& d_5y_5&=z_5,& x_5           &=y_5.
 \end{align*}
-Thus,
+Thus, the steps of the computation are as follows:
 \begin{align*}
-z_1&=b_1,           & y_1&=z_1/d_1,& z_5&=y_5,\\
-z_2&=b_2-\ell_1 z_1,& y_2&=z_2/d_2,& z_4&=y_4-\ell_4z_5,\\
-z_3&=b_3-\ell_2 z_2,& y_3&=z_3/d_3,& z_3&=y_3-\ell_3z_4,\\
-z_4&=b_4-\ell_3 z_3,& y_4&=z_4/d_4,& z_2&=y_2-\ell_2z_3,\\
-z_5&=b_5-\ell_4 z_4,& y_5&=z_5/d_5,& z_1&=y_1-\ell_1z_2.\\
+z_1&=b_1,           & y_1&=z_1/d_1,& x_5&=y_5,\\
+z_2&=b_2-\ell_1 z_1,& y_2&=z_2/d_2,& x_4&=y_4-\ell_4x_5,\\
+z_3&=b_3-\ell_2 z_2,& y_3&=z_3/d_3,& x_3&=y_3-\ell_3x_4,\\
+z_4&=b_4-\ell_3 z_3,& y_4&=z_4/d_4,& x_2&=y_2-\ell_2x_3,\\
+z_5&=b_5-\ell_4 z_4,& y_5&=z_5/d_5,& x_1&=y_1-\ell_1x_2.\\
 \end{align*}
+Matrix multiplication gives
+\[
+\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T=\begin{bmatrix}
+      d_1&      \ell_1d_1&               &               &         \\
+\ell_1d_1&d_2+\ell_1^2d_1&      \ell_2d_2&               &         \\
+         &      \ell_2d_2&d_3+\ell_2^2d_2&      \ell_3d_3&         \\
+         &               &      \ell_3d_3&d_4+\ell_3^2d_3&\ell_4d_4\\
+         &               &               &      \ell_4d_4&d_5+\ell_4^2d_4
+\end{bmatrix},
+\]
+so the factorization~\eqref{eq: L D LT} requires that
+\begin{align*}
+     \alpha_1&=d_1,      &        &                 &&&&&&\\
+      \beta_1&=\ell_1d_1,&\alpha_2&=d_2+\ell_1^2d_1,&&&&&&\\
+    &&\beta_2&=\ell_2d_2,&\alpha_3&=d_3+\ell_2^2d_2,&&&&\\
+  &&&&\beta_3&=\ell_3d_3,&\alpha_4&=d_4+\ell_3^2d_3,&&\\
+&&&&&&\beta_4&=\ell_4d_4,&\alpha_5&=d_5+\ell_4^2d_4.
+\end{align*}
+Thus, the steps of the computation are as follows:
+\begin{align*}
+         d_1&=\alpha_1,   &   &                      &&&&&&\\
+      \ell_1&=\beta_1/d_1,&d_2&=\alpha_2-\ell_1^2d_1,&&&&&&\\
+    &&\ell_2&=\beta_2/d_2,&d_3&=\alpha_3-\ell_2^2d_2,&&&&\\
+  &&&&\ell_3&=\beta_3/d_3,&d_4&=\alpha_4-\ell_3^2d_3,&&\\
+&&&&&&\ell_4&=\beta_4/d_4,&d_5&=\alpha_5-\ell_4^2d_4.
+\end{align*}
+In the general $n\times n$~case,
+Algorithm~\ref{alg: LDLT} computes the factorization~\eqref{eq: L D LT}
+and Algorithm~\ref{alg: solve symmetric tridiagonal} 
+uses this factorization to solve the linear 
+system~$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$. 
 
+The derivations above show that if the factorization \eqref{alg: LDLT} exists,
+then it is unique, that is, $\boldsymbol{L}$ and $\boldsymbol{D}$ are uniquely 
+determined by~$\boldsymbol{A}$.  Unfortunately,
+Algorithm~\ref{alg: LDLT} can break down because one of the $d_j$ is zero, as 
+the following example shows.
 
+\begin{example}
+The $3\times3$ matrix
+\[
+\boldsymbol{A}=\begin{bmatrix}1&1&0\\1&1&2\\ 0&2&0 \end{bmatrix}
+\]
+is non-singular with inverse
+\[
+\boldsymbol{A}^{-1}=\begin{bmatrix}1&0&-1/2\\ 0&0&1/2\\ -1/2&1/2&0\end{bmatrix},
+\]
+but Algorithm~\ref{alg: LDLT} produces
+\[
+d_1=1,\quad \ell_1=1,\quad d_2=0,
+\]
+and then breaks down because $\ell_2=2/0$.
+\end{example}
 
+However, the following result can be shown.
 
+\begin{theorem}
+If the $n\times n$, symmetric, tridiagonal matrix $\boldsymbol{A}$ is 
+positive-definite, then the factorization~\eqref{eq: L D LT} exists and $d_j>0$ 
+for $1\le j\le n$.
+\end{theorem}
+
+\begin{algorithm}
+\caption{Compute the factorization \eqref{eq: L D LT} for a symmetric, 
+tridiagonal matrix $\boldsymbol{A}$.}
+\label{alg: LDLT}
+\begin{algorithmic}
+\Require{$\boldsymbol{\alpha}=[\alpha_1,\alpha_2,\ldots,\alpha_n]$ is the main 
+diagonal of $\boldsymbol{A}$.}
+\Require{$\boldsymbol{\beta}=[\beta_1,\beta_2,\ldots,\beta_{n-1}]$ is the 
+off-diagonal of $\boldsymbol{A}$.}
+\Statex
+\Function{Factorize}{$\boldsymbol{\alpha}, \boldsymbol{\beta}$}
+\State Allocate storage for $\boldsymbol{d}=[d_1,d_2,\ldots, d_n]$ and
+$\boldsymbol{\ell}=[\ell_1,\ell_2,\ldots,\ell_{n-1}]$
+\State $d_1=\alpha_1$
+\For{$j=1:n-1$}
+\State $\ell_j=\beta_j/d_j$
+\State $d_{j+1}=\alpha_{j+1}-\ell_j^2d_j$
+\EndFor
+\State\Return{$\boldsymbol{d}$, $\boldsymbol{\ell}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Solve a symmetric, tridiagonal linear system 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ given the 
+factorization~\eqref{eq: L D LT}.}
+\label{alg: solve symmetric tridiagonal}
+\begin{algorithmic}
+\Require{$\boldsymbol{b}=[b_1,b_2,\ldots,b_n]$ the right-hand side vector.}
+\Require{$\boldsymbol{d}=[d_1, d_2, \ldots, d_n]$ the main diagonal of 
+$\boldsymbol{D}$.}
+\Require{$\boldsymbol{\ell}=[\ell_1,\ell_2,\ldots,\ell_{n-1}]$ the first 
+sub-diagonal of~$\boldsymbol{L}$.}
+\Statex
+\Function{Solve}{$\boldsymbol{b},\boldsymbol{d},\boldsymbol{\ell}$}
+\State Allocate storage for $\boldsymbol{x}=[x_1,x_2,\ldots,x_n]$,
+$\boldsymbol{y}=[y_1,y_2,\ldots,y_n]$ and $\boldsymbol{z}=[z_1,z_2,\ldots,z_n]$.
+\State $z_1=b_1$
+\For{$j=1:n-1$}
+\State $z_{j+1}=b_{j+1}-\ell_jz_j$
+\EndFor
+\For{$j=1:n$}
+\State $y_j=z_j/d_j$
+\EndFor
+\State $x_n=y_n$
+\For{$j=n-1:-1:1$}
+\State $x_j=y_j-\ell_jx_{j+1}$
+\EndFor
+\State\Return{$\boldsymbol{x}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
 \section{General two-point boundary-value problem}
+
+Now consider a general second-order linear differential operator,
+\[
+\mathcal{L}u=-a(x)u''+b(x)u'+c(x)u,
+\]
+where, for simplicity, we will assume that the coefficients $a$, $b$ and 
+$c$ are continuous on~$[0,L]$, and that the \emph{leading coefficient}~$a$ is 
+\emph{strictly positive} on~$[0,L]$, say
+\[
+a(x)\ge a_{\min}>0\quad\text{for $0\le x\le L$.}
+\]
+The general \emph{two-point boundary-value problem} is to find $u=u(x)$ 
+satisfying
+\begin{equation}\label{eq: two-point bvp}
+\begin{aligned}
+\mathcal{L}u&=f(x)&&\text{for $0<x<L$,}\\
+\alpha_0u'+\beta_0u&=\gamma_0&&\text{at $x=0$,}\\
+\alpha_Lu'+\beta_Lu&=\gamma_L&&\text{at $x=L$,}
+\end{aligned}
+\end{equation}
+where, for the boundary conditions to make sense, we assume that at least one 
+of $\alpha_0$~and $\beta_0$ is not zero, and likewise at least one of  
+$\alpha_L$~and $\beta_L$ is not zero.  For simplicity, we will also assume that 
+the function~$f$ is continuous on~$[0,L]$.
+
+To construct a finite difference scheme for~\eqref{eq: two-point bvp}, we need 
+to approximate the first derivative~$u'$.  Once again, we apply Taylor 
+expansions, this time showing that
+\[
+\frac{f(x+h)-f(x-h)}{2h}=f'(x)+O(h^2)\quad\text{as $h\to0$.}
+\]
+More precisely, the following holds.
+
+\begin{theorem}
+If $f$ is $C^3$ on the closed interval~$[x-h,x+h]$, then
+\[
+\biggl|f'(x)-\frac{f(x+h)-f(x-h)}{2h}\biggr|
+	\le\frac{h^2}{6}\,\max_{x-h\le y\le x+h}|f'''(y)|.
+\]
+\end{theorem}
+\begin{proof}
+Since
+\[
+f(x+h)=f(x)+f'(x)h+\tfrac12f''(x)h^2+(R_2f)(x,h)
+\]
+and
+\[
+f(x-h)=f(x)-f'(x)h+\tfrac12f''(x)h^2+(R_2f)(x,-h),
+\]
+we have
+\[
+f(x+h)-f(x-h)=2f'(x)h+(R_2f)(x,h)-(R_2f)(x,-h).
+\]
+Thus,
+\[
+\frac{f(x+h)-f(x-h)}{2h}-f'(x)=\frac{(R_2f)(x,h)-(R_2f)(x,-h)}{2h},
+\]
+and since
+\begin{align*}
+\bigl|(R_2f)(x,h)-(R_2f)(x,-h)\bigr|
+	&\le\frac{h^3}{3!}\max_{x\le y\le x+h}|f'''(y)|
+ 	   +\frac{h^3}{3!}\max_{x-h\le y\le x}|f'''(y)|\\
+	&\le\frac{2h^3}{3!}\max_{x-h\le y\le x+h}|f'''(y)|,
+\end{align*}
+the result follows at once.
+\end{proof}
+
+The approximations \eqref{eq: u'' approx}~and
+\[
+\frac{u(x_{p+1})-u(x_{p-1})}{2\,\Delta x}
+	=\frac{u(x_p+\Delta x)-u(x_p-\Delta x)}{2\,\Delta x}
+	\approx u'(x_p)
+\]
+suggest the following discrete approximation to the ODE~$\mathcal{L}u=f(x)$,
+\begin{equation}\label{eq: Lu=f finite diff}
+-a_p\,\frac{U_{p+1}-2U_p+U_{p-1}}{\Delta x^2}
+	+b_p\,\frac{U_{p+1}-U_{p-1}}{2\,\Delta x}+c_pU_p=f_p,
+\end{equation}
+where we have used the abbreviations $a_p=a(x_p)$, $b_p=b(x_p)$, $c_p=c(x_p)$
+and $f_p=f(x_p)$.  The boundary conditions in~\eqref{eq: two-point bvp} can be 
+approximated by
+\[
+\alpha_0\,\frac{U_1-U_{-1}}{2\,\Delta x}+\beta_0U_0=\gamma_0
+\quad\text{and}\quad
+\alpha_L\,\frac{U_{P+1}-U_{P-1}}{2\,\Delta x}+\beta_LU_P=\gamma_L.
+\]
+There are four cases to consider.
+\begin{enumerate}
+\item If $\alpha_0=0$ and $\alpha_L=0$, then the unknowns are
+$U_1$, $U_2$, \dots, $U_{P-1}$, with
+\[
+U_0=\gamma_0/\beta_0\quad\text{and}\quad U_P=\gamma_L/\beta_L.
+\]
+\item If $\alpha_0\ne0$ and $\alpha_L=0$, then the unknowns are
+$U_0$, $U_1$, \dots, $U_{P-1}$, with 
+\[
+U_{-1}=U_1+2\,\Delta x\,(\beta_0U_0-\gamma_0)\quad\text{and}\quad
+U_P=\gamma_L/\beta_L.
+\]
+\item If $\alpha_0=0$ and $\alpha_L\ne0$, then the unknowns are
+$U_1$, $U_2$, \dots, $U_P$, with 
+\[
+U_0=\gamma_0/\beta_0\quad\text{and}\quad
+U_{P+1}=U_{P-1}+2\,\Delta x(\gamma_L-\beta_LU_P)/\alpha_L.
+\]
+\item If $\alpha_0\ne0$ and $\alpha_L\ne0$, then the unknowns are
+$U_0$, $U_1$, \dots, $U_P$, with
+\[ 
+U_{-1}=U_1+2\,\Delta x\,(\beta_0U_0-\gamma_0)\quad\text{and}\quad
+U_{P+1}=U_{P-1}+2\,\Delta x(\gamma_L-\beta_LU_P)/\alpha_L.
+\]
+\end{enumerate}
+
+In case~1, we use \eqref{eq: Lu=f finite diff} for $1\le p\le P-1$.
+The first equation is
+\[
+-a_1\,\frac{U_2-2U_1+U_0}{\Delta x^2}+b_1\,\frac{U_2-U_0}{2\,\Delta x}
+	+c_1U_1=f_1
+\]
+so $U_0=\gamma_0/\beta_0$ gives
+\[
+a_1\,\frac{2U_1-U_2}{\Delta x^2}+b_1\,\frac{U_2}{2\,\Delta x}+c_1U_1
+	=f_1+\biggl(\frac{a_1}{\Delta x^2}+\frac{b_1}{2\,\Delta x}\biggr)
+	\frac{\gamma_0}{\beta_0}.
+\]
+Similarly, the last equation is
+\[
+-a_{P-1}\,\frac{U_P-2U_{P-1}+U_{P-2}}{\Delta x^2}
+	+b_{P-1}\,\frac{U_P-U_{P-2}}{2\,\Delta x}+c_{P-1}U_{P-1}=f_{P-1},
+\]
+so $U_P=\gamma_L/\beta_L$ gives
+\[
+a_{P-1}\,\frac{-U_{P-2}+2U_{P-1}}{\Delta x^2}
+	-b_{P-1}\,\frac{U_{P-2}}{2\,\Delta x}+c_{P-1}U_{P-1}
+	=f_{P-1}+\biggl(\frac{a_{P-1}}{\Delta x^2}-\frac{b_{P-1}}{2\,\Delta x}
+	\biggr)\,\frac{\gamma_L}{\beta_L}.
+\]
+For example, if $P=6$ we obtain a $5\times5$ linear system
+\[
+\boldsymbol{A}\boldsymbol{U}+\boldsymbol{B}\boldsymbol{U}
+	+\boldsymbol{C}\boldsymbol{U}=\boldsymbol{f}+\boldsymbol{g},
+\]
+where
+\begin{gather*}
+\boldsymbol{A}=\frac{1}{\Delta x^2}\begin{bmatrix}
+2a_1&-a_1&    &    &    \\
+-a_2&2a_2&-a_2&    &    \\
+    &-a_3&2a_3&-a_3&    \\
+    &    &-a_4&2a_4&-a_4\\
+    &    &    &-a_5&2a_5\\
+               \end{bmatrix},\qquad
+\boldsymbol{B}=\frac{1}{2\,\Delta x}\begin{bmatrix}
+   0& b_1&    &    &    \\
+-b_2&   0& b_2&    &    \\
+    &-b_3&   0& b_3&    \\
+    &    &-b_4&   0& b_4\\
+    &    &    &-b_5&   0\end{bmatrix},\\
+\boldsymbol{C}=\begin{bmatrix}
+c_1&   &   &   &   \\
+   &c_2&   &   &   \\
+   &   &c_3&   &   \\
+   &   &   &c_4&   \\
+   &   &   &   &c_5
+\end{bmatrix},\quad
+\boldsymbol{U}=\begin{bmatrix} U_1\\ U_2\\ U_3\\ U_4\\ U_5\end{bmatrix},\quad
+\boldsymbol{f}=\begin{bmatrix} f_1\\ f_2\\ f_3\\ f_4\\ f_5\end{bmatrix},\quad
+\boldsymbol{g}=\begin{bmatrix} g_1\\ 0\\ 0\\ 0\\ g_5 \end{bmatrix},
+\end{gather*}
+where
+\[
+g_1=\biggl(\frac{a_1}{\Delta x^2}+\frac{b_1}{2\,\Delta x}\bigr)
+	\frac{\gamma_0}{\beta_0}
+\quad\text{and}\quad
+g_5=\biggl(\frac{a_{P-1}}{\Delta x^2}-\frac{b_{P-1}}{2\,\Delta x}
+	\biggr)\,\frac{\gamma_L}{\beta_L}.
+\]
+
+
+
+
+
+
+
+
+\section{Maximum principle}
+
+\begin{lemma}\label{lem: Lu<0}
+Assume that $u$ is $C^2$ on the open interval~$(0,L)$.
+If $c\ge0$ and $\mathcal{L}u<0$ on~$(0,L)$, then $u$ cannot attain a 
+non-negative local maximum in~$(0,L)$.
+\end{lemma}
+\begin{proof}
+Suppose for a contradiction that there exist $x_0\in(0,L)$~and $\delta>0$ such
+that
+\[
+u(x_0)\ge0\quad\text{and}\quad
+\text{$u(x)\le u(x_0)$ for~$x\in(x_0-\delta,x_0+\delta)\subseteq(0,L)$.}
+\]
+Since $u$ has an interior local maximum at~$x_0$, it follows that 
+$u'(x_0)=0$~and $u''(x_0)\le0$ so 
+\[
+(\mathcal{L}u)(x_0)=-a(x_0)u''(x_0)+c(x_0)u(x_0)\ge 0,
+\]
+contradicting our assumption that $\mathcal{L}u<0$ on~$(0,L)$.
+\end{proof}
+
+\begin{theorem}
+Assume that $u$ is continuous on the closed interval~$[0,L]$ and is $C^2$ on 
+the open interval~$(0,L)$. If $c\ge0$ and $\mathcal{L}u\le0$ on~$(0,L)$, then
+\[
+u(x)\le\max\{u^+(0),u^+(L)\}\quad\text{for $0<x<L$.}
+\]
+\end{theorem}
+\begin{proof}
+Let $\epsilon>0$ and put $w(x)=u(x)+\epsilon e^{\mu x}$.  Since
+\[
+(\mathcal{L}w)(x)
+	=(\mathcal{L}u)(x)+\epsilon\bigl[-a(x)\mu^2+b(x)\mu+c(x)\bigr]e^{\mu x}
+	\le-\epsilon\bigl[a(x)\mu^2-\mu\|b\|_\infty-\|c\|_\infty\bigr]e^{\mu x}
+\]
+by choosing $|\mu|$ sufficiently large we can ensure that $\mathcal{L}w<0$
+on~$(0,L)$.  By Lemma~\ref{lem: Lu<0}, the function~$w$ cannot attain a 
+non-negative local maximum in~$(0,L)$, implying that 
+\[
+u(x)\le w(x)\le w^+(x)\le\max\{w^+(0),w^+(L)\}
+	\le\max\{u^+(0)+\epsilon,u^+(L)+\epsilon e^{\mu L}\}
+\]
+for~$0<x<L$.  Since this inequality holds for any~$\epsilon>0$, the result 
+follows.
+\end{proof}
+
+\begin{theorem}
+Assume that $u$ is continuous on the closed interval~$[0,L]$ and is $C^2$ on 
+the open interval~$(0,L)$. If $c\ge0$ and $\mathcal{L}u=f$ on~$(0,L)$, then
+\[
+\max_{[0,L]}u\le\max\{u^+(0),u^+(L)\}+\cosh(\mu L/2)\max_{[0,L]}f^+
+\]
+and
+\[
+\min_{[0,L]}u\ge\min\{u^-(0),u^-(L)\}+\cosh(\mu L/2)\max_{[0,L]}f^-,
+\]
+where $\mu=\max\bigl\{1,(1+\|b\|_\infty)/a_{\min}\bigr\}$.
+\end{theorem}
+\begin{proof}
+Let
+\[
+w(x)=\max\{u^+(0),u^+(L)\}+v(x)\,\max_{[0,L]}f
+\quad\text{where}\quad
+v(x)=\cosh(\mu L/2)-\cosh\mu(x-L/2),
+\]
+and observe that $v\ge0$ on~$[0,L]$ with
+\begin{align*}
+(\mathcal{L}v)(x)&=a(x)\mu^2\cosh\mu(x-L/2)
+	-b(x)\mu\sinh\mu(x-L/2)+c(x)v(x)\\
+	&\ge\bigl(a_{\min}\mu^2-\|b\|_\infty\mu\bigr)\cosh\mu(x-L/2)
+	\ge(a_{\min}\mu-\|b\|_\infty)\mu\ge1
+\end{align*}
+for $0<x<L$, so
+\[
+\mathcal{L}(u-w)=f-c(x)\max\{u^+(0),u^+(L)\}-(\mathcal{L}v)\max_{[0,L]}f^+
+	\le0\quad\text{on $(0,L)$.}
+\]
+By Lemma~\ref{lem: Lu<0},
+\[
+u(x)-w(x)\le\max\{(u-w)^+(0),(u-w)^+(L)\}\quad\text{for $0<x<L$,}
+\]
+and since $v(0)=0=v(L)$ we see that 
+\[
+(u-w)(0)=u(0)-\max\{u^+(0),u^+(L)\}\le0
+\]
+and
+\[
+(u-w)(L)=u(L)-\max\{u^+(0),u^+(L)\}\le0.
+\]
+Thus, $u-w\le0$ on~$(0,L)$, and therefore 
+$\max_{[0,L]}u\le\max_{[0,L]}w(x)=w(L/2)$, proving the first inequality.  
+The second follows because $\mathcal{L}(-u)=-f$, $(-u)^+=-u^-$~and
+$(-f)^+=-f^-$.
+\end{proof}
+\begin{corollary}\label{cor: Lu=f apriori infty}
+$\|u\|_\infty\le\max\{|u(0)|,|u(L)|\}+\cosh(\mu L/2)\|f\|_\infty$.
+\end{corollary}
+
+Now consider the two-point boundary-value problem~\eqref{eq: two-point bvp} in 
+the case when $\alpha_0=0=\alpha_L$ and $\beta_0=1=\beta_L$:
+\begin{equation}\label{eq: Lu=f Dirichlet}
+\mathcal{L}u=f\quad\text{on $(0,L)$,}
+	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$.}
+\end{equation}
+The next theorem shows that this problem is \emph{well-posed}, that is,
+\begin{enumerate}
+\item a unique solution exists for each choice of the data $f$, $\gamma_0$~and 
+$\gamma_L$, and 
+\item small changes in the data lead to only small changes in the solution.
+\end{enumerate}
+To explain the second part, suppose that we perturb the data to $\tilde f$, 
+$\tilde\gamma_0$ and $\tilde\gamma_L$, and let $\tilde u$ denote the solution 
+of the resulting perturbed problem,
+\[
+\mathcal{L}\tilde u=\tilde f\quad\text{on $(0,L)$,}
+	\quad\text{with $\tilde u(0)=\tilde\gamma_0$ 
+and $\tilde u(L)=\tilde\gamma_L$.}
+\]
+If w denote the changes in the solution and the data by
+\[
+\delta u=\tilde u-u,\quad\delta f=\tilde f-f,\quad
+\delta\gamma_0=\tilde\gamma_0-\gamma_0,\quad
+\delta\gamma_L=\tilde\gamma_L-\gamma_L,
+\]
+then we need to show that $\delta u$ is small whenever $\delta f$, 
+$\delta\gamma_0$~and $\delta\gamma_L$ are all small.
+
+\begin{theorem}
+If $c\ge0$ on~$(0,L)$, then \eqref{eq: Lu=f Dirichlet} has a unique 
+solution~$u$.  This solution is continuous on~$[0,L]$ and is $C^2$ on~$(0,L)$.
+Moreover, when the problem is perturbed as described above, 
+\[
+\|\delta u\|_\infty\le\max\{|\delta\gamma_0|,|\delta\gamma_L|\}
+	+\cosh(\mu L/2)\|\delta f\|_\infty.
+\]
+\end{theorem}
+\begin{proof}
+We will not prove the hard part, namely existence.  Since the $\mathcal{L}$ is 
+linear, the proof of uniqueness follows easily from 
+Corollary~\ref{cor: Lu=f apriori infty}.  In fact, suppose that $u_1$~and $u_2$ 
+are solutions, that is,
+\[
+\mathcal{L}u_1=f=\mathcal{L}u_2\quad\text{on $(0,L)$,}
+	\quad\text{with $u_1(0)=\gamma_0=u_2(0)$ and $u_1(L)=\gamma_L=u_2(L)$.}
+\]
+The difference $v=u_1-u_2$ satisfies
+\[
+\mathcal{L}v=\mathcal{L}(u_1-u_2)=\mathcal{L}u_1-\mathcal{L}u_2=f-f=0
+	\quad\text{on $(0,L)$},
+\]
+with $v(0)=u_1(0)-u_2(0)=\gamma_0-\gamma_0=0$ and
+$v(L)=u_1(L)-u_2(L)=\gamma_L-\gamma_L=0$, so $\|v\|_\infty\le0$ by 
+Corollary~\ref{cor: Lu=f apriori infty}, which means that $u_1=u_2$ on~$[0,L]$.
+
+Similarly, since $\mathcal{L}$ is linear,
+\[
+\mathcal{L}\delta u=\delta f\quad\text{on $(0,L)$,}
+	\quad\text{with $\delta u(0)=\delta\gamma_0$ 
+and $\delta u(L)=\delta\gamma_L$,}
+\]
+and Corollary~\ref{cor: Lu=f apriori infty} implies the desired estimate 
+for~$\|\delta u\|_\infty$.
+\end{proof}
 
 \section{An error bound}
