@@ -1,7 +1,151 @@
 \chapter[Finite elements in 1D]{Finite elements for \\
 stationary problems in 1D}
 
-\section{The weak solution}
+Let $u$ be the solution of 
+Recall our model two-point boundary-value problem~\ref{eq: model 1d}, 
+\[
+-u''=f(x)\quad\text{for $0<x<L$,}
+	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$.}
+\]
+Multiply both sides of the ODE by a \emph{test function}~$v$ and integrate to 
+obtain
+\[
+-\int_0^L u''(x)v(x)\,dx=\int_0^L f(x)v(x)\,dx.
+\]
+Provided $v'$ exists and is continuous on~$[0,L]$, we can integrate by parts to 
+obtain
+\begin{equation}\label{eq: int by parts}
+-\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx,
+\end{equation}
+and therefore
+\[
+\int_0^L u'(x)v'(x)\,dx=\int_0^L f(x)v(x)\,dx
+	\quad\text{provided $v(0)=0=v(L)$.}
+\]
+This observation is the basis of the finite element method.
+
+\section{Classical and weak solutions}
+A \emph{classical solution}~$u$ of~\eqref{eq: model 1d} is a solution in the 
+obvious sense, meaning that $u$ is $C^2$ on~$(0,L)$ and continuous on~$[0,L]$,
+and satisfies the ODE and boundary condition.  We will now define the concept 
+of a \emph{weak solution}.
+
+The \emph{support} of a function~$v$, denoted by $\operatorname{supp}f$, is 
+the closure of the set of points~$x$ where $v(x)\ne0$. Let $\mathcal{D}(0,L)$ 
+denote the vector space of $C^\infty$ functions $v:[0,L]\to\mathbb{R}$ with the 
+property that $\operatorname{supp}v$ lies inside a closed subinterval 
+of~$(0,L)$.  This, in particular,
+it follows that $v(0)=0=v(L)$ for each~$v\in\mathcal{D}(0,L)$.
+
+\begin{definition}
+A function $u$ is a \emph{weak solution} of~\eqref{eq: model 1d} if 
+\begin{enumerate}
+\item $u$ is $C^1$ on~$[0,L]$,
+\item $u(0)=\gamma_0$ and $u(L)=\gamma_L$,
+\item for every $v\in\mathcal{D}(0,L)$,
+\[
+\int_0^L u'(x)v'(x)\,dx=\int_0^Lf(x)v(x)\,dx.
+\]
+\end{enumerate}
+\end{definition}
+
+We see from~\eqref{eq: int by parts} that every classical solution 
+of~\eqref{eq: model 1d} is also a weak solution.  To establish a partial 
+converse, we use the following result.
+
+\begin{lemma}
+Suppose that $f$ and $g$ are continuous, real-valued functions on~$[0,L]$.
+If
+\[
+\int_0^L f(x)v(x)\,dx=\int_0^L g(x)v(x)\,dx
+	\quad\text{for every $v\in\mathcal{D}(0,L)$,}
+\]
+then 
+\[
+f(x)=g(x)\quad\text{for $0\le x\le L$.}
+\]
+\end{lemma}
+
+Let $V=C([0,L])$ denote the vector space consisting of all continuous functions 
+from~$[0,L]$ to~$\mathbb{R}$.  Suppose that $f$, $g\in V$ have the property that
+\begin{equation}\label{eq: int fv gv}
+\int_0^Lf(x)v(x)\,dx=\int_0^Lg(x)v(x)\,dx
+\end{equation}
+for all $v\in V$. It follows that $\int_0^L(f-g)v\,dx=0$ for all $v\in V$, and 
+in particular by choosing $v=f-g$ we see that $\int_0^L(f-g)^2\,dx=0$ so $f=g$.
+
+Let $V_0=\{\,v\in C([0,L]):v(0)=0=v(L)\,\}$ denote the subspace of~$V$ 
+consisting of the continuous functions that vanish at both ends of the interval.
+Suppose once again that $f$, $g\in V$ but now assume \eqref{eq: int fv gv} 
+only for all $v\in V_0$.  The previous argument does not work, because $v=f-g$ 
+belongs to~$V_0$ only in the special case when $f(0)=g(0)$ and $f(L)=g(L)$.  
+Nevertheless, we can show the following.
+
+\begin{theorem}\label{thm: int fv gv}
+Define $V$ and $V_0$ as above. If $f$, $g\in V$ satisfy \eqref{eq: int fv gv} 
+for all $v\in V_0$, then $f=g$ on~$[0,L]$.
+\end{theorem}
+\begin{proof}
+Consider an arbitrary interior point~$a\in(0,L)$ and choose~$h_0>0$ 
+such that $0<a-h_0<a+h_0<L$.  For $0<h<h_0$, let
+\[
+v(x)=\begin{cases}
+(x-a+h)/h^2,&a-h<x<a,\\
+1/h,&x=a,\\
+(a+h-x)/h^2,&a<x<a+h,\\
+0,&\text{otherwise,}
+\end{cases}
+\]
+and observe that $v$ is continuous on~$[0,L]$ with $v(0)=0=v(L)$, that is,
+$v\in V_0$.  Also, $v\ge0$ on~$[0,L]$, and
+\[
+\int_0^Lv(x)\,dx=1.
+\]
+Therefore,
+\[
+f(a)-\int_0^Lf(x)v(x)\,dx=f(a)\int_0^Lv(x)\,dx-\int_0^Lf(x)v(x)\,dx
+	=\int_0^L\bigl[f(a)-f(x)]v(x)\,dx,
+\]
+and since $v$ vanishes outside the subinterval~$[a-h,a+h]$,
+\[
+f(a)-\int_0^Lf(x)v(x)\,dx=\int_{a-h}^{a+h}\bigl[f(a)-f(x)]v(x)\,dx.
+\]
+The function~$f$ is continuous, so given $\epsilon>0$ there is a $\delta_1>0$
+such that $|f(x)-f(a)|<\epsilon$ for $a-\delta_1<x<a+\delta_1$.  
+If $0<h<\min(h_0,\delta_1)$ then
+\[
+\biggl|f(a)-\int_0^Lf(x)v(x)\,dx\biggr|
+	\le\int_{a-h}^{a+h}\bigl|f(a)-f(x)|v(x)\,dx
+	\le\epsilon\int_{a-h}^{a+h}v(x)\,dx=\epsilon.
+\]
+Similarly, there is a $\delta_2>0$ such that if $0<h<\min(h_0,\delta_2)$ then
+\[
+\biggl|g(a)-\int_0^Lg(x)v(x)\,dx\biggr|\le\epsilon.
+\]
+Therefore, using \eqref{eq: int fv gv}, if $0<h<\min(h_0,\delta_1,\delta_2)$ 
+then
+\begin{align*}
+|f(a)-g(a)|&=\biggl|f(a)-\int_0^Lf(x)v(x)\,dx+\int_0^Lg(x)v(x)\,dx-g(a)\biggr|\\
+	&\le\biggl|f(a)-\int_0^Lf(x)v(x)\,dx\biggr|
+	+\biggl|g(a)-\int_0^Lg(x)v(x)\,dx\biggr|\le2\epsilon,
+\end{align*}
+implying that $f(a)=g(a)$.  Hence, $f=g$ on~$(0,L)$.  In fact, $f=g$ on~$[0,L]$ 
+because both functions are continuous at the end points.
+\end{proof}
+
+Now consider our model two-point boundary-value problem~\eqref{eq: model 1d},
+and suppose that $u''$ is continuous on~$[0,L]$.  Theorem~\ref{thm: int fv gv}
+shows that $-u''=f$ on~$(0,L)$ if and only if
+\[
+-\int_0^L u''(x)v(x)\,dx=\int_0^Lf(x)v(x)\,dx\quad\text{for all $v\in V_0$.}
+\]
+If $v'$ exists and is continuous on~$[0,L]$, then on the left-hand side we can 
+integrate by parts to obtain
+\[
+-\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx,
+\]
+and since $v(0)=0=v(L)$,
+
 
 \section{Piecewise-linear functions}
 
