@@ -1,6 +1,7 @@
 \documentclass[12pt,a4paper]{book}
 \usepackage[margin=2cm]{geometry}
-\usepackage{amsmath}
+\usepackage{amsmath,amsthm,amsfonts}
+\usepackage{algorithm,algpseudocode}
 \usepackage{hyperref}
 
 \title{Numerical Methods for \\
@@ -8,6 +9,12 @@ Partial Differential Equations}
 \author{William McLean}
 \date{\today}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}[theorem]{Definition}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \maketitle
