@@ -1,5 +1,6 @@
 \chapter[Finite differences in 1D]{Finite differences for \\ 
 stationary problems in 1D}
+\label{chap: finite diff 1d}
 We begin our study of numerical methods for partial differential equations 
 (PDEs) by treating the one-dimensional (1D) case, which means we deal only with 
 an \emph{ordinary} differential equation (ODE).  Moreover, in this chapter we 
@@ -155,8 +156,8 @@ For example, if $P=6$ then
 \end{equation}
 where, for brevity, we have written $f_p=f(x_p)$.
 
-
 \section{Symmetric tridiagonal linear systems}
+\label{sec: sym tridiagonal}
 How can we solve a symmetric, tridiagonal linear system such as the one
 \eqref{eq: model 1d linear system} arising from the finite difference 
 scheme~\eqref{eq: model 1d discrete}?  To discuss this problem, consider a 
@@ -352,9 +353,9 @@ Now consider a general second-order linear differential operator,
 where, for simplicity, we will assume that the coefficients $a$, $b$ and 
 $c$ are continuous on~$[0,L]$, and that the \emph{leading coefficient}~$a$ is 
 \emph{strictly positive} on~$[0,L]$, say
-\[
+\begin{equation}\label{eq: ellipticity 1d}
 a(x)\ge a_{\min}>0\quad\text{for $0\le x\le L$.}
-\]
+\end{equation}
 The general \emph{two-point boundary-value problem} is to find $u=u(x)$ 
 satisfying
 \begin{equation}\label{eq: two-point bvp}

@@ -3,10 +3,10 @@ stationary problems in 1D}
 
 Let $u$ be the solution of 
 Recall our model two-point boundary-value problem~\ref{eq: model 1d}, 
-\[
+\begin{equation}\label{eq: model 1d chap 2}
 -u''=f(x)\quad\text{for $0<x<L$,}
 	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$.}
-\]
+\end{equation}
 Multiply both sides of the ODE by a \emph{test function}~$v$ and integrate to 
 obtain
 \[
@@ -18,11 +18,279 @@ obtain
 -\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx,
 \end{equation}
 and therefore
-\[
+\begin{equation}\label{eq: model 1d weak}
 \int_0^L u'(x)v'(x)\,dx=\int_0^L f(x)v(x)\,dx
 	\quad\text{provided $v(0)=0=v(L)$.}
-\]
+\end{equation}
 This observation is the basis of the finite element method.
+
+\section{Piecewise-linear functions}
+Suppose that we partition the interval~$[0,L]$ into $M$~subintervals, not 
+necessarily of equal length, by choosing grid points, or \emph{nodes},
+\begin{equation}\label{eq: 1d nodes}
+0=x_0<x_1<x_2<\cdots<x_M=L.
+\end{equation}
+Denote the length of the $k$th subinterval, or \emph{element}, 
+by~$h_k=x_k-x_{k-1}$, for~$1\le k\le M$, and denote the maximum width 
+by~$h=\max_{1\le k\le M}h_k$.  A function $v:[0,L]\to\mathtt{R}$ is 
+\emph{piecewise-linear} (with respect to the chosen grid points~$x_k$) if its 
+restriction~$v|_{(x_{k-1},x_k)}$ to the $k$th element is linear, for~$1\le k\le 
+M$.  The set of all continuous, piecewise-linear functions forms a vector 
+space~$V_h$.  Each $v\in V_h$ is determined by its values at the grid points, 
+since
+\[
+v(x)=\frac{1}{h_k}\bigl((x_k-x)v(x_{k-1})+(x-x_{k-1})v(x_k)\bigr)
+    \quad\text{for $x_{k-1}\le x\le x_k$.}
+\]
+In particular, the $k$th \emph{nodal basis function} $\phi_k\in V_h$ is the 
+unique continuous, piecewise-linear function satisfying
+\begin{equation}\label{eq: phi k x j}
+\phi_k(x_j)=\delta_{jk}\quad\text{for $j$, $k\in\{0, 1, 2, \ldots, M\}$,}
+\end{equation}
+where $\delta_{jk}$ is the Kronecker delta, that is,
+\[
+\delta_{jk}=\begin{cases}
+1,&\text{if $j=k$,}\\ 0,&\text{if $j\ne k$.} 
+\end{cases}
+\]
+The property~\eqref{eq: phi k x j} implies that each~$v\in V_h$ has the 
+representation
+\[
+v(x)=\sum_{k=0}^M v(x_k)\phi_k(x)\quad\text{for $0\le x\le L$,}
+\]
+since the sum on the right defines a continuous, piecewise-linear function that 
+equals $v(x_j)$ when~$x=x_j$, for~$0\le j\le M$.  It follows that 
+$\{\phi_k\}_{k=0}^M$ is a basis for~$V_h$, and therefore that $\dim V_h=M+1$.
+
+In the finite element method for our model 2-point boundary-value 
+problem~\eqref{eq: model 1d chap 2}, we define a \emph{solution set} (or
+\emph{trial set})
+\[
+S_h=\{\,v\in V_h:\text{$v(0)=\gamma_0$ and $v(L)=\gamma_L$}\,\}
+\]
+and a \emph{test space}
+\[
+T_h=\{\,v\in V_h:\text{$v(0)=0$ and $v(L)=0$}\,\}.
+\]
+Notice that $T_h$ is subspace of~$V_h$ with $\dim T_h=M-1$.  Based 
+on~\eqref{eq: model 1d weak}, the \emph{finite element solution}~$u_h$
+of~\eqref{eq: model 1d chap 2} is determined by requiring that
+\[
+u_h\in S_h\qquad\text{and}\qquad
+\int_0^L u_h'(x)v'(x)\,dx=\int_0^L f(x)v(x)\,dx \quad\text{for all $v\in T_h$.}
+\]
+Since $\{\phi_k\}_{k=1}^{M-1}$ is a basis for~$T_h$, it suffices that $u_h$ 
+satisfies
+\begin{equation}\label{eq: model FEM phi j}
+\int_0^L u_h'(x)\phi_j'(x)\,dx=\int_0^L f(x)\phi_j(x)\,dx 
+    \quad\text{for $1\le j\le M-1$.}
+\end{equation}
+Moreover, 
+\begin{equation}\label{eq: uh U 1d}
+u_h(x)=\sum_{k=0}^M U_k\phi_k(x)\quad\text{for $0\le x\le L$,}\quad
+\text{where $U_k=u_h(x_k)$,}
+\end{equation}
+so
+\[
+\int_0^Lu_h'(x)\phi_j'(x)\,dx
+    =\int_0^L\biggl(\sum_{k=0}^MU_k\phi_k'(x)\biggr)\phi_j'(x)\,dx
+    =\sum_{k=0}^M\biggl(\int_0^L\phi_k'(x)\phi_j'(x)\,dx\biggr)U_k.
+\]
+Therefore, by letting
+\[
+a_{jk}=\int_0^L\phi_k'(x)\phi_j'(x)\,dx
+\quad\text{and}\quad
+f_j=\int_0^Lf(x)\phi_j(x)\,dx,
+\]
+we can write \eqref{eq: model FEM phi j} as
+\[
+\sum_{k=0}^M a_{jk}U_k=f_j\quad\text{for $1\le j\le M-1$.}
+\]
+Since $u_h\in S_h$, we have $U_0=u_h(x_0)=u_h(0)=\gamma_0$~and 
+$U_M=u_h(x_M)=u_h(L)=\gamma_L$, we obtain an $(M-1)\times(M-1)$ linear system 
+for the unknowns $U_1$, $U_2$, \dots, $U_{M-1}$, namely
+\begin{equation}\label{eq: model FEM eqns}
+\sum_{k=1}^{M-1}a_{jk}U_k=f_j-a_{j0}\gamma_0-a_{jM}\gamma_M
+    \quad\text{for $1\le j\le M-1$.}
+\end{equation}
+The coefficients on the left-hand side of~\eqref{eq: model FEM eqns} form the
+\emph{stiffness matrix}~$\boldsymbol{A}$, which has the following properties.
+
+\begin{theorem}
+If $|j-k|\ge2$ then $a_{jk}=0$.  The diagonal values are
+\[
+a_{00}=\frac{1}{h_1},\qquad
+\text{$a_{jj}=\frac{1}{h_j}+\frac{1}{h_{j+1}}$ for $1\le j\le M-1$,}\qquad
+a_{MM}=\frac{1}{h_M},
+\]
+and the off-diagonal values are
+\[
+a_{j-1,j}=a_{j,j-1}=\frac{-1}{h_j}\quad\text{for $1\le j\le M$.}
+\]
+Furthermore, the $(M-1)\times(M-1)$ symmetric, tridiagonal 
+matrix~$\boldsymbol{A}=[a_{jk}]_{j, k=1}^{M-1}$ is strictly positive-definite.
+\end{theorem}
+\begin{proof}
+It is easy to see that for~$1\le j\le M-1$,
+\[
+\phi_j'(x)=\begin{cases}
+1/h_j,&x_{j-1}<x<x_j,\\
+-1/h_{j+1},&x_j<x<x_{j+1},\\
+0,&\text{otherwise,}
+\end{cases}
+\]
+with the first case missing when~$j=0$, and the second when~$j=M$.  Thus,
+the supports of $\phi_j'$ and $\phi_k'$ overlap iff $|j-k|\le1$, and so 
+$a_{jk}=0$ otherwise, that is, if $|j-k|\ge2$.  The diagonal 
+values are
+\[
+a_{00}=\int_0^L\phi_0'(x)^2\,dx
+    =\int_{x_0}^{x_1}\biggl(\frac{1}{h_1}\biggr)^2\,dx
+    =\frac{x_1-x_0}{h_1^2}=\frac{1}{h_1}
+\]
+and
+\[
+a_{MM}=\int_0^L\phi'_M(x)^2\,dx
+    =\int_{x_{M-1}}^{x_M}\biggl(\frac{-1}{h_M}\biggr)^2\ , dx
+    =\frac{x_M-x_{M-1}}{h_M^2}=\frac{1}{h_M},
+\]
+with
+\[
+a_{jj}=\int_{x_{j-1}}^{x_j}\biggl(\frac{1}{h_j}\biggr)^2\,dx
+      +\int_{x_j}^{x_{j+1}}\biggl(\frac{-1}{h_{j+1}}\biggr)^2\,dx
+        =\frac{1}{h_j}+\frac{1}{h_{j+1}}
+\]
+for $1\le j\le M-1$.  The off-diagonal values are
+\[
+a_{j-1,j}=\int_0^L\phi'_j(x)\phi'_{j-1}(x)\,dx
+    =\int_{x_{j-1}}^{x_j}\biggl(\frac{-1}{h_j}\biggr)
+    \biggl(\frac{1}{h_j}\biggr)\,dx=\frac{-(x_j-x_{j-1})}{h_j^2}=\frac{-1}{h_j}
+\]
+for $1\le j\le M$. 
+
+The matrix~$\boldsymbol{A}$ is thus tridiagonal and symmetric.  Given
+$\boldsymbol{V}=[V_k]_{k=1}^{M-1}\in\mathbb{R}^{M-1}$
+we define $v\in T_h$ by $v(x)=\sum_{k=1}^{M-1}V_k\phi_k(x)$ and observe that
+\begin{align*}
+\boldsymbol{V}^T\boldsymbol{A}\boldsymbol{V}
+    &=\sum_{j=1}^{M-1}\sum_{k=1}^{M-1}V_ja_{jk}V_k
+    =\sum_{j=1}^{M-1}\sum_{k=1}^{M-1}V_jV_k\int_0^L\phi_k'(x)\phi_j'(x)\,dx\\
+    &=\int_0^L\biggl(\sum_{k=0}^{M-1}V_k\phi_k'(x)\biggr)
+             \biggl(\sum_{j=0}^{M-1}V_j\phi_j'(x)\biggr)\,dx
+    =\int_0^L\bigl(v'(x)\bigr)^2\,dx\ge0.
+\end{align*}
+Thus, $\boldsymbol{A}$ is positive-semidefinite.  To see that
+$\boldsymbol{A}$ is in fact \emph{strictly} positive-definite, suppose that
+$\boldsymbol{V}^T\boldsymbol{A}\boldsymbol{V}=0$. Then 
+$\int_0^L\bigl(v'(x)\bigr)^2\,dx=0$ so $v'=0$ and thus $v$ is constant 
+on~$[0,L]$. Since $v(0)=0=v(L)$, the function~$v$ must be identically zero, 
+and hence $V_k=0$ for~$1\le k\le M-1$.   That is, 
+$\boldsymbol{V}^T\boldsymbol{A}\boldsymbol{V}=0$ implies 
+$\boldsymbol{V}=\boldsymbol{0}$.
+\end{proof}
+
+For example, if $M=6$ then the $5\times 5$ system of 
+equations~\eqref{eq: model FEM eqns} can be written in matrix form as
+\[
+\begin{bmatrix}
+ h_1^{-1}+h_2^{-1}&        -h_2^{-1}&&&\\
+         -h_2^{-1}&h_2^{-1}+h_3^{-1}&-h_3^{-1}&&\\
+        &-h_3^{-1}&h_3^{-1}+h_4^{-1}&-h_4^{-1}&\\
+       &&-h_4^{-1}&h_4^{-1}+h_5^{-1}&-h_5^{-1}\\
+      &&&-h_5^{-1}&h_5^{-1}+h_6^{-1}\\
+\end{bmatrix}
+\begin{bmatrix}U_1\\ U_2\\ U_3\\ U_4\\ U_5\end{bmatrix}
+=\begin{bmatrix}f_1\\ f_2\\ f_3\\ f_4\\ f_5\end{bmatrix}
++\begin{bmatrix}h_1^{-1}\gamma_0\\ \\ \\ \\ h_6^{-1}\gamma_L\end{bmatrix}.
+\]
+Being positive-definite, the stiffness matrix is non-singular so this linear 
+system has a unique solution, which can be computed using the algorithms 
+described in section~\ref{sec: sym tridiagonal}.
+
+\section{General self-adjoint problems}
+A second-order linear differential operator~$\mathcal{L}$ is 
+\emph{formally self-adjoint} if it can be written in the form
+\[
+(\mathcal{L}u)(x)=-\bigl(a(x)u'\bigr)'+c(x)u(x).
+\]
+Here, the coefficients $a(x)$ and $c(x)$ are assumed to have the same 
+properties as in Chapter~\ref{chap: finite diff 1d}; in particular, $a(x)$ must 
+satisfy the lower bound~\eqref{eq: ellipticity 1d}. For such an $\mathcal{L}$, 
+consider the following two-point boundary-value problem with \emph{mixed 
+boundary conditions},
+\begin{equation}\label{eq: self-adjoint mixed}
+\mathcal{L}u=f(x)\quad\text{for $0<x<L$,}\quad
+\text{with $u(0)=\gamma_0$ and $a(L)u'(L)=\gamma_L$.}
+\end{equation}
+Integration by parts implies that
+\[
+\int_0^L(\mathcal{L}u)(x)v(x)\,dx
+    =-\bigl[a(x)u'(x)v(x)\bigr]_0^L+\int_0^L\bigl(a(x)u'(x)v'(x)+c(x)u(x)v(x)
+        \bigr)\,dx,
+\]
+so any solution~$u$ of~\eqref{eq: self-adjoint mixed} must satisfy
+\[
+\int_0^L\bigl(a(x)u'(x)v'(x)+c(x)u(x)v(x)\bigr)\,dx
+    =\gamma_Lv(L)+\int_0^Lf(x)v(x)\,dx
+    \quad\text{provided $v(0)=0$.}
+\]
+Given nodes~\eqref{eq: 1d nodes}, we therefore define the solution set~$S_h$ and 
+test space~$T_h$ by
+\[
+S_h=\{\,v\in V_h:v(0)=\gamma_0\,\}
+\quad\text{and}\quad
+T_h=\{\,v\in V_h:v(0)=0\,\},
+\]
+and require that the finite element solution~$u_h\in S_h$ satisfy
+\[
+\int_0^L\bigl(a(x)u_h'(x)v'(x)+c(x)u_h(x)v(x)\bigr)\,dx
+    =\gamma_Lv(L)+\int_0^Lf(x)v(x)\,dx
+    \quad\text{for all $v\in T_h$.}
+\]
+Equivalently, since $\{\phi_j\}_{j=1}^M$ is a basis for~$T_h$, we require
+\[
+\int_0^L\bigl(a(x)u_h'(x)\phi_j'(x)+c(x)u_h(x)\phi_j(x)\bigr)\,dx
+    =\gamma_L\phi_j(L)+\int_0^Lf(x)\phi_j(x)\,dx
+    \quad\text{for $1\le j\le M$.}
+\]
+Inserting the representation~\eqref{eq: uh U 1d} yields the system of linear 
+equations
+\[
+\sum_{k=0}^M\bigl(a_{jk}U_k+c_{jk}U_k\bigr)=\gamma_L\phi_j(L)+f_j
+    \quad\text{for $1\le j\le M$,}
+\]
+where
+\[
+a_{jk}=\int_0^La(x)\phi_k'(x)\phi_j'(x)\,dx,\quad
+c_{jk}=\int_0^Lc(x)\phi_k(x)\phi_j(x)\,dx,\quad
+f_j=\int_0^Lf(x)\phi_j(x)\,dx.
+\]
+Moving $U_0=\gamma_0$ to the right-hand side leads to an $M\times M$ linear 
+system,
+\[
+\sum_{j=1}^M\bigl(a_{jk}+c_{jk})U_k
+    =\gamma_L\phi_j(L)+f_j-(a_{j0}+c_{j0})\gamma_0
+    \quad\text{for $1\le j\le M$,}
+\]
+or, in matrix notation,
+\[
+\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
+    =\boldsymbol{f}+\boldsymbol{g},
+\]
+where $\boldsymbol{A}=[a_{jk}]_{j,k=1}^M$, $\boldsymbol{C}=[c_{jk}]_{j,k=1}^M$,
+$\boldsymbol{f}=[f_j]_{j=1}^M$ and $\boldsymbol{g}=[g_j]_{j=1}^M$, where
+\[
+g_1=-(a_{10}+c_{10})\gamma_0,\qquad
+\text{$g_j=0$ for $2\le j\le M-1$,}\qquad
+g_M=\gamma_L.
+\]
+We again refer to~$\boldsymbol{A}$ as the mass matrix, whereas $\boldsymbol{C}$ 
+is called the \emph{mass matrix}.  On the right-hand side, $\boldsymbol{f}$ is 
+called the \emph{load vector}.  This terminology reflects the historical 
+origins of finite element methods in structural engineering.
+
+\section{Matrix assembly element-by-element}
+
 
 \section{Classical and weak solutions}
 A \emph{classical solution}~$u$ of~\eqref{eq: model 1d} is a solution in the 
