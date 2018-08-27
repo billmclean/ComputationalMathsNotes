@@ -242,11 +242,11 @@ S_h=\{\,v\in V_h:v(0)=\gamma_0\,\}
 T_h=\{\,v\in V_h:v(0)=0\,\},
 \]
 and require that the finite element solution~$u_h\in S_h$ satisfy
-\[
+\begin{equation}\label{eq: self-adjoint mixed bc FEM}
 \int_0^L\bigl(a(x)u_h'(x)v'(x)+c(x)u_h(x)v(x)\bigr)\,dx
     =\gamma_Lv(L)+\int_0^Lf(x)v(x)\,dx
     \quad\text{for all $v\in T_h$.}
-\]
+\end{equation}
 Equivalently, since $\{\phi_j\}_{j=1}^M$ is a basis for~$T_h$, we require
 \[
 \int_0^L\bigl(a(x)u_h'(x)\phi_j'(x)+c(x)u_h(x)\phi_j(x)\bigr)\,dx
@@ -273,10 +273,10 @@ system,
     \quad\text{for $1\le j\le M$,}
 \]
 or, in matrix notation,
-\[
+\begin{equation}\label{eq: self-adjoint mixed equations}
 \bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
     =\boldsymbol{f}+\boldsymbol{g},
-\]
+\end{equation}
 where $\boldsymbol{A}=[a_{jk}]_{j,k=1}^M$, $\boldsymbol{C}=[c_{jk}]_{j,k=1}^M$,
 $\boldsymbol{f}=[f_j]_{j=1}^M$ and $\boldsymbol{g}=[g_j]_{j=1}^M$, where
 \[
@@ -284,12 +284,182 @@ g_1=-(a_{10}+c_{10})\gamma_0,\qquad
 \text{$g_j=0$ for $2\le j\le M-1$,}\qquad
 g_M=\gamma_L.
 \]
-We again refer to~$\boldsymbol{A}$ as the mass matrix, whereas $\boldsymbol{C}$ 
-is called the \emph{mass matrix}.  On the right-hand side, $\boldsymbol{f}$ is 
-called the \emph{load vector}.  This terminology reflects the historical 
-origins of finite element methods in structural engineering.
+We again refer to~$\boldsymbol{A}$ as the stiffness matrix, whereas 
+$\boldsymbol{C}$ is called the \emph{mass matrix}.  On the right-hand side, 
+$\boldsymbol{f}$ is called the \emph{load vector}.  This terminology reflects 
+the historical origins of finite element methods in structural engineering.
 
 \section{Matrix assembly element-by-element}
+
+In the previous section, we used the nodal basis functions~$\phi_k$ to set up 
+the linear system~\eqref{eq: self-adjoint mixed equations}, but this approach 
+becomes very complicated in 2D~or 3D, or even in 1D with higher-order elements.
+Instead, a simpler method is to assemble the matrices $\boldsymbol{A}$~and 
+$\boldsymbol{C}$, and the vector~$\boldsymbol{f}$, element-by-element.  
+For~$1\le m\le M$, we put $\mathsf{n}^\brak{m}_1=x_{m-1}$~and
+$\mathsf{n}^\brak{m}_2=x_m$ so that the $m$th 
+element~$[x_{m-1},x_m]=[\mathsf{n}^\brak{m}_1,\mathsf{n}^\brak{m}_2]$.  The
+\emph{linear shape functions} for this element are defined by
+\[
+\psi^\brak{m}_1(x)=\frac{x_m-x}{h_m}
+\quad\text{and}\quad
+\psi^\brak{m}_2(x)=\frac{x-x_{m-1}}{h_m}
+\quad\text{for $x_{m-1}\le x\le x_m$,}
+\]
+and satisfy
+\[
+\psi^\brak{m}_p(\mathsf{n}^\brak{m}_q)=\delta_{pq}
+    \quad\text{for $p$, $q\in\{1,2\}$,}
+\]
+so that for any~$v\in V_h$,
+\[
+v(x)=v(\mathsf{n}^\brak{m}_1)\psi^\brak{m}_1(x)
+    +v(\mathsf{n}^\brak{m}_2)\psi^\brak{m}_2(x)
+    \quad\text{for $x\in[\mathsf{n}^\brak{m}_1,\mathsf{n}^\brak{m}_2]$.}
+\]
+The \emph{element stiffness matrix} is defined by
+\[
+\boldsymbol{A}^\brak{m}=\begin{bmatrix}
+a^\brak{m}_{11}&a^\brak{m}_{12}\\
+a^\brak{m}_{21}&a^\brak{m}_{22}\end{bmatrix}
+\quad\text{where}\quad
+a^\brak{m}_{pq}=\int_{x_{m-1}}^{x_m}a(x)\bigl(\psi_q^\brak{m}\bigr)'(x)
+    \bigl(\psi_p^\brak{m}\bigr)'(x)\,dx,
+\]
+the \emph{element mass matrix} by
+\[
+\boldsymbol{C}^\brak{m}=\begin{bmatrix}
+c^\brak{m}_{11}&c^\brak{m}_{12}\\
+c^\brak{m}_{21}&c^\brak{m}_{22}\end{bmatrix}
+\quad\text{where}\quad
+c^\brak{m}_{pq}=\int_{x_{m-1}}^{x_m}c(x)\psi_q^\brak{m}(x) 
+    \psi_p^\brak{m}(x)\,dx,
+\]
+and the \emph{element load vector} by
+\[
+\boldsymbol{f}^\brak{m}=\begin{bmatrix}f^\brak{m}_1\\ f^\brak{m}_2\end{bmatrix}
+\quad\text{where}\quad
+f^\brak{m}_p=\int_{x_{m-1}}^{x_m}f(x)\psi_p^\brak{m}(x)\,dx.
+\]
+We also enumerate the nodes of the mesh so that the \emph{free nodes} precede 
+the \emph{fixed nodes}.  For our problem~\eqref{eq: self-adjoint mixed}, the 
+only fixed node is~$x_0$, so we put
+\[
+\mathsf{n}_j=x_j\quad\text{for $1\le j\le M$,}
+\quad\text{and}\quad\mathsf{n}_{M+1}=x_0.
+\]
+The $2\times(M+1)$ \emph{connectivity matrix} $[e_{pm}]$ is defined by
+\[
+e_{pm}=j\quad\text{iff}\quad\mathsf{n}^\brak{m}_p=\mathsf{n}_j;
+\]
+for example, if $M=6$ then
+\[
+[e_{pm}]=\begin{bmatrix}
+7&1&2&3&4&5&6\\
+1&2&3&4&5&6&7\end{bmatrix}.
+\]
+Writing $U^\brak{m}_q=u_h(\mathsf{n}^\brak{m}_q)$~and
+$V^\brak{m}_p=v(\mathsf{n}^\brak{m}_p)$, we see that
+\[
+u_h(x)=\sum_{q=1}^2U^\brak{m}_q\psi^\brak{m}_q(x)
+\quad\text{and}\quad
+v(x)=\sum_{p=1}^2V^\brak{m}_p\psi^\brak{m}_p(x)
+\quad\text{for $x\in[x_{m-1},x_m]$.}
+\]
+Thus,
+\[
+\int_0^Lf(x)v(x)\,dx=\sum_{m=1}^M\int_{x_{m-1}}^{x_m}f(x)\sum_{p=1}^2
+    V^\brak{m}_p\psi^\brak{m}_p(x)\,dx
+    =\sum_{m=1}^M\sum_{p=1}^M f^\brak{m}_pV_p^\brak{m}
+\]
+and
+\begin{align*}
+\int_0^La(x)u_h'(x)v'(x)\,dx
+    &=\sum_{m=1}^M\int_{x_{m-1}}^{x_m}a(x)
+    \biggl(\sum_{q=1}^2 U^\brak{m}_q(\psi_q^\brak{m})'(s)\biggr)
+    \biggl(\sum_{p=1}^2 V^\brak{m}_p(\psi_p^\brak{m})'(x)\biggr)\,dx\\
+    &=\sum_{m=1}^M\sum_{q=1}^2\sum_{p=1}^2
+    U^\brak{m}_qa^\brak{m}_{pq}V^\brak{m}_p;
+\end{align*}
+likewise
+\[
+\int_0^Lc(x)u_h(x)v(x)\,dx=\sum_{m=1}^M\sum_{q=1}^2\sum_{p=1}^2
+    U^\brak{m}_qc^\brak{m}_{pq}V^\brak{m}_p
+\quad\text{and}\quad
+v(L)=V^\brak{M}_2.
+\]
+Thus, \eqref{eq: self-adjoint mixed bc FEM} holds iff
+\[
+\sum_{m=1}^M\sum_{p=1}^2V^\brak{m}_p
+\sum_{q=1}^2\bigl(a^\brak{m}_{pq}+c^\brak{m}_{pq} \bigr)U^\brak{m}_q
+    =\gamma_LV^\brak{M}_2+\sum_{m=1}^M\sum_{p=1}^2V^\brak{m}_pf^\brak{m}_p
+    \quad\text{for all $v\in T_h$.}
+\]
+
+Let $\mathfrak{S}_j=\{\,(m,p):j=\mathsf{n}^\brak{m}_p\,\}$, and
+define the $M\times(M+1)$ matrices $\boldsymbol{A}=[a_{jk}]$~and 
+$\boldsymbol{B}=[b_{jk}]$, and the $M$-dimensional vector~$\boldsymbol{f}$, by
+\[
+a_{jk}=\sum_{(m,p)\in\mathfrak{S}_j}
+    \sum_{(m,q)\in\mathfrak{S}_k}a^\brak{m}_{pq},\qquad
+c_{jk}=\sum_{(m,p)\in\mathfrak{S}_j}
+    \sum_{(m,q)\in\mathfrak{S}_k}c^\brak{m}_{pq},\qquad
+f_j=\sum_{(m,p)\in\mathfrak{S}_j}f^\brak{m}_p,
+\]
+for $1\le j\le M$ and $1\le k\le M+1$.  Since $V^\brak{1}_1=V_{M+1}=0$, we see
+that
+\[
+\boldsymbol{V}^T\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
+    =\gamma_LV_M+\boldsymbol{V}^T\boldsymbol{f}
+    \quad\text{for all $\boldsymbol{V}\in\mathbb{R}^M$,}
+\]
+and therefore
+\[
+\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
+    =\gamma_L\boldsymbol{e}_M+\boldsymbol{f}.
+\]
+Now partition the matrices as 
+$\boldsymbol{A}=[\boldsymbol{A}'\quad\boldsymbol{A}'']$~and
+$\boldsymbol{B}=[\boldsymbol{B}'\quad\boldsymbol{B}'']$, where 
+$\boldsymbol{A}'$~and $\boldsymbol{B}'$ are $M\times M$, and so
+$\boldsymbol{A}''$~and $\boldsymbol{B}''$ are $M\times1$.  Likewise partition 
+the vector~$\boldsymbol{U}=[\boldsymbol{U}'\quad U'']^T$ where 
+$\boldsymbol{U}'$ is $M\times1$ and so $U''$ is $1\times1$, that is, a scalar.  
+Since $U''=U_{M+1}=u_h(\mathsf{n}_{M+1})=u_h(0)=\gamma_0$, we conclude that
+\[
+\bigl(\boldsymbol{A}'+\boldsymbol{C}'\bigr)\boldsymbol{U}'
+=\gamma_L\boldsymbol{e}_M-(\boldsymbol{A}''+\boldsymbol{B}'')\gamma_0
+    +\boldsymbol{f}.
+\]
+
+
+
+
+
+
+
+
+\begin{algorithm}
+\caption{Assemble the global load vector~$\boldsymbol{f}$.}
+\label{alg: load vector}
+\begin{algorithmic}
+\State Allocate storage for $\boldsymbol{f}=[f_1, f_2, \ldots, f_M]$.
+\For{$j=1:M+1$}
+\State $f_j=0$
+\EndFor
+\For{$m=1:M$}
+\State Compute $\boldsymbol{f}^\brak{m}$
+\For{$p=1:2$}
+\State $j=e_{pm}$
+\If{$j\le M$}
+\State $f_j\gets f_j+f^\brak{m}_p$
+\EndIf
+\EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+
 
 
 \section{Classical and weak solutions}
