@@ -91,9 +91,9 @@ we see that
 f(x+h)+f(x-h)=2f(x)+f''(x)h^2+(R_3f)(x,h)+(R_3f)(x,-h).
 \]
 Thus,
-\[
+\begin{equation}\label{eq: second diff remainder}
 \frac{f(x+h)-2f(x)+f(x-h)}{h^2}-f''(x)=\frac{(R_3f)(x,h)+(R_3f)(x,-h)}{h^2}
-\]
+\end{equation}
 and since
 \begin{align*}
 |(R_3f)(x,h)+(R_3f)(x,-h)|&\le
@@ -559,13 +559,13 @@ u(x)\le\max\{u^+(0),u^+(L)\}\quad\text{for $0<x<L$.}
 \]
 \end{theorem}
 \begin{proof}
-Let $\epsilon>0$ and put $w(x)=u(x)+\epsilon e^{\mu x}$.  Since
+Let $\epsilon>0$~and $\mu>0$, and put $w(x)=u(x)+\epsilon e^{\mu x}$.  Since
 \[
 (\mathcal{L}w)(x)
 	=(\mathcal{L}u)(x)+\epsilon\bigl[-a(x)\mu^2+b(x)\mu+c(x)\bigr]e^{\mu x}
 	\le-\epsilon\bigl[a(x)\mu^2-\mu\|b\|_\infty-\|c\|_\infty\bigr]e^{\mu x}
 \]
-by choosing $|\mu|$ sufficiently large we can ensure that $\mathcal{L}w<0$
+by choosing $\mu$ sufficiently large we can ensure that $\mathcal{L}w<0$
 on~$(0,L)$.  By Lemma~\ref{lem: Lu<0}, the function~$w$ cannot attain a 
 non-negative local maximum in~$(0,L)$, implying that 
 \[
@@ -576,7 +576,7 @@ for~$0<x<L$.  Since this inequality holds for any~$\epsilon>0$, the result
 follows.
 \end{proof}
 
-\begin{theorem}
+\begin{theorem}\label{thm: max principle}
 Assume that $u$ is continuous on the closed interval~$[0,L]$ and is $C^2$ on 
 the open interval~$(0,L)$. If $c\ge0$ and $\mathcal{L}u=f$ on~$(0,L)$, then
 \[
@@ -584,21 +584,22 @@ the open interval~$(0,L)$. If $c\ge0$ and $\mathcal{L}u=f$ on~$(0,L)$, then
 \]
 and
 \[
-\min_{[0,L]}u\ge\min\{u^-(0),u^-(L)\}+\cosh(\mu L/2)\max_{[0,L]}f^-,
+\min_{[0,L]}u\ge\min\{u^-(0),u^-(L)\}+\cosh(\mu L/2)\min_{[0,L]}f^-,
 \]
 where $\mu=\max\bigl\{1,(1+\|b\|_\infty)/a_{\min}\bigr\}$.
 \end{theorem}
 \begin{proof}
 Let
 \[
-w(x)=\max\{u^+(0),u^+(L)\}+v(x)\,\max_{[0,L]}f
+w(x)=\max\{u^+(0),u^+(L)\}+v(x)\,\max_{[0,L]}f^+
 \quad\text{where}\quad
 v(x)=\cosh(\mu L/2)-\cosh\mu(x-L/2),
 \]
 and observe that $v\ge0$ on~$[0,L]$ with
 \begin{align*}
 (\mathcal{L}v)(x)&=a(x)\mu^2\cosh\mu(x-L/2)
-	-b(x)\mu\sinh\mu(x-L/2)+c(x)v(x)\\
+	-b(x)\mu\sinh\mu(x-L/2)\\
+	&\qquad{}+c(x)\bigl(\max\{u^+(0),u^+(L)\}+v(x)\big)\\
 	&\ge\bigl(a_{\min}\mu^2-\|b\|_\infty\mu\bigr)\cosh\mu(x-L/2)
 	\ge(a_{\min}\mu-\|b\|_\infty)\mu\ge1
 \end{align*}
@@ -607,7 +608,7 @@ for $0<x<L$, so
 \mathcal{L}(u-w)=f-c(x)\max\{u^+(0),u^+(L)\}-(\mathcal{L}v)\max_{[0,L]}f^+
 	\le0\quad\text{on $(0,L)$.}
 \]
-By Lemma~\ref{lem: Lu<0},
+By Theorem~\ref{thm: max principle},
 \[
 u(x)-w(x)\le\max\{(u-w)^+(0),(u-w)^+(L)\}\quad\text{for $0<x<L$,}
 \]
@@ -620,13 +621,14 @@ and
 (u-w)(L)=u(L)-\max\{u^+(0),u^+(L)\}\le0.
 \]
 Thus, $u-w\le0$ on~$(0,L)$, and therefore 
-$\max_{[0,L]}u\le\max_{[0,L]}w(x)=w(L/2)$, proving the first inequality.  
+\[
+\max_{[0,L]}u\le\max_{[0,L]}w(x)=w(L/2)=\max\{u^+(0),u^+(L)\}
+	+v(L/2)\max_{[0,L]}f, 
+\]
+proving the first inequality.  
 The second follows because $\mathcal{L}(-u)=-f$, $(-u)^+=-u^-$~and
 $(-f)^+=-f^-$.
 \end{proof}
-\begin{corollary}\label{cor: Lu=f apriori infty}
-$\|u\|_\infty\le\max\{|u(0)|,|u(L)|\}+\cosh(\mu L/2)\|f\|_\infty$.
-\end{corollary}
 
 Now consider the two-point boundary-value problem~\eqref{eq: two-point bvp} in 
 the case when $\alpha_0=0=\alpha_L$ and $\beta_0=1=\beta_L$:
@@ -634,7 +636,18 @@ the case when $\alpha_0=0=\alpha_L$ and $\beta_0=1=\beta_L$:
 \mathcal{L}u=f\quad\text{on $(0,L)$,}
 	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$.}
 \end{equation}
-The next theorem shows that this problem is \emph{well-posed}, that is,
+As an immediate consequence of Theorem~\ref{thm: max principle} we have the 
+following \emph{a priori} estimate.
+
+\begin{theorem}\label{thm: Lu=f apriori infty}
+Any solution~$u$ of~\eqref{eq: Lu=f Dirichlet} satisfies
+\[
+\|u\|_\infty\le\max\{|\gamma_0|,|\gamma_L|\}+\cosh(\mu L/2)\|f\|_\infty.
+\]
+\end{theorem}
+
+Using Theorem~\ref{thm: Lu=f apriori infty} one can show that the 
+problem~\eqref{eq: Lu=f Dirichlet} is \emph{well-posed}, that is,
 \begin{enumerate}
 \item a unique solution exists for each choice of the data $f$, $\gamma_0$~and 
 $\gamma_L$, and 
@@ -648,7 +661,7 @@ of the resulting perturbed problem,
 	\quad\text{with $\tilde u(0)=\tilde\gamma_0$ 
 and $\tilde u(L)=\tilde\gamma_L$.}
 \]
-If w denote the changes in the solution and the data by
+If we denote the changes in the solution and the data by
 \[
 \delta u=\tilde u-u,\quad\delta f=\tilde f-f,\quad
 \delta\gamma_0=\tilde\gamma_0-\gamma_0,\quad
@@ -693,5 +706,154 @@ and $\delta u(L)=\delta\gamma_L$,}
 and Corollary~\ref{cor: Lu=f apriori infty} implies the desired estimate 
 for~$\|\delta u\|_\infty$.
 \end{proof}
+
+\section{Discrete maximum principle}
+
+We will now establish a maximum principle for a finite difference approximation 
+to the two-point boundary-value problem~\eqref{eq: two-point bvp} in the case
+\[
+b(x)=0,\qquad\alpha_0=0,\quad\beta_0=1,\quad\alpha_L=0,\quad\beta_L=1.
+\]
+It will be convenient to introduce the notation
+\[
+(\mathcal{L}_{\Delta x}U)_p=-a_p\,\frac{U_{p+1}-2U_p+U_{p-1}}{\Delta x^2}
+	+c_pU_p\quad\text{for $1\le p\le P-1$,}
+\]
+where, as before, $a_p=a(x_p)$ and $c_p=c(x_p)$. Our finite difference method 
+can then be written as
+\[
+(\mathcal{L}_{\Delta x}U)_p=f_p\quad\text{for $1\le p\le P-1$,}\quad
+	\text{with $U_0=\gamma_0$ and $U_P=\gamma_L$.}
+\]
+The following discrete analogue of Theorem~\ref{lem: Lu<0} holds.
+
+\begin{lemma}\label{lem: discrete LU<0}
+If $c_p\ge0$ and $(\mathcal{L}_{\Delta x}U)_p<0$ for~$1\le p\le P-1$, then
+the is no $p^*$ in the range $1\le p^*\le P-1$ for which
+\[
+U_{p^*}\ge 0,\qquad U_{p^*-1}\le U_{p^*}\qquad\text{and}\qquad
+U_{p^*+1}\le U_{p^*}.
+\]
+\end{lemma}
+\begin{proof}
+If such a $p^*$ exists, then $U_{p^*+1}+U^{p^*-1}\le 2U_{p^*}$ so
+\[
+(\mathcal{L}_{\Delta x}U)_{p^*}
+	=a_{p^*}\,\frac{-U_{p^*+1}+2U_{p^*}-U_{p^*-1}}{\Delta x^2}
+	+c_{p^*}U_{p^*}\ge 0,
+\]
+contradicting the second hypothesis of the lemma.
+\end{proof}
+
+A discrete analogue of Theorem~\ref{thm: max principle} then follows.
+
+\begin{theorem}\label{thm: discrete max principle}
+If $c_p\ge0$ and $(\mathcal{L}_{\Delta x}U)_p\le0$ for $1\le p\le P-1$, then 
+\[
+U_p\le\max\{U_0^+,U_P^+\}\quad\text{for $1\le p\le P-1$.}
+\]
+\end{theorem}
+\begin{proof}
+Let $\epsilon>0$~and $\mu>0$, and put $W_p=U_p+\epsilon e^{\mu x_p}$.  
+We see from~\eqref{eq: second diff remainder} that the 
+function~$g(x)=e^{\mu x}$ satisfies
+\[
+\frac{g(x_{p+1})-2g(x_p)+g(x_{p-1})}{\Delta x^2}-g''(x_p)
+	=\frac{1}{\Delta x^2}\bigl[(R_3g)(x_p,\Delta x)+(R_3g)(x_p,-\Delta x)\bigr],
+\]
+where
+\begin{align*}
+(R_3g)(x_p,\Delta x)
+	&=\frac{1}{4!}\int_{x_p}^{x_{p+1}}(x_{p+1}-y)^3g^{(4)}(y)\,dy,\\
+(R_3g)(x_p,-\Delta x)
+	&=\frac{(-1)^4}{4!}\int_{x_{p-1}}^{x_p}(y-x_{p-1})^3g^{(4)}(y)\,dy.
+\end{align*}
+Since $g^{(4)}(y)=\mu^4e^{\mu y}\ge0$ for all~$y$, it follows that
+$(R_3g)(x_p,\pm\Delta x)\ge0$ and thus
+\[
+\frac{g(x_{p+1})-2g(x_p)+g(x_{p-1})}{\Delta x^2}\ge g''(x_p)=\mu^2e^{\mu x_p}.
+\]
+Hence, 
+\begin{align*}
+(\mathcal{L}_{\Delta x}W)_p&=(\mathcal{L}_{\Delta x}U)_p
+	+\epsilon\biggl(-a_p\,\frac{g(x_{p+1})-2g(x_p)+g(x_{p-1})}{\Delta x^2}
+	+c_pg(x_p)\biggr)\\
+	&\le (\mathcal{L}_{\Delta x}U)_p
+		+\epsilon\bigl(-a_p\mu^2e^{\mu x_p}+c_pe^{\mu x_p}\bigr)
+	\le0-\epsilon(\mu^2-\|c\|_\infty)e^{\mu x_p}, 
+\end{align*}
+and by choosing $\mu>\|c\|_\infty$ we can ensure that 
+$(\mathcal{L}_{\Delta x}U)_p<0$ for~$1\le p\le P-1$.  By 
+Lemma~\ref{lem: discrete LU<0}, we conclude that
+\[
+U_p\le W_p\le W_p^+\le\max\{W_0^+,W_P^+\}
+	=\max\{U_0^++\epsilon,U_P^++\epsilon e^{\mu L}\}
+\]
+for $1\le p\le P-1$.  Since this inequality holds for any $\epsilon>0$, the 
+result follows.
+\end{proof}
+
+\begin{theorem}
+If $c_p\ge0$ and $(\mathcal{L}_{\Delta x}U)_p=f_p$ for $1\le p\le L$, then
+\[
+\max_{0\le p\le P}U_p\le\max\{U^+_0,U^+_P\}+\frac{L^2}{8a_{\min}}
+	\max_{1\le q\le P-1}f_q^+
+\]
+and
+\[
+\min_{0\le p\le P}U_p\ge\min\{U^+_0,U^+_P\}+\frac{L^2}{8a_{\min}}
+	\max_{1\le q\le P-1}f_q^-
+\]
+\end{theorem}
+\begin{proof}
+Let 
+\[
+W_p=\max\{U^+_0,U^+_P\}+V_p\max_{1\le q\le P-1}f_q^+
+\quad\text{where}\quad
+V_p=\frac{x_p(L-x_p)}{2a_{\min}}.
+\]
+Since the second-order central difference formula is exact for a quadratic 
+polynomial,
+\[
+\frac{V_{p+1}-2V_p+V_{p-1}}{\Delta x^2}=\frac{-1}{a_{\min}}
+\]
+and thus, noting that $V_p\ge0$, we conclude that
+\[
+(\mathcal{L}_{\Delta x}V)_p=1+c_pV_p\ge1\quad\text{for $1\le p\le P-1$.}
+\]
+It follows that
+\[
+(\mathcal{L}_{\Delta x}W)_p=\max\{U^+_0,U^+_P\}(\mathcal{L}_{\Delta x}1)_p
+	+\Bigl(\max_{1\le q\le P-1}f_q^+\Bigr)(\mathcal{L}_{\Delta x}V)_p
+	\ge\max_{1\le q\le P-1}f_q^+
+\]
+and so
+\[
+\bigl(\mathcal{L}_{\Delta x}(U-W)\bigr)_p=f_p-(\mathcal{L}_{\Delta x}W)_p
+	\le f_p-\max_{1\le q\le P-1}f_q^+\le0\quad\text{for $1\le p\le P-1$,}
+\]
+with
+\[
+(U-W)_0=U_0-\max{U_0^+,U_P^+}\le0
+\quad\text{and}\quad
+(U-W)_P=U_P-\max{U_0^+,U_P^+}\le0.
+\]
+By Theorem~\ref{thm: discrete max principle},
+\[
+U_p-W_p\le\max\{(U-W)_0^+,(U-W)_P^+\}\le0\quad\text{for $1\le p\le P-1$,}
+\]
+and the first inequality follows because
+\[
+U_p\le W_p\le\max\{U^+_0,U^+_P\}
+	+\biggl(\max_{0\le x\le L}\frac{x(L-x)}{2a_{\min}}\biggr)
+	\biggl(\max_{1\le q\le P-1}f_q^+\biggr). 
+\]
+The second follows because $\bigl(\mathcal{L}_{\Delta x}(-U)\bigr)_p=-f_p$,
+$(-U)_p^+=-U_p^-$~and $(-f)_p^+=-f_p^-$.
+\end{proof}
+
+
+
+
 
 \section{An error bound}

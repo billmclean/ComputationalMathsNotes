@@ -349,9 +349,9 @@ only fixed node is~$x_0$, so we put
 \quad\text{and}\quad\mathsf{n}_{M+1}=x_0.
 \]
 The $2\times(M+1)$ \emph{connectivity matrix} $[e_{pm}]$ is defined by
-\[
+\begin{equation}\label{eq: e pm def}
 e_{pm}=j\quad\text{iff}\quad\mathsf{n}^\brak{m}_p=\mathsf{n}_j;
-\]
+\end{equation}
 for example, if $M=6$ then
 \[
 [e_{pm}]=\begin{bmatrix}
@@ -414,10 +414,10 @@ that
     \quad\text{for all $\boldsymbol{V}\in\mathbb{R}^M$,}
 \]
 and therefore
-\[
+\begin{equation}\label{eq: A C f example}
 \bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
     =\gamma_L\boldsymbol{e}_M+\boldsymbol{f}.
-\]
+\end{equation}
 Now partition the matrices as 
 $\boldsymbol{A}=[\boldsymbol{A}'\quad\boldsymbol{A}'']$~and
 $\boldsymbol{B}=[\boldsymbol{B}'\quad\boldsymbol{B}'']$, where 
@@ -431,168 +431,239 @@ Since $U''=U_{M+1}=u_h(\mathsf{n}_{M+1})=u_h(0)=\gamma_0$, we conclude that
 =\gamma_L\boldsymbol{e}_M-(\boldsymbol{A}''+\boldsymbol{B}'')\gamma_0
     +\boldsymbol{f}.
 \]
-
-
-
-
-
-
-
+Algorithm~\ref{alg: assembly example} shows how the connectivity 
+matrix~$[e_{pm}]$ is used to the global load 
+vector~$\boldsymbol{f}$ can be assembled from the element load vectors, and 
+how the global stiffness and mass matrices $\boldsymbol{A}$~and $\boldsymbol{B}$ 
+can be assembled from the element mass and stiffness matrices.  In practice,
+$\boldsymbol{A}$~and $\boldsymbol{B}$ are constructed as \emph{sparse arrays}
+with an appropriate data structure.
 
 \begin{algorithm}
-\caption{Assemble the global load vector~$\boldsymbol{f}$.}
-\label{alg: load vector}
+\caption{Assemble the $\boldsymbol{A}$, $\boldsymbol{B}$~and $\boldsymbol{f}$
+from~\eqref{eq: A C f example}.}
+\label{alg: assembly example}
 \begin{algorithmic}
-\State Allocate storage for $\boldsymbol{f}=[f_1, f_2, \ldots, f_M]$.
-\For{$j=1:M+1$}
-\State $f_j=0$
+\State Allocate storage for $\boldsymbol{f}=[f_j]\in\mathbb{R}^M$,
+$\boldsymbol{A}=[a_{jk}]\in\mathbb{R}^{M\times(M+1)}$ and
+$\boldsymbol{B}=[b_{jk}]\in\mathbb{R}^{M\times(M+1)}$.
+\For{$j=1:M$}
+    \State $f_j=0$
+    \For{$k=1:M+1$}
+        \State $a_{jk}=0$ and $b_{jk}=0$
+    \EndFor
 \EndFor
 \For{$m=1:M$}
-\State Compute $\boldsymbol{f}^\brak{m}$
-\For{$p=1:2$}
-\State $j=e_{pm}$
-\If{$j\le M$}
-\State $f_j\gets f_j+f^\brak{m}_p$
-\EndIf
-\EndFor
+    \State Compute $\boldsymbol{f}^\brak{m}$, $\boldsymbol{A}^\brak{m}$ and
+           $\boldsymbol{C}^\brak{m}$
+    \For{$p=1:2$}
+        \State $j=e_{pm}$
+        \If{$j\le M$}
+            \State $f_j\gets f_j+f^\brak{m}_p$
+        \EndIf
+        \For{$q=1:2$}
+            \State $k=e_{qm}$
+            \State $a_{jk}\gets a_{jk}+a^\brak{m}_{pq}$
+            \State $c_{jk}\gets c_{jk}+c^\brak{m}_{pq}$
+        \EndFor
+    \EndFor
 \EndFor
 \end{algorithmic}
 \end{algorithm}
 
-
-
-
-\section{Classical and weak solutions}
-A \emph{classical solution}~$u$ of~\eqref{eq: model 1d} is a solution in the 
-obvious sense, meaning that $u$ is $C^2$ on~$(0,L)$ and continuous on~$[0,L]$,
-and satisfies the ODE and boundary condition.  We will now define the concept 
-of a \emph{weak solution}.
-
-The \emph{support} of a function~$v$, denoted by $\operatorname{supp}f$, is 
-the closure of the set of points~$x$ where $v(x)\ne0$. Let $\mathcal{D}(0,L)$ 
-denote the vector space of $C^\infty$ functions $v:[0,L]\to\mathbb{R}$ with the 
-property that $\operatorname{supp}v$ lies inside a closed subinterval 
-of~$(0,L)$.  This, in particular,
-it follows that $v(0)=0=v(L)$ for each~$v\in\mathcal{D}(0,L)$.
-
-\begin{definition}
-A function $u$ is a \emph{weak solution} of~\eqref{eq: model 1d} if 
-\begin{enumerate}
-\item $u$ is $C^1$ on~$[0,L]$,
-\item $u(0)=\gamma_0$ and $u(L)=\gamma_L$,
-\item for every $v\in\mathcal{D}(0,L)$,
+\begin{example}
+We will show that for the constant coefficients $a(x)=1$ and $c(x)=1$, the 
+element stiffness and mass matrices are simply
 \[
-\int_0^L u'(x)v'(x)\,dx=\int_0^Lf(x)v(x)\,dx.
+\boldsymbol{A}^\brak{m}=\frac{1}{h_m}\begin{bmatrix}1&-1\\ -1&1\end{bmatrix}
+\quad\text{and}\quad
+\boldsymbol{C}^\brak{m}=\frac{h_m}{6}\begin{bmatrix}2&1\\ 1&2\end{bmatrix}.
 \]
-\end{enumerate}
-\end{definition}
-
-We see from~\eqref{eq: int by parts} that every classical solution 
-of~\eqref{eq: model 1d} is also a weak solution.  To establish a partial 
-converse, we use the following result.
-
-\begin{lemma}
-Suppose that $f$ and $g$ are continuous, real-valued functions on~$[0,L]$.
-If
+In fact, since $(\psi^\brak{m}_1)'(x)=-1/h_m$ and 
+$(\psi^\brak{m}_2)'(x)=1/h_m$, we see that
 \[
-\int_0^L f(x)v(x)\,dx=\int_0^L g(x)v(x)\,dx
-	\quad\text{for every $v\in\mathcal{D}(0,L)$,}
+a^\brak{m}_{11}=a^\brak{m}_{22}
+	=\int_{x_{m-1}}^{x_m}\frac{1}{h_m^2}\,dx
+	=\frac{x_m-x_{m-1}}{h_m^2}=\frac{1}{h_m}
 \]
-then 
+and
 \[
-f(x)=g(x)\quad\text{for $0\le x\le L$.}
+a^\brak{m}_{12}=a^\brak{m}_{21}
+	=\int_{x_{m-1}}^{x_m}\frac{-1}{h_m^2}\,dx=\frac{-1}{h_m}.
 \]
-\end{lemma}
-
-Let $V=C([0,L])$ denote the vector space consisting of all continuous functions 
-from~$[0,L]$ to~$\mathbb{R}$.  Suppose that $f$, $g\in V$ have the property that
-\begin{equation}\label{eq: int fv gv}
-\int_0^Lf(x)v(x)\,dx=\int_0^Lg(x)v(x)\,dx
-\end{equation}
-for all $v\in V$. It follows that $\int_0^L(f-g)v\,dx=0$ for all $v\in V$, and 
-in particular by choosing $v=f-g$ we see that $\int_0^L(f-g)^2\,dx=0$ so $f=g$.
-
-Let $V_0=\{\,v\in C([0,L]):v(0)=0=v(L)\,\}$ denote the subspace of~$V$ 
-consisting of the continuous functions that vanish at both ends of the interval.
-Suppose once again that $f$, $g\in V$ but now assume \eqref{eq: int fv gv} 
-only for all $v\in V_0$.  The previous argument does not work, because $v=f-g$ 
-belongs to~$V_0$ only in the special case when $f(0)=g(0)$ and $f(L)=g(L)$.  
-Nevertheless, we can show the following.
-
-\begin{theorem}\label{thm: int fv gv}
-Define $V$ and $V_0$ as above. If $f$, $g\in V$ satisfy \eqref{eq: int fv gv} 
-for all $v\in V_0$, then $f=g$ on~$[0,L]$.
-\end{theorem}
-\begin{proof}
-Consider an arbitrary interior point~$a\in(0,L)$ and choose~$h_0>0$ 
-such that $0<a-h_0<a+h_0<L$.  For $0<h<h_0$, let
+For the element mass matrix,
 \[
-v(x)=\begin{cases}
-(x-a+h)/h^2,&a-h<x<a,\\
-1/h,&x=a,\\
-(a+h-x)/h^2,&a<x<a+h,\\
-0,&\text{otherwise,}
-\end{cases}
+c^\brak{m}_{11}=\int_{x_{m-1}}^{x_m}\biggl(\frac{x_m-x}{h_m}\biggr)^2\,dx
+	=\biggl[-\frac{(x_m-x)^3}{3h_m^2}\biggr]_{x_{m-1}}^{x_m}
+	=\frac{(x_m-x_{m-1})^3}{3h_m^2}=\frac{h_m}{3}
 \]
-and observe that $v$ is continuous on~$[0,L]$ with $v(0)=0=v(L)$, that is,
-$v\in V_0$.  Also, $v\ge0$ on~$[0,L]$, and
+and similarly
 \[
-\int_0^Lv(x)\,dx=1.
+c^\brak{m}_{22}=\int_{x_{m-1}}^{x_m}\biggl(\frac{x-x_{m-1}}{h_m}\biggr)^2\,dx
+	=\biggl[-\frac{(x-x_{m-1})^3}{3h_m^2}\biggr]_{x_{m-1}}^{x_m}
+	=\frac{(x_m-x_{m-1})^3}{3h_m^2}=\frac{h_m}{3},
 \]
-Therefore,
-\[
-f(a)-\int_0^Lf(x)v(x)\,dx=f(a)\int_0^Lv(x)\,dx-\int_0^Lf(x)v(x)\,dx
-	=\int_0^L\bigl[f(a)-f(x)]v(x)\,dx,
-\]
-and since $v$ vanishes outside the subinterval~$[a-h,a+h]$,
-\[
-f(a)-\int_0^Lf(x)v(x)\,dx=\int_{a-h}^{a+h}\bigl[f(a)-f(x)]v(x)\,dx.
-\]
-The function~$f$ is continuous, so given $\epsilon>0$ there is a $\delta_1>0$
-such that $|f(x)-f(a)|<\epsilon$ for $a-\delta_1<x<a+\delta_1$.  
-If $0<h<\min(h_0,\delta_1)$ then
-\[
-\biggl|f(a)-\int_0^Lf(x)v(x)\,dx\biggr|
-	\le\int_{a-h}^{a+h}\bigl|f(a)-f(x)|v(x)\,dx
-	\le\epsilon\int_{a-h}^{a+h}v(x)\,dx=\epsilon.
-\]
-Similarly, there is a $\delta_2>0$ such that if $0<h<\min(h_0,\delta_2)$ then
-\[
-\biggl|g(a)-\int_0^Lg(x)v(x)\,dx\biggr|\le\epsilon.
-\]
-Therefore, using \eqref{eq: int fv gv}, if $0<h<\min(h_0,\delta_1,\delta_2)$ 
-then
+whereas, integrating by parts,
 \begin{align*}
-|f(a)-g(a)|&=\biggl|f(a)-\int_0^Lf(x)v(x)\,dx+\int_0^Lg(x)v(x)\,dx-g(a)\biggr|\\
-	&\le\biggl|f(a)-\int_0^Lf(x)v(x)\,dx\biggr|
-	+\biggl|g(a)-\int_0^Lg(x)v(x)\,dx\biggr|\le2\epsilon,
+c^\brak{m}_{12}&=c^\brak{m}_{21}=\int_{x_{m-1}}^{x_m}
+	\biggl(\frac{x_m-x}{h_m}\biggr)\biggl(\frac{x-x_{m-1}}{h_m}\biggr)\,dx\\
+	&=\frac{1}{h_m^2}\biggl(
+	\biggl[(x_m-x)\frac{(x-x_{m-1})^2}{2}\biggr]_{x_{m-1}}^{x_m}
+	-\int_{x_{m-1}}^{x_m}(-1)\frac{(x-x_{m-1})^2}{2}\,dx\biggr)\\
+	&=\frac{1}{2h_m^2}\int_{x_{m-1}}^{x_m}(x-x_{m-1})^2\,dx
+	=\frac{1}{2h_m^2}\biggl[\frac{(x-x_{m-1})^3}{3}\biggr]_{x_{m-1}}^{x_m}
+	=\frac{h_m}{6}.
 \end{align*}
-implying that $f(a)=g(a)$.  Hence, $f=g$ on~$(0,L)$.  In fact, $f=g$ on~$[0,L]$ 
-because both functions are continuous at the end points.
-\end{proof}
+\end{example}
 
-Now consider our model two-point boundary-value problem~\eqref{eq: model 1d},
-and suppose that $u''$ is continuous on~$[0,L]$.  Theorem~\ref{thm: int fv gv}
-shows that $-u''=f$ on~$(0,L)$ if and only if
+\begin{example}
+Consider a uniform grid with $M=4$ subintervals, each of length~$h_m=1$,
+and suppose $a(x)=1=c(x)$. Assembling the $5\times4$ stiffness 
+matrix~$\boldsymbol{A}=[\boldsymbol{A}'\quad\boldsymbol{A}'']$ amounts 
+to computing
 \[
--\int_0^L u''(x)v(x)\,dx=\int_0^Lf(x)v(x)\,dx\quad\text{for all $v\in V_0$.}
+\left[
+\begin{array}{cccc|c}1&0&0&0&-1\\0&0&0&0&0\\0&0&0&0&0\\0&0&0&0&0\end{array}
+\right]+\left[
+\begin{array}{cccc|c}1&-1&0&0&0\\-1&1&0&0&0\\0&0&0&0&0\\0&0&0&0&0\end{array}
+\right]+\left[
+\begin{array}{cccc|c}0&0&0&0&0\\0&1&-1&0&0\\0&-1&1&0&0\\0&0&0&0&0\end{array}
+\right]+\left[
+\begin{array}{cccc|c}0&0&0&0&0\\0&0&0&0&0\\0&0&1&-1&0\\0&0&-1&1&0\end{array}
+\right],
 \]
-If $v'$ exists and is continuous on~$[0,L]$, then on the left-hand side we can 
-integrate by parts to obtain
+so
 \[
--\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx,
+\boldsymbol{A}=\left[\begin{array}{cccc|c}
+2&-1&0&0&-1\\ -1&2&-1&0&0\\ 0&-1&2&-1&0\\ 0&0&-1&1&0\end{array}\right],\qquad
+\boldsymbol{A}'=\begin{bmatrix}
+2&-1&0&0\\ -1&2&-1&0\\ 0&-1&2&-1\\ 0&0&-1&1\end{bmatrix},\qquad
+\boldsymbol{A}''=\begin{bmatrix}-1\\ 0\\ 0\\ 0\end{bmatrix}.
 \]
-and since $v(0)=0=v(L)$,
+Similarly, we find that the mass 
+matrix~$\boldsymbol{C}=[\boldsymbol{C}'\quad\boldsymbol{C}'']$ is given by
+\[
+\boldsymbol{C}=\frac{1}{6}\left[\begin{array}{cccc|c}
+4&1&0&0&1\\ 1&4&1&0&0\\ 0&1&4&1&0\\ 0&0&1&2&0\end{array}\right],\qquad
+\boldsymbol{C}'=\frac{1}{6}\begin{bmatrix}
+4&1&0&0\\ 1&4&1&0\\ 0&1&4&1\\ 0&0&1&2\end{bmatrix},\qquad
+\boldsymbol{C}''=\frac{1}{6}\begin{bmatrix}1\\ 0\\ 0\\ 0\end{bmatrix}.
+\]
 
 
-\section{Piecewise-linear functions}
 
-\section{The finite element solution}
 
-\section{Optimality property}
 
-\section{Accuracy of piecewise-linear approximation}
+\end{example}
 
-\section{Natural vs essential boundary conditions}
 
-\section{Sturm--Liouville problem}
+\section{Quadratic elements}
+
+Let us again consider the self-adjoint, two-point boundary-value 
+problem~\eqref{eq: self-adjoint mixed} but now let $V_h$ denote the vector 
+space consisting of the continuous, piecewise-\emph{quadratic} functions with 
+respect to the grid points~$x_k$.  Thus, a continuous 
+function~$v:[0,L]\to\mathbb{R}$ belongs to~$V_h$ iff for each 
+element~$[x_{m-1},x_m]$ the restriction~$v|_{[x_{m-1},x_m]}$ is a polynomial of 
+degree at most~$2$.  We define the nodes
+\[
+\mathsf{n}^\brak{m}_1=x_{m-1},\qquad
+\mathsf{n}^\brak{m}_2=\tfrac12(x_{m-1}+x_m),\qquad
+\mathsf{n}^\brak{m}_3=x_m,
+\]
+and corresponding quadratic shape functions
+\begin{align*}
+\psi^\brak{m}_1(x)
+	&=2h_m^{-2}(x-\mathsf{n}^\brak{m}_2)(x-\mathsf{n}^\brak{m}_3),\\
+\psi^\brak{m}_2(x)
+	&=4h_m^{-2}(x-\mathsf{n}^\brak{m}_1)(\mathsf{n}^\brak{m}_3-x),\\
+\psi^\brak{m}_3(x)
+	&=2h_m^{-2}(x-\mathsf{n}^\brak{m}_1)(x-\mathsf{n}^\brak{m}_2),
+\end{align*}
+satisfying
+\[
+\psi^\brak{m}_p(\mathsf{n}^\brak{m}_q)=\delta_{pq}.
+\]
+The global enumeration of the free nodes is
+\[
+\mathsf{n}_{2m-1}=\tfrac12(x_{m-1}+x_m)
+\quad\text{and}\quad
+\mathsf{n}_{2m}=x_m\quad\text{for $1\le m\le M$,}
+\]
+and the fixed node is $\mathsf{n}_{2M+1}=x_0$.  The connectivity 
+matrix~$[e_{pm}]$ is now $3\times M$, with $e_{pm}$ again given 
+by~\eqref{eq: e pm def}.  For example, if $M=6$ then 
+\[
+[e_{pm}]=\begin{bmatrix}
+13&2&4&6&8&10\\
+ 1&3&5&7&9&11\\
+ 2&4&6&8&10&12          
+\end{bmatrix}.
+\]
+
+We define the \emph{reference element}~$[0,1]$ with \emph{reference nodes}
+\[
+\mathsf{n}_1=0,\qquad\mathsf{n}_2=\frac{1}{2},\qquad\mathsf{n}_3=1,
+\]
+and corresponding quadratic shape functions
+\begin{equation}\label{eq: quadratic shape funcs 1d}
+\Psi_1(\xi)=2(\xi-\tfrac12)(\xi-1),\qquad
+\Psi_2(\xi)=4\xi(1-\xi),\qquad
+\Psi_3(\xi)=2\xi(\xi-\tfrac12),
+\end{equation}
+satisfying $\Psi_p(\mathsf{n}_q)=\delta_{pq}$.  It is easy to verify that
+\[
+\Psi_p(\xi)=\psi^\brak{m}_p(x)\quad
+	\text{if $x=x_{m-1}+\xi h_m$,}\quad\text{for $0\le\xi\le1$,}
+\]
+and since $dx/d\xi=h_m$, the chain rule implies that
+\[
+\Psi'_p(\xi)=h_m^{-1}(\psi^\brak{m}_p)'(x).
+\]
+Thus, the entries of the $3\times3$ element stiffness matrix are given by
+\begin{equation}\label{eq: a mpq reference 1d}
+a^\brak{m}_{pq}=\frac{1}{h_m}\int_0^1a(x_{m-1}+\xi h_m)
+	\Psi'_q(\xi)\Psi'_p(\xi)\,d\xi,
+\end{equation}
+and those of the $3\times3$ element mass matrix by
+\begin{equation}\label{eq: c mpq reference 1d}
+c^\brak{m}_{pq}=h_m\int_0^1c(x_{m-1}+\xi h_m)
+	\Psi_q(\xi)\Psi_p(\xi)\,d\xi.
+\end{equation}
+
+\begin{example}
+If $a(x)=1$~and $c(x)=1$, then
+\begin{equation}\label{eq: element matrices quadratic 1d}
+\boldsymbol{A}^\brak{m}=\frac{1}{3h_m}\begin{bmatrix}
+ 7&-8& 1\\
+-8&16&-8\\
+ 1&-8& 7\end{bmatrix}
+\quad\text{and}\quad
+\boldsymbol{C}^\brak{m}=\frac{h_m}{30}\begin{bmatrix}
+ 4& 2&-1\\
+ 2&16& 2\\
+-1& 2& 4 \end{bmatrix}
+\end{equation}
+\end{example}
+
+
+\section{Accuracy of piecewise-polynomial approximation}
+
+\section{Sturm--Liouville problems}
+
+
+\section{Exercises}
+\begin{Exercise}
+Recall the formulae \eqref{eq: a mpq reference 1d}~and
+\eqref{eq: c mpq reference 1d} for the element stiffness and mass matrices using 
+the quadratic shape functions~\eqref{eq: quadratic shape funcs 1d} on the 
+reference element~$[0,1]$. 
+\Question Verify that $\Psi_3(1-\xi)=\Psi_1(\xi)$ and 
+$\Psi_2(1-\xi)=\Psi_2(\xi)$.
+\Question Deduce that
+$a^\brak{m}_{11}=a^\brak{m}_{33}$, $a^\brak{m}_{12}=a^\brak{m}_{32}$,
+$c^\brak{m}_{11}=c^\brak{m}_{33}$, $c^\brak{m}_{12}=c^\brak{m}_{32}$.
+\Question Verify the formulae \eqref{eq: element matrices quadratic 1d}
+for the element stiffness and mass matrices when $a(x)=1$~and $c(x)=1$.
+\end{Exercise}
+
