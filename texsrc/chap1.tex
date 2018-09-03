@@ -426,11 +426,11 @@ suggest the following discrete approximation to the ODE~$\mathcal{L}u=f(x)$,
 where we have used the abbreviations $a_p=a(x_p)$, $b_p=b(x_p)$, $c_p=c(x_p)$
 and $f_p=f(x_p)$.  The boundary conditions in~\eqref{eq: two-point bvp} can be 
 approximated by
-\[
+\begin{equation}\label{eq: bc finite diff 1d}
 \alpha_0\,\frac{U_1-U_{-1}}{2\,\Delta x}+\beta_0U_0=\gamma_0
 \quad\text{and}\quad
 \alpha_L\,\frac{U_{P+1}-U_{P-1}}{2\,\Delta x}+\beta_LU_P=\gamma_L.
-\]
+\end{equation}
 There are four cases to consider.
 \begin{enumerate}
 \item If $\alpha_0=0$ and $\alpha_L=0$, then the unknowns are
@@ -483,10 +483,10 @@ a_{P-1}\,\frac{-U_{P-2}+2U_{P-1}}{\Delta x^2}
 	\biggr)\,\frac{\gamma_L}{\beta_L}.
 \]
 For example, if $P=6$ we obtain a $5\times5$ linear system
-\[
+\begin{equation}\label{eq: finite diff matrix 1d}
 \boldsymbol{A}\boldsymbol{U}+\boldsymbol{B}\boldsymbol{U}
 	+\boldsymbol{C}\boldsymbol{U}=\boldsymbol{f}+\boldsymbol{g},
-\]
+\end{equation}
 where
 \begin{gather*}
 \boldsymbol{A}=\frac{1}{\Delta x^2}\begin{bmatrix}
@@ -522,13 +522,6 @@ g_5=\biggl(\frac{a_{P-1}}{\Delta x^2}-\frac{b_{P-1}}{2\,\Delta x}
 	\biggr)\,\frac{\gamma_L}{\beta_L}.
 \]
 
-
-
-
-
-
-
-
 \section{Maximum principle}
 
 \begin{lemma}\label{lem: Lu<0}
@@ -551,7 +544,7 @@ $u'(x_0)=0$~and $u''(x_0)\le0$ so
 contradicting our assumption that $\mathcal{L}u<0$ on~$(0,L)$.
 \end{proof}
 
-\begin{theorem}
+\begin{theorem}\label{thm: max principle 1d}
 Assume that $u$ is continuous on the closed interval~$[0,L]$ and is $C^2$ on 
 the open interval~$(0,L)$. If $c\ge0$ and $\mathcal{L}u\le0$ on~$(0,L)$, then
 \[
@@ -576,7 +569,7 @@ for~$0<x<L$.  Since this inequality holds for any~$\epsilon>0$, the result
 follows.
 \end{proof}
 
-\begin{theorem}\label{thm: max principle}
+\begin{theorem}\label{thm: max min 1d}
 Assume that $u$ is continuous on the closed interval~$[0,L]$ and is $C^2$ on 
 the open interval~$(0,L)$. If $c\ge0$ and $\mathcal{L}u=f$ on~$(0,L)$, then
 \[
@@ -608,7 +601,7 @@ for $0<x<L$, so
 \mathcal{L}(u-w)=f-c(x)\max\{u^+(0),u^+(L)\}-(\mathcal{L}v)\max_{[0,L]}f^+
 	\le0\quad\text{on $(0,L)$.}
 \]
-By Theorem~\ref{thm: max principle},
+By Theorem~\ref{thm: max principle 1d},
 \[
 u(x)-w(x)\le\max\{(u-w)^+(0),(u-w)^+(L)\}\quad\text{for $0<x<L$,}
 \]
@@ -636,18 +629,20 @@ the case when $\alpha_0=0=\alpha_L$ and $\beta_0=1=\beta_L$:
 \mathcal{L}u=f\quad\text{on $(0,L)$,}
 	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$.}
 \end{equation}
-As an immediate consequence of Theorem~\ref{thm: max principle} we have the 
+As an immediate consequence of Theorem~\ref{thm: max min 1d} we have the 
 following \emph{a priori} estimate.
 
 \begin{theorem}\label{thm: Lu=f apriori infty}
-Any solution~$u$ of~\eqref{eq: Lu=f Dirichlet} satisfies
+If $c\ge0$ on~$(0,L)$, then any solution~$u$ of~\eqref{eq: Lu=f Dirichlet} 
+satisfies
 \[
 \|u\|_\infty\le\max\{|\gamma_0|,|\gamma_L|\}+\cosh(\mu L/2)\|f\|_\infty.
 \]
 \end{theorem}
 
-Using Theorem~\ref{thm: Lu=f apriori infty} one can show that the 
-problem~\eqref{eq: Lu=f Dirichlet} is \emph{well-posed}, that is,
+Using Theorem~\ref{thm: Lu=f apriori infty} it can be shown that
+the two-point boundary-value problem~\eqref{eq: Lu=f Dirichlet} is 
+\emph{well-posed}, that is, 
 \begin{enumerate}
 \item a unique solution exists for each choice of the data $f$, $\gamma_0$~and 
 $\gamma_L$, and 
@@ -658,7 +653,7 @@ $\tilde\gamma_0$ and $\tilde\gamma_L$, and let $\tilde u$ denote the solution
 of the resulting perturbed problem,
 \[
 \mathcal{L}\tilde u=\tilde f\quad\text{on $(0,L)$,}
-	\quad\text{with $\tilde u(0)=\tilde\gamma_0$ 
+    \quad\text{with $\tilde u(0)=\tilde\gamma_0$ 
 and $\tilde u(L)=\tilde\gamma_L$.}
 \]
 If we denote the changes in the solution and the data by
@@ -676,34 +671,34 @@ solution~$u$.  This solution is continuous on~$[0,L]$ and is $C^2$ on~$(0,L)$.
 Moreover, when the problem is perturbed as described above, 
 \[
 \|\delta u\|_\infty\le\max\{|\delta\gamma_0|,|\delta\gamma_L|\}
-	+\cosh(\mu L/2)\|\delta f\|_\infty.
+    +\cosh(\mu L/2)\|\delta f\|_\infty.
 \]
 \end{theorem}
 \begin{proof}
 We will not prove the hard part, namely existence.  Since the $\mathcal{L}$ is 
 linear, the proof of uniqueness follows easily from 
-Corollary~\ref{cor: Lu=f apriori infty}.  In fact, suppose that $u_1$~and $u_2$ 
+Theorem~\ref{thm: Lu=f apriori infty}.  In fact, suppose that $u_1$~and $u_2$ 
 are solutions, that is,
 \[
 \mathcal{L}u_1=f=\mathcal{L}u_2\quad\text{on $(0,L)$,}
-	\quad\text{with $u_1(0)=\gamma_0=u_2(0)$ and $u_1(L)=\gamma_L=u_2(L)$.}
+    \quad\text{with $u_1(0)=\gamma_0=u_2(0)$ and $u_1(L)=\gamma_L=u_2(L)$.}
 \]
 The difference $v=u_1-u_2$ satisfies
 \[
 \mathcal{L}v=\mathcal{L}(u_1-u_2)=\mathcal{L}u_1-\mathcal{L}u_2=f-f=0
-	\quad\text{on $(0,L)$},
+    \quad\text{on $(0,L)$},
 \]
 with $v(0)=u_1(0)-u_2(0)=\gamma_0-\gamma_0=0$ and
 $v(L)=u_1(L)-u_2(L)=\gamma_L-\gamma_L=0$, so $\|v\|_\infty\le0$ by 
-Corollary~\ref{cor: Lu=f apriori infty}, which means that $u_1=u_2$ on~$[0,L]$.
+Theorem~\ref{thm: Lu=f apriori infty}, which means that $u_1=u_2$ on~$[0,L]$.
 
 Similarly, since $\mathcal{L}$ is linear,
 \[
 \mathcal{L}\delta u=\delta f\quad\text{on $(0,L)$,}
-	\quad\text{with $\delta u(0)=\delta\gamma_0$ 
+    \quad\text{with $\delta u(0)=\delta\gamma_0$ 
 and $\delta u(L)=\delta\gamma_L$,}
 \]
-and Corollary~\ref{cor: Lu=f apriori infty} implies the desired estimate 
+and Theorem~\ref{thm: Lu=f apriori infty} implies the desired estimate 
 for~$\|\delta u\|_\infty$.
 \end{proof}
 
@@ -711,23 +706,26 @@ for~$\|\delta u\|_\infty$.
 
 We will now establish a maximum principle for a finite difference approximation 
 to the two-point boundary-value problem~\eqref{eq: two-point bvp} in the case
-\[
+\begin{equation}\label{eq: discrete max assumptions}
 b(x)=0,\qquad\alpha_0=0,\quad\beta_0=1,\quad\alpha_L=0,\quad\beta_L=1.
-\]
-It will be convenient to introduce the notation
+\end{equation}
+so that $(\mathcal{L}u)(x)=-a(x)u''(x)+c(x)u(x)=f(x)$ for~$0<x<L$, with
+$u(0)=\gamma_0$~and $u(L)=\gamma_L$. It will be convenient to introduce the 
+notation
 \[
 (\mathcal{L}_{\Delta x}U)_p=-a_p\,\frac{U_{p+1}-2U_p+U_{p-1}}{\Delta x^2}
 	+c_pU_p\quad\text{for $1\le p\le P-1$,}
 \]
 where, as before, $a_p=a(x_p)$ and $c_p=c(x_p)$. Our finite difference method 
 can then be written as
-\[
+\begin{equation}\label{eq: finite diff Dirichlet 1d}
 (\mathcal{L}_{\Delta x}U)_p=f_p\quad\text{for $1\le p\le P-1$,}\quad
 	\text{with $U_0=\gamma_0$ and $U_P=\gamma_L$.}
-\]
+\end{equation}
 The following discrete analogue of Theorem~\ref{lem: Lu<0} holds.
 
 \begin{lemma}\label{lem: discrete LU<0}
+Assume \eqref{eq: discrete max assumptions}.
 If $c_p\ge0$ and $(\mathcal{L}_{\Delta x}U)_p<0$ for~$1\le p\le P-1$, then
 the is no $p^*$ in the range $1\le p^*\le P-1$ for which
 \[
@@ -745,9 +743,10 @@ If such a $p^*$ exists, then $U_{p^*+1}+U^{p^*-1}\le 2U_{p^*}$ so
 contradicting the second hypothesis of the lemma.
 \end{proof}
 
-A discrete analogue of Theorem~\ref{thm: max principle} then follows.
+A discrete analogue of Theorem~\ref{thm: max principle 1d} then follows.
 
 \begin{theorem}\label{thm: discrete max principle}
+Assume \eqref{eq: discrete max assumptions}.
 If $c_p\ge0$ and $(\mathcal{L}_{\Delta x}U)_p\le0$ for $1\le p\le P-1$, then 
 \[
 U_p\le\max\{U_0^+,U_P^+\}\quad\text{for $1\le p\le P-1$.}
@@ -793,7 +792,10 @@ for $1\le p\le P-1$.  Since this inequality holds for any $\epsilon>0$, the
 result follows.
 \end{proof}
 
+Next is a discrete version of Theorem~\ref{thm: max min 1d}.
+
 \begin{theorem}
+Assume \eqref{eq: discrete max assumptions}.
 If $c_p\ge0$ and $(\mathcal{L}_{\Delta x}U)_p=f_p$ for $1\le p\le L$, then
 \[
 \max_{0\le p\le P}U_p\le\max\{U^+_0,U^+_P\}+\frac{L^2}{8a_{\min}}
@@ -852,8 +854,40 @@ The second follows because $\bigl(\mathcal{L}_{\Delta x}(-U)\bigr)_p=-f_p$,
 $(-U)_p^+=-U_p^-$~and $(-f)_p^+=-f_p^-$.
 \end{proof}
 
-
-
-
+\begin{theorem}
+Assume \eqref{eq: discrete max assumptions}. If $c\ge0$ on~$(0,L)$, then the
+finite difference equations~\eqref{eq: finite diff Dirichlet 1d} has a unique
+solution~$U_p$, and
+\[
+\max_{0\le p\le P}|U_p|\le\max\{|\gamma_0|,|\gamma_L|\}
+    +\frac{L^2}{8a_{\min}}\max_{1\le q\le P-1}|f_q|.
+\]
+\end{theorem}
+\begin{proof}
+The \emph{a priori} estimate for~$U_p$ follows at once from 
+Theorem~\ref{thm: max min 1d}.  To prove existence and uniqueness, we write the 
+finite difference equations in matrix form, as 
+in~\eqref{eq: finite diff matrix 1d} except that 
+now $\boldsymbol{B}=\boldsymbol{0}$ so
+\[
+(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}=\boldsymbol{f}+\boldsymbol{g}.
+\]
+The \emph{a priori} estimate shows that if $f_p=0$ for~$1\le p\le P-1$ and 
+$\gamma_0=0=\gamma_L$, then $U_p=0$ for~$0\le p\le P$.  In other words if 
+$\boldsymbol{f}=\boldsymbol{0}=\boldsymbol{g}$, then 
+$\boldsymbol{U}=\boldsymbol{0}$.  Thus, the homogeneous linear system admits 
+only the trivial solution, which implies that the 
+matrix~$\boldsymbol{A}+\boldsymbol{C}$ is non-singular and so the linear system 
+is uniquely solvable for any $f_p$, $\gamma_0$~and $\gamma_L$.
+\end{proof}
 
 \section{An error bound}
+
+The finite difference method defined by \eqref{eq: Lu=f finite diff}~and 
+\eqref{eq: bc finite diff 1d} is said to be \emph{stable} if there is a 
+constant~$C$ --- independent of $f_p$, $\gamma_0$, $\gamma_L$~and $\Delta x$
+--- such that
+\[
+\max_{0\le p\le P}|U_p|\le C\Bigl(|\gamma_0|+\gamma_L|
+    +\max_{1\le p\le P-1} |f_p|\Bigr).
+\]
