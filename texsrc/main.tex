@@ -2,7 +2,7 @@
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath,amsthm,amsfonts}
 \usepackage{algorithm,algpseudocode}
-\usepackage{exercise}
+\usepackage{answers}
 \usepackage{hyperref}
 
 \title{Numerical Methods for \\
@@ -17,16 +17,25 @@ Partial Differential Equations}
 \newtheorem{example}[theorem]{Example}
 \newtheorem{definition}[theorem]{Definition}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcounter{exno}[chapter]
+\renewcommand{\Currentlabel}{\theexno}
+\newcommand{\exercise}{\refstepcounter{exno}\paragraph{\theexno.}}
+\Newassociation{ans}{answer}{ansfile}
+\newenvironment{Exercises}{\section{Exercises}%
+\Writetofile{ansfile}{\protect\section*{Chapter \thechapter}}}{\relax}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\brak}[1]{{\langle#1\rangle}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \maketitle
 \tableofcontents
+\Opensolutionfile{ansfile}
 \include{chap1}
 \include{chap2}
 \include{chap3}
 \include{chap4}
 \include{chap5}
 \include{chap6}
+\Closesolutionfile{ansfile}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
