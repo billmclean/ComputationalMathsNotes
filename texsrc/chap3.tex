@@ -1,9 +1,137 @@
 \chapter[Finite differences for parabolic problems]{Finite differences for \\
 parabolic problems in 1D}
-
-\section{Diffusion equation}
+Consider the following \emph{initial-boundary value problem} for~$u=u(x,t)$,
+\begin{equation}\label{eq: heat ivp 1d}
+\begin{aligned}
+u_t-au_{xx}&=f(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
+u&=\gamma_0&&\text{at $x=0$, for $0<t<T$,}\\
+u&=\gamma_L&&\text{at $x=L$, for $0<t<T$,}\\
+u&=u_0(x)&&\text{for $0<x<L$ when $t=0$,}
+\end{aligned}
+\end{equation}
+where $u_t=\partial u/\partial t$ and $u_{xx}=\partial^2u/\partial x^2$.  For 
+simplicity, we assume that the coefficient~$a$ is a positive constant.  The 
+problem~\eqref{eq: heat ivp 1d} provides a model of heat in 1D, where $u(x,t)$ 
+is the temperature at position~$x$ and time~$t$.  The coefficient~$a>0$ 
+is the \emph{thermal conductivity}: the value of~$a$ will be large for a 
+material that conducts heat well, whereas $a$ will be small a material that 
+conducts heat poorly.  The \emph{source term}~$f(x,t)$ gives the density of any 
+heat sources in the material, the \emph{boundary conditions} specify the 
+temperatures $\gamma_0$~and $\gamma_L$ at the two edges of the spatial domain, 
+and the \emph{initial condition} gives the temperature field~$u_0(x)$ 
+when~$t=0$.  In this 1D model, the temperature does not vary in the $y$~and $z$ 
+directions.
 
 \section{Separation of variables}
+
+Associated with~\eqref{eq: heat ivp 1d} is the \emph{steady-state} problem 
+for~$u^\infty=u^\infty(x)$ satisfying
+\[
+-a(u^\infty)''=f^\infty(x)\quad\text{for $0<x<L$,}\quad
+    \text{with $u^\infty(0)=\gamma_0$ and $u(L)=\gamma_L$,}
+\]
+where we assume that $f(x,t)$ tends to a steady-state 
+limit~$f^\infty(x)$ as~$t\to\infty$.  By noting that 
+$-(u^\infty)''=f^\infty(x)/a$, and recalling the 
+formula~\eqref{eq: model 1d exact soln}, we conclude 
+\[
+u^\infty(x)=\frac{L-x}{L}\biggl(
+    \gamma_0+\frac{1}{a}\int_0^x yf^\infty(y)\,dy\biggr)
+    +\frac{x}{L}\biggl(\gamma_L+\frac{1}{a}\int_x^L(L-y)f(y)\,dy\biggr)
+\]
+for $0\le x\le L$.  The difference $v(x,t)=u(x,t)-u^\infty(x)$ describes the 
+\emph{transient behaviour} of the system, and satisfies
+\begin{equation}\label{eq: heat ivp homog 1d}
+\begin{aligned}
+v_t-av_{xx}&=g(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
+v&=0&&\text{at $x=0$, for $0<t<T$,}\\
+v&=0&&\text{at $x=L$, for $0<t<T$,}\\
+v&=v_0(x)&&\text{for $0<x<L$ when $t=0$,}
+\end{aligned}
+\end{equation}
+where $g(x,t)=f(x,t)-f^\infty(x)$ and $v_0(x)=u_0(x,0)-u^\infty(x)$.  In this 
+way, it suffices to solve a problem with \emph{homogeneous boundary conditions}.
+
+Associated with the time-dependent problem~\eqref{eq: heat ivp homog 1d} is the 
+Sturm--Liouville \emph{eigenproblem},
+\[
+-av''=\lambda v\quad\text{for $0<x<L$,}\quad\text{with $v(0)=0=v(L)$,}
+\]
+which has only the trivial solution~$v(x)\equiv0$ unless $\lambda$ is one of 
+the \emph{eigenvalues} 
+\[
+\lambda_n=a\biggl(\frac{n\pi}{L}\biggr)^2\quad\text{for $n\in\{1,2,3,\ldots\}$.}
+\]
+When $\lambda=\lambda_n$, the solution~$v$ is a constant multiple of the 
+corresponding \emph{eigenfunction}
+\[
+\phi_n(x)=\sin\frac{n\pi}{L}\,x.
+\]
+The eigenfunctions are \emph{orthogonal} with respect to the 
+\emph{inner product}
+\[
+\langle f,g\rangle=\int_0^Lf(x)g(x)\,dx,
+\]
+that is,
+\[
+\langle\phi_n,\phi_k\rangle=0\quad\text{if $n\ne k$,}
+\]
+and their 2-norms are given by
+\[
+\|\phi_n\|^2=\langle\phi_n,\phi_n\rangle=\frac{L}{2}.
+\]
+
+Given a square-integrable function~$f(x)$, we define the 
+\emph{Fourier sine coefficients}
+\[
+\hat f_n=\frac{\langle f,\phi_n\rangle}{\|\phi_n\|^2}
+    =\frac{2}{L}\int_0^Lf(x)\sin\biggl(\frac{n\pi}{L}\,x\biggr)\,dx
+    \quad\text{for $n\in\{1,2,3,\ldots\}$.}
+\]
+The \emph{completeness} of the eigenfunctions means that the Fourier sine series
+\[
+Sf(x)=\sum_{n=1}^\infty\hat f_n\sin\frac{n\pi}{L}\,x
+\]
+converges to~$f(x)$ in the \emph{mean-square sense}.  The Fourier coefficients 
+of~$v(x,t)$ are functions of~$t$,
+\[
+\hat v_n(t)=\langle u(\cdot,t),\phi_n\rangle
+    =\frac{2}{L}\int_0^Lu(x,t)\sin\biggl(\frac{n\pi}{L}\,x\biggr)\,dx,
+\]
+and formal term-by-term differentiation of the Fourier expansion of~$v$ gives
+\[
+v_t(x,t)=\frac{\partial}{\partial t}\sum_{n=1}^\infty\hat v_n(t)\phi_n(x)
+    =\sum_{n=1}^\infty\frac{d\hat v_n}{dt}\,\phi_n(x)
+\]
+and
+\[
+-av_{xx}=-a\,\frac{\partial^2}{\partial x^2}
+    \sum_{n=1}^\infty\hat v_n(t)\phi_n(x)
+    =\sum_{n=1}^\infty\hat v_n(t)\bigl(-a\phi_n''(x)\bigr)
+    =\sum_{n=1}^\infty\hat v_n(t)\bigl(\lambda_n\phi_n(x)\bigr),
+\]
+so
+\[
+v_t-av_{xx}=\sum_{n=1}^\infty\biggl(\frac{d\hat u_n}{dt}+\lambda_n\biggr)
+    \phi_n(x),
+\]
+which equals $f(x,t)$ if and only if all of the Fourier coefficients match, 
+that is,
+\[
+\frac{d\hat u_n}{dt}+\lambda_n\hat u_n=\hat g_n(t)
+    \quad\text{for $0<t<T$ and $n\in\{1,2,3,\ldots\}$.}
+\]
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Semidiscrete method}
 
