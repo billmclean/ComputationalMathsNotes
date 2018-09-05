@@ -25,21 +25,21 @@ directions.
 \section{Separation of variables}
 
 Associated with~\eqref{eq: heat ivp 1d} is the \emph{steady-state} problem 
-for~$u^\infty=u^\infty(x)$ satisfying
+for~$u_\infty=u_\infty(x)$ satisfying
 \[
--a(u^\infty)''=f^\infty(x)\quad\text{for $0<x<L$,}\quad
-    \text{with $u^\infty(0)=\gamma_0$ and $u(L)=\gamma_L$,}
+-au_\infty''=f_\infty(x)\quad\text{for $0<x<L$,}\quad
+    \text{with $u_\infty(0)=\gamma_0$ and $u_\infty(L)=\gamma_L$,}
 \]
 where we assume that $f(x,t)$ tends to a steady-state 
-limit~$f^\infty(x)$ as~$t\to\infty$.  By noting that 
-$-(u^\infty)''=f^\infty(x)/a$, and recalling the 
+limit~$f_\infty(x)$ as~$t\to\infty$.  By noting that 
+$-u_\infty''=f_\infty(x)/a$, and recalling the 
 formula~\eqref{eq: model 1d exact soln}, we conclude 
 \[
-u^\infty(x)=\frac{L-x}{L}\biggl(
-    \gamma_0+\frac{1}{a}\int_0^x yf^\infty(y)\,dy\biggr)
-    +\frac{x}{L}\biggl(\gamma_L+\frac{1}{a}\int_x^L(L-y)f(y)\,dy\biggr)
+u_\infty(x)=\frac{L-x}{L}\biggl(
+    \gamma_0+\frac{1}{a}\int_0^x yf_\infty(y)\,dy\biggr)
+    +\frac{x}{L}\biggl(\gamma_L+\frac{1}{a}\int_x^L(L-y)f_\infty(y)\,dy\biggr)
 \]
-for $0\le x\le L$.  The difference $v(x,t)=u(x,t)-u^\infty(x)$ describes the 
+for $0\le x\le L$.  The difference $v(x,t)=u(x,t)-u_\infty(x)$ provides the 
 \emph{transient behaviour} of the system, and satisfies
 \begin{equation}\label{eq: heat ivp homog 1d}
 \begin{aligned}
@@ -49,20 +49,21 @@ v&=0&&\text{at $x=L$, for $0<t<T$,}\\
 v&=v_0(x)&&\text{for $0<x<L$ when $t=0$,}
 \end{aligned}
 \end{equation}
-where $g(x,t)=f(x,t)-f^\infty(x)$ and $v_0(x)=u_0(x,0)-u^\infty(x)$.  In this 
+where $g(x,t)=f(x,t)-f_\infty(x)$ and $v_0(x)=u_0(x,0)-u_\infty(x)$.  In this 
 way, it suffices to solve a problem with \emph{homogeneous boundary conditions}.
 
 Associated with the time-dependent problem~\eqref{eq: heat ivp homog 1d} is the 
 Sturm--Liouville \emph{eigenproblem},
-\[
--av''=\lambda v\quad\text{for $0<x<L$,}\quad\text{with $v(0)=0=v(L)$,}
-\]
-which has only the trivial solution~$v(x)\equiv0$ unless $\lambda$ is one of 
+\begin{equation}\label{eq: simple eigenproblem}
+-a\phi''=\lambda\phi\quad\text{for $0<x<L$,}
+	\quad\text{with $\phi(0)=0=\phi(L)$,}
+\end{equation}
+which has only the trivial solution~$\phi(x)\equiv0$ unless $\lambda$ is one of 
 the \emph{eigenvalues} 
 \[
 \lambda_n=a\biggl(\frac{n\pi}{L}\biggr)^2\quad\text{for $n\in\{1,2,3,\ldots\}$.}
 \]
-When $\lambda=\lambda_n$, the solution~$v$ is a constant multiple of the 
+When $\lambda=\lambda_n$, the solution~$\phi$ is a constant multiple of the 
 corresponding \emph{eigenfunction}
 \[
 \phi_n(x)=\sin\frac{n\pi}{L}\,x.
@@ -101,41 +102,685 @@ of~$v(x,t)$ are functions of~$t$,
 and formal term-by-term differentiation of the Fourier expansion of~$v$ gives
 \[
 v_t(x,t)=\frac{\partial}{\partial t}\sum_{n=1}^\infty\hat v_n(t)\phi_n(x)
-    =\sum_{n=1}^\infty\frac{d\hat v_n}{dt}\,\phi_n(x)
+    =\sum_{n=1}^\infty\frac{d\hat v_n}{dt}\,\phi_n(x).
 \]
-and
+Since $\phi=\phi_n$ satisfies \eqref{eq: simple eigenproblem} 
+with~$\lambda=\lambda_n$,
 \[
 -av_{xx}=-a\,\frac{\partial^2}{\partial x^2}
     \sum_{n=1}^\infty\hat v_n(t)\phi_n(x)
     =\sum_{n=1}^\infty\hat v_n(t)\bigl(-a\phi_n''(x)\bigr)
     =\sum_{n=1}^\infty\hat v_n(t)\bigl(\lambda_n\phi_n(x)\bigr),
 \]
-so
+and so
 \[
-v_t-av_{xx}=\sum_{n=1}^\infty\biggl(\frac{d\hat u_n}{dt}+\lambda_n\biggr)
-    \phi_n(x),
+v_t-av_{xx}=\sum_{n=1}^\infty
+	\biggl(\frac{d\hat v_n}{dt}+\lambda_n\hat v_n\biggr)\phi_n(x),
 \]
-which equals $f(x,t)$ if and only if all of the Fourier coefficients match, 
+which equals $g(x,t)$ if and only if all of the Fourier coefficients match, 
 that is,
 \[
-\frac{d\hat u_n}{dt}+\lambda_n\hat u_n=\hat g_n(t)
+\frac{d\hat v_n}{dt}+\lambda_n\hat v_n=\hat g_n(t)
     \quad\text{for $0<t<T$ and $n\in\{1,2,3,\ldots\}$.}
 \]
+Multiplying both sides of this linear, first-order ODE by the 
+\emph{integrating factor}~$e^{\lambda_n t}$ we obtain
+\[
+e^{\lambda_nt}\,\frac{d\hat v_n}{dt}+\lambda_ne^{\lambda_nt}\hat v_n
+	=e^{\lambda_nt}\hat g_n(t),
+\]
+and since the left-hand side equals $(d/dt)(e^{\lambda_nt}\hat v_n)$ we see that
+\[
+e^{\lambda_nt}\hat v_n(t)-\hat v_n(0)=\int_0^te^{\lambda_ns}\hat g_n(s)\,ds.
+\]
+Thus,
+\begin{equation}\label{eq: Duhamel n}
+\hat v_n(t)=\hat v_n(0)e^{-\lambda_nt}
+	+\int_0^te^{-\lambda_n(t-s)}\hat g_n(s)\,ds\quad\text{for $t\ge0$,}
+\end{equation}
+and multiplying both sides by~$\phi_n(x)$ and summing over~$n$, we obtain the
+series representation
+\[
+v(x,t)=\sum_{n=1}^\infty\hat v_n(t)\phi_n(x)
+	=\sum_{n=1}^\infty e^{-\lambda_nt}\hat v_n(0)\phi_n(x)
+	+\int_0^t\sum_{n=1}^\infty e^{-\lambda_n(t-s)}\hat g_n(s)\phi_n(x)\,ds.
+\]
 
-
-
-
-
-
-
-
-
-
-
+Define the differential operator~$\mathcal{A}v=-v''$ so that 
+$\mathcal{A}\phi_n=\lambda_n\phi_n$, and then define the linear 
+operator~$e^{-t\mathcal{A}}$ by
+\[
+(e^{-t\mathcal{A}}v)(x)=\sum_{n=1}^\infty e^{-\lambda_nt}\hat v_n\phi_n(x).
+\]
+In particular, this definition means that
+\[
+e^{-t\mathcal{A}}\phi_n=e^{-\lambda_nt}\phi_n
+	\quad\text{for $n\in\{1,2,3,\ldots\}$,}
+\]
+and
+\[
+\sum_{n=1}^\infty e^{-\lambda_nt}\hat v_n(0)\phi_n(x)
+	=e^{-t\mathcal{A}}v(x,0)=e^{-t\mathcal{A}}v_0(x)
+\]
+with
+\[
+\sum_{n=1}^\infty e^{-\lambda_n(t-s)}\hat g_n(s)\phi_n(x)
+	=e^{-(t-s)\mathcal{A}}g(x,s),
+\]
+so \eqref{eq: Duhamel n} can be written more succinctly as
+\[
+v(x,t)=e^{-t\mathcal{A}}v_0(x)+\int_0^te^{-(t-s)\mathcal{A}}g(x,s)\,ds.
+\]
+This representation of~$v$ is known as the \emph{Duhamel formula}, and the 
+solution of our original problem~\eqref{eq: heat ivp 1d} is then given by
+\[
+u(x,t)=u_\infty(x)+v(x,t)\quad\text{for $0\le x\le L$ and $0\le t\le T$.}
+\]
+Since $\lambda_n>0$ for all $n\in\{1,2,3,\ldots\}$, if $t\to\infty$ then
+$(e^{-t\boldsymbol{A}}v)(x)\to0$ and hence $u(x,t)\to u_\infty(x)$.
 
 \section{Semidiscrete method}
 
+We define a uniform grid on the spatial interval~$[0,L]$,
+\[
+x_p=p\,\Delta x\quad\text{for $0\le p\le P$,}
+	\quad\text{with $\Delta x=\frac{L}{P}$,}
+\]
+and let
+\[
+U_p(t)\approx u(x_p,t),\qquad f_p(t)=f(x_p,t),\qquad u_{0p}=u_0(x_p).
+\]
+Since $u_t(x_p,t)\approx dU_p/dt$ and
+\[
+u_{xx}(x_p,t)\approx\frac{u(x_{p+1},t)-2u(x_p,t)+u(x_{p-1},t)}{\Delta x^2}
+	\approx\frac{U_{p+1}(t)-2U_p(t)+U_{p-1}(t)}{\Delta x^2},
+\]
+we formulate the following semidiscrete approximation to the initial-boundary 
+value problem~\eqref{eq: heat ivp 1d},
+\begin{equation}\label{eq: semidiscrete heat 1d}
+\begin{aligned}
+\frac{dU_p}{dt}-a\,\frac{U_{p+1}-2U_p+U_{p-1}}{\Delta x^2}&=f_p(t)&
+	&\text{for $1\le p\le P-1$ and $0<t<T$,}\\
+U_0&=\gamma_0&&\text{for $0<t<T$,}\\
+U_P&=\gamma_P&&\text{for $0<t<T$,}\\
+U_p&=u_{0p}&&\text{for $1\le p\le P-1$ when $t=0$.}
+\end{aligned}
+\end{equation}
+We can write this system in matrix notation as
+\begin{equation}\label{eq: ODE system}
+\frac{d\boldsymbol{U}}{dt}+\boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}(t)
+	+\boldsymbol{g},
+\end{equation}
+where
+\[
+\boldsymbol{A}=\frac{a}{\Delta x^2}\begin{bmatrix}
+ 2&    -1&      &      &\\
+-1&     2&    -1&      &\\
+  &\ddots&\ddots&\ddots&\\
+  &      &    -1&     2&-1\\
+  &      &      &    -1& 2\end{bmatrix},\qquad
+\]
+and
+\[
+\boldsymbol{U}(t)=\begin{bmatrix}
+U_1(t)\\ U_2(t)\\ \vdots\\ U_{P-2}(t)\\ U_{P-1}(t)\end{bmatrix},\qquad
+\boldsymbol{f}(t)=\begin{bmatrix}
+f_1(t)\\ f_2(t)\\ \vdots\\ f_{P-2}(t)\\ f_{P-1}(t)\end{bmatrix},\qquad
+\boldsymbol{g}=\frac{a}{\Delta x^2}\begin{bmatrix}
+\gamma_0\\ 0\\ \vdots\\ 0\\ \gamma_L\end{bmatrix}.
+\]
+Recall that for any square matrix~$\boldsymbol{A}$, the matrix exponential
+is defined by the convergent infinite series
+\[
+e^{\boldsymbol{A}}=\sum_{k=0}^\infty\frac{\boldsymbol{A}^n}{n!}
+	=\boldsymbol{I}+\boldsymbol{A}+\frac{\boldsymbol{A}^2}{2!}
+	+\frac{\boldsymbol{A}^3}{3!}+\cdots.
+\]
+Furthermore,
+\[
+\frac{d}{dt}\,e^{t\boldsymbol{A}}=\boldsymbol{A}e^{t\boldsymbol{A}},
+\]
+so $e^{t\boldsymbol{A}}$ provides an integrating factor 
+for~\eqref{eq: ODE system}:
+\[
+\frac{d}{dt}\bigl(e^{t\boldsymbol{A}}\boldsymbol{U}\bigr)
+	=\boldsymbol{A}e^{t\boldsymbol{A}}\boldsymbol{U}
+	+e^{t\boldsymbol{A}}\,\frac{d\boldsymbol{U}}{dt}
+	=e^{t\boldsymbol{A}}\biggl(\frac{d\boldsymbol{U}}{dt}
+	+\boldsymbol{A}\boldsymbol{U}\biggr)
+	=e^{t\boldsymbol{A}}\bigl(\boldsymbol{f}(t)+\boldsymbol{g}\bigr),
+\]
+where we used the fact that $\boldsymbol{A}$ commutes 
+with~$e^{t\boldsymbol{A}}$.  If $t=0$ then $e^{t\boldsymbol{A}}=\boldsymbol{I}$
+is the identity matrix, so
+\[
+e^{t\boldsymbol{A}}\boldsymbol{U}(t)-\boldsymbol{U}(0)
+	=\int_0^te^{s\boldsymbol{A}}\bigl(\boldsymbol{f}(s)+\boldsymbol{g}\bigr)\,ds
+\]
+Using $e^{-t\boldsymbol{A}}=(e^{t\boldsymbol{A}})^{-1}$~and 
+$e^{-t\boldsymbol{A}}e^{s\boldsymbol{A}}=e^{-(t-s)\boldsymbol{A}}$, we obtain
+a semidiscrete Duhamel formula,
+\[
+\boldsymbol{U}(t)=e^{-t\boldsymbol{A}}\boldsymbol{u}_0
+	+\int_0^te^{-(t-s)\boldsymbol{A}}\bigl(\boldsymbol{f}(s)+\boldsymbol{g}
+	\bigr)\,ds,
+\]
+where $\boldsymbol{u}_0=[u_0(x_p)]_{p=1}^{P-1}$ is the vector of initial data.
+
 \section{Explicit Euler method}
+
+To obtain a fully-discrete scheme, we introduce a uniform grid on the time axis,
+\[
+t_n=n\,\Delta t\quad\text{for $0\le n\le N$,}
+	\quad\text{where $\Delta t=\frac{T}{N}$,}
+\]
+and let
+\[
+U^n_p\approx u(x_p,t_n),\qquad
+f^n_p=f(x_p,t_n),\qquad
+u_{0p}=u_0(x_p).
+\]
+The \emph{forward difference} approximation in time,
+\[
+u_t(x_p,t_n)\approx\frac{u(x_p,t_n+\Delta t)-u(x_p,t_n)}{\Delta t}
+	=\frac{u(x_p,t_{n+1})-u(x_p,t_n)}{\Delta t},
+\]
+and the second-order central difference approximation in space,
+\begin{align*}
+u_{xx}(x_p,t_n)
+&\approx\frac{u(x_p+\Delta x,t_n)-2u(x_p,t_n)+u(x_p-\Delta x,t_n)}{\Delta x^2}\\
+&=\frac{u(x_{p+1},t_n)-2u(x_p,t_n)+u(x_{p-1},t_n)}{\Delta x^2},
+\end{align*}
+lead to the \emph{explicit Euler method} for~\eqref{eq: heat ivp 1d}:
+\begin{equation}\label{eq: explicit Euler 1d}
+\begin{aligned}
+\frac{U^{n+1}_p-U^n_p}{\Delta t}
+	-a\,\frac{U^n_{p+1}-2U^n_p+U^n_{p-1}}{\Delta x^2}&=f^n_p&
+&\text{for $1\le p\le P-1$ and $0\le n\le N-1$,}\\
+U^n_0&=\gamma_0&&\text{for $0\le n\le N$,}\\
+U^n_P&=\gamma_L&&\text{for $0\le n\le N$,}\\
+U^0_p&=u_{0p}&&\text{for $1\le p\le P-1$.}
+\end{aligned}
+\end{equation}
+We multiply both sides of the finite difference equation by~$\Delta t$ and put
+\begin{equation}\label{eq: rho explicit Euler}
+\rho=\frac{a\,\Delta t}{\Delta x^2}
+\end{equation}
+to obtain
+\[
+U^{n+1}_p-U^n_p-\rho(U^n_{p+1}-2U^n_p+U^n_{p-1})=f^n_p\,\Delta t
+\]
+and thus
+\begin{equation}\label{eq: explicit Euler stencil}
+U^{n+1}_p=f^n_p\,\Delta t+\rho U^n_{p-1}+(1-2\rho)U^n_p+\rho U^n_{p+1}.
+\end{equation}
+In this way, the scheme provides an \emph{explicit} formula for the solution 
+at~$(x_p,t_{n+1})$ given the values at the three nearest grid 
+points $(x_{p-1},t_n)$, $(x_p,t_n)$~and $(x_{p+1},t_n)$ from the previous time 
+level.  We say the these four points constitute the \emph{stencil} for the 
+method; see Figure~\ref{fig: explicit Euler stencil}.
+Algorithm~\ref{alg: explicit Euler} shows how the 
+formula~\eqref{eq: explicit Euler stencil} is used to compute the finite 
+difference solutions~$U^n_p$ by advancing from one time level to the next, 
+starting at~$t_0=0$.  
+
+\begin{figure}
+\caption{Computational stencil for the explicit Euler 
+method~\eqref{eq: explicit Euler stencil}.}
+\label{fig: explicit Euler stencil}
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+\draw[->] (-1,0) -- (17,0);
+\node[right] at (17,0) {$x$};
+\node[below] at (8,0) {$x_p$};
+\draw[->] (0,-1) -- (0,6);
+\node[above left] at (0,6) {$t$};
+\node[left] at (0,3) {$t_n$};
+\foreach \x in {2, 4, ..., 16}
+    \draw[thin] (\x,0) -- (\x,6);
+\foreach \y in {1, ..., 5}
+    \draw[thin] (0,\y) -- (16,\y);
+\draw[ultra thick] (6,3) -- (8,3) -- (10,3);
+\draw[fill] (6,3)  circle (0.15cm);
+\draw[fill] (8,3)  circle (0.15cm);
+\draw[fill] (10,3) circle (0.15cm);
+\draw[ultra thick] (8,3) -- (8,4);
+\draw[fill=red] (8,4)  circle (0.15cm);
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+\begin{algorithm}
+\caption{Explicit Euler method.}
+\label{alg: explicit Euler}
+\begin{algorithmic}
+\State Allocate storage for $x_p$, $t_n$~and $U^n_p$, where $0\le p\le P$ and 
+$0\le n\le N$.
+\State $\Delta x=L/P$ 
+\State$\Delta t=T/N$
+\For{$p=0:P$}
+    \State $x_p=p\,\Delta x$
+\EndFor
+\For{$n=0:N$}
+    \State $t_n=n\,\Delta t$
+    \State $U^n_0=\gamma_0$
+    \State $U^n_P=\gamma_L$
+\EndFor
+\State $\rho=a\,\Delta t/\Delta x^2$
+\For{$p=1:P-1$}
+    \State $U^0_p=u_0(x_p)$
+\EndFor
+\For{$n=0:N-1$}
+    \State $U^n_{p+1}=f(x_p,t_n)\,\Delta t
+            +\rho U^n_{p-1}+(1-2\rho)U^n_p+\rho U^n_{p+1}$
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+We now show that the explicit Euler method is stable provided the time 
+step~$\Delta t$ is sufficiently small compared to the spatial grid 
+size~$\Delta x$.
+
+\begin{theorem}\label{thm: explicit Euler stability}
+If $\Delta x$ and $\Delta t$ satisfying
+\begin{equation}\label{eq: explicit Euler timestep}
+\Delta t\le\frac{\Delta x^2}{2a},                                        
+\end{equation}
+or equivalently if the ratio~\eqref{eq: rho explicit Euler} satisfies 
+$\rho\le1/2$, then the explicit Euler method~\eqref{eq: explicit Euler 1d} is 
+stable:
+\[
+\|\boldsymbol{U}^n_{0:P}\|_\infty
+	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
+		|\gamma_0|,|\gamma_L|\bigr\}
+	+\sum_{j=0}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
+\quad\text{for $0\le n\le N$.}
+\]
+\end{theorem}
+\begin{proof}
+We use finite induction on~$n$.  When~$n=0$, we have
+$U^0_p=u_{0p}$ for~$1\le p\le P-1$, with $U^0_0=\gamma_0$~and $U^0_P=\gamma_L$,
+so 
+\[
+\|\boldsymbol{U}^0_{0:P}\|_\infty=
+\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\},
+\]
+which agrees with the formula since the empty sum vanishes. Now let 
+$0\le n\le N-1$ and make the induction hypothesis.  We see 
+from~\eqref{eq: explicit Euler stencil} that
+\[
+|U^{n+1}_p|\le|f^n_p|\,\Delta t+\rho|U^n_{p-1}|+(1-2\rho)|U^n_p|+\rho|U^n_{p+1}|
+\]
+and thus
+\[
+|U^{n+1}_p|\le\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t
+		+(2\rho+|1-2\rho|)\|\boldsymbol{U}^n_{0:P}\|_\infty
+\quad\text{for $1\le p\le P-1$.} 
+\]
+If $\rho\le1/2$, then $2\rho+|1-2\rho|=2\rho+1-2\rho=1$, and
+since $U^{n+1}_0=\gamma_0=U^n_0$~and $U^{n+1}_P=\gamma_L=U^n_P$ we see that
+\begin{align*}
+\|\boldsymbol{U}^{n+1}_{0:P}\|_\infty
+	&\le\|\boldsymbol{U}^n_{0:P}\|_\infty
+		+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
+	&\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
+		|\gamma_0|,|\gamma_L|\bigr\}
+	+\sum_{j=0}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
+		+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
+	&=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
+		|\gamma_0|,|\gamma_L|\bigr\}
+	+\sum_{j=0}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
+\end{align*}
+as required.
+\end{proof}
+
+The \emph{local trunction error} for the explicit Euler method is defined by
+\begin{equation}\label{eq: tau explicit Euler}
+\tau(x,t)=f(x,t)-\frac{u(x,t+\Delta t)-u(x,t)}{\Delta t}
+	+a\,\frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x,t)}{\Delta x^2},
+\end{equation}
+and measures the extent to which the solution~$u(x,t)$ of the continuous 
+problem~\eqref{eq: heat ivp 1d} fails to satisfy the finite difference equation.
+We can estimate $\tau^n_p=\tau(x_p,t_n)$ by Taylor expansion.
+
+\begin{lemma}\label{lem: tau explicit Euler}
+If $u_{tt}$~and $u_{xxxx}$ are continuous for~$(x,t)\in[0,L]\times[0,T]$, then
+\[
+|\tau^n_p|\le\frac{\Delta t}{2}\max_{[0,L]\times[0,T]}|u_{tt}|
+	+a\,\frac{\Delta x^2}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|
+\]
+for $1\le p\le P-1$ and $0\le n\le N-1$.
+\end{lemma}
+\begin{proof}
+Since $u_t-au_{xx}=f$,
+\[
+|\tau(x,t)|=\biggl|u_t-\frac{u(x,t+\Delta t)-u(x,t)}{\Delta t}
+	-a\biggl(u_{xx}-\frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x,t)}{\Delta x^2}
+\biggr)\biggr|,
+\]
+and, so by Exercise~\ref{ex: forward diff}~and 
+Theorem~\ref{thm: 2nd central diff},
+\[
+|\tau(x,t)|\le\frac{\Delta t}{2}\max_{t\le s\le t+\Delta t}|u_{tt}(x,s)|
+	+a\,\frac{\Delta x^2}{12}\,
+	\max_{x-\Delta x\le y\le x+\Delta x}|u_{xxxx}(y,t)|,
+\]
+which implies the stated estimate for~$\tau^n_p$. 
+\end{proof}
+
+It follows that, provided the restriction~\eqref{eq: explicit Euler timestep}
+on the step sizes is satisfied, the explicit Euler method is first-order 
+accurate in time and second-order accurate in space.
+
+\begin{theorem}\label{thm: explicit Euler error}
+Assume that $\Delta x$~and $\Delta t$ satisfy 
+\eqref{eq: explicit Euler timestep}, and that $u_{tt}$~and $u_{xxxx}$ are 
+continuous on~$[0,L]\times[0,T]$. Then the error for the explicit Euler method 
+satisfies
+\[
+|U^n_p-u(x_p,t_n)|\le Ct_n(\Delta t+\Delta x^2)
+\quad\text{for $0\le p\le P-1$ and $0\le n\le N$,}
+\]
+where
+\begin{equation}\label{eq: error const explicit Euler}
+C=\max\biggl\{\frac{1}{2}\max_{[0,L]\times[0,T]}|u_{tt}|,
+	\frac{1}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|\biggr\}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+By the definition~\eqref{eq: tau explicit Euler} of the local truncation error,
+\[
+\frac{u(x_p,t_{n+1})-u(x_p,t_n)}{\Delta t}
+	-a\,\frac{u(x_{p+1},t)-2u(x_p,t_n)+u(x_{p-1},t_n)}{\Delta x^2}
+	=f^n_p-\tau^n_p.
+\]
+Subtracting this equation from the finite difference equation 
+in~\eqref{eq: explicit Euler 1d}, we obtain a finite difference equation for
+the error in the finite difference solution by~$E^n_p=U^n_p-u(x_p,t_n)$, namely
+\[
+\frac{E^{n+1}_p-E^n_p}{\Delta t}
+	-a\,\frac{E^n_{p+1}-2E^n_p+E^n_{p-1}}{\Delta x^2}=\tau^n_p
+\quad\text{for $1\le p\le P-1$ and $0\le n\le N-1$.}
+\]
+In addition, the boundary and initial conditions satisfied by $U^n_p$~and $u$ 
+imply that
+\[
+\begin{aligned}
+E^n_0&=U^n_0-u(x_0,t_n)=\gamma_0-\gamma_0=0&&\text{for $0\le n\le N$,}\\
+E^n_P&=U^n_P-u(x_P,t_n)=\gamma_L-\gamma_L=0&&\text{for $0\le n\le N$,}\\
+E^0_p&=U^0_p-u(x_p,t_0)=u_0(x_p)-u_0(x_p)=0&&\text{for $1\le p\le P-1$.}
+\end{aligned}
+\]
+Thus, $E^n_p$ is the explicit Euler solution obtained when $f^n_p$, $\gamma_0$,
+$\gamma_L$~and $u_{0p}$ are replaced by $\tau^n_p$, $0$, $0$~and $0$, 
+respectively.  The restriction on the step sizes allows us to apply the 
+stability estimate of Theorem~\ref{thm: explicit Euler stability} to deduce that
+\[
+\|\boldsymbol{E}^n_{0:P}\|_\infty
+	\le\sum_{j=0}^{n-1}\|\boldsymbol{\tau}^n_{1:P-1}\|_\infty\,\Delta t
+	\quad\text{for $0\le n\le N$.}
+\]
+By Lemma~\ref{lem: tau explicit Euler}, 
+$\|\boldsymbol{\tau}^n_{1:P-1}\|_\infty\le C(\Delta t+\Delta x^2)$, so
+\[
+\|\boldsymbol{E}^n_{0:P}\|_\infty\le Cn(\Delta t+\Delta x^2)\,\Delta t
+	=Ct_n(\Delta t+\Delta x^2),
+\]
+as claimed.
+\end{proof}
 
 \section{Implicit Euler method}
 
+Instead of using a forward difference, we can approximate $u_t$ by a 
+\emph{backward difference},
+\[
+u_t(x_p,t_n)\approx\frac{u(x_p,t_n)-u(x_p,t_n-\Delta t)}{\Delta t}
+	=\frac{u(x_p,t_n)-u(x_p,t_{n-1})}{\Delta t},
+\]
+which leads to the \emph{im}plicit Euler method,
+\begin{equation}\label{eq: implicit Euler 1d}
+\begin{aligned}
+\frac{U^n_p-U^{n-1}_p}{\Delta t}
+	-a\,\frac{U^n_{p+1}-2U^n_p+U^n_{p-1}}{\Delta x^2}&=f^n_p&
+&\text{for $1\le p\le P-1$ and $1\le n\le N$,}\\
+U^n_0&=\gamma_0&&\text{for $0\le n\le N$,}\\
+U^n_P&=\gamma_L&&\text{for $0\le n\le N$,}\\
+U^0_p&=u_{0p}&&\text{for $1\le p\le P-1$.}
+\end{aligned}
+\end{equation}
+Multiplying both sides of the finite difference equation by~$\Delta t$, and 
+defining $\rho$ as before in~\eqref{eq: rho explicit Euler}, we obtain
+\[
+U^n_p-U^{n-1}_p-\rho(U^n_{p+1}-2U^n_p+U^n_{p-1})=f^n_p\,\Delta t
+\]
+and thus
+\begin{equation}\label{eq: implicit Euler stencil}
+-\rho U^n_{p-1}+(1+2\rho)U^n_p-\rho U^n_{p+1}=U^{n-1}_p+f^n_p\,\Delta t
+\end{equation}
+for $1\le p\le P-1$ and $1\le n\le N$.  Thus, at the $n$th time level we have a 
+system of linear equations for the unknown $U^n_1$, $U^n_2$, \dots, $U^n_{P-1}$,
+with the right-hand sides involving the solution at the previous time level.
+The stencil for the scheme is shown in Figure~\ref{fig: implicit Euler stencil}.
+
+\begin{figure}\label{fig: implicit Euler stencil}
+\caption{Computational stencil for the implicit Euler 
+method~\eqref{eq: implicit Euler stencil}.}
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+\draw[->] (-1,0) -- (17,0);
+\node[right] at (17,0) {$x$};
+\node[below] at (8,0) {$x_p$};
+\draw[->] (0,-1) -- (0,6);
+\node[above left] at (0,6) {$t$};
+\node[left] at (0,3) {$t_n$};
+\foreach \x in {2, 4, ..., 16}
+    \draw[thin] (\x,0) -- (\x,6);
+\foreach \y in {1, ..., 5}
+    \draw[thin] (0,\y) -- (16,\y);
+\draw[ultra thick] (8,2) -- (8,3);
+\draw[fill] (8,2)  circle (0.15cm);
+\draw[ultra thick] (6,3) -- (8,3) -- (10,3);
+\draw[fill=red] (6,3)  circle (0.15cm);
+\draw[fill=red] (8,3)  circle (0.15cm);
+\draw[fill=red] (10,3) circle (0.15cm);
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+Alternatively, we can start from the matrix form of the semidiscrete 
+method~\eqref{eq: ODE system}, and approximate $d\boldsymbol{U}/dt$ with a 
+backward difference to obtain
+\begin{equation}\label{eq: implicit Euler 1d vector}
+\frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
+	+\boldsymbol{A}\boldsymbol{U}^n=\boldsymbol{f}^n+\boldsymbol{g}
+\quad\text{for $1\le n\le N$,}
+\end{equation}
+where
+\[
+\boldsymbol{A}=\frac{a}{\Delta x^2}\begin{bmatrix}
+ 2&    -1&      &      &\\
+-1&     2&    -1&      &\\
+  &\ddots&\ddots&\ddots&\\
+  &      &    -1&     2&-1\\
+  &      &      &    -1& 2\end{bmatrix},\qquad
+\]
+and
+\[
+\boldsymbol{U}^n=\begin{bmatrix}
+U^n_1\\ U^n_2\\ \vdots\\ U^n_{P-2}\\ U^n_{P-1}\end{bmatrix},\qquad
+\boldsymbol{f}^n=\begin{bmatrix}
+f^n_1\\ f^n_2\\ \vdots\\ f^n_{P-2}\\ f^n_{P-1}\end{bmatrix},\qquad
+\boldsymbol{g}=\frac{a}{\Delta x^2}\begin{bmatrix}
+\gamma_0\\ 0\\ \vdots\\ 0\\ \gamma_L\end{bmatrix}.
+\]
+Rearranging \eqref{eq: implicit Euler 1d vector} we find that
+\[
+(\boldsymbol{I}+\Delta t\,\boldsymbol{A})\boldsymbol{U}^n
+	=\boldsymbol{U}^{n-1}+\Delta t(\boldsymbol{f}^n+\boldsymbol{g})
+\quad\text{for $1\le n\le N$.}
+\]
+Here, the coefficient matrix is symmetric, tridiagonal and positive-definite, 
+so we can compute~$\boldsymbol{U}^n$ via a factorization
+\[
+\boldsymbol{I}+\Delta t\,\boldsymbol{A}
+	=\boldsymbol{L}^T\boldsymbol{D}\boldsymbol{L},
+\]
+as shown in Algorithm~\ref{alg: implicit Euler}.
+
+\begin{algorithm}
+\caption{Implicit Euler method.}
+\label{alg: implicit Euler}
+\begin{algorithmic}
+\State Allocate storage for $x_p$, $t_n$~and $U^n_p$, where $0\le p\le P$ and 
+$0\le n\le N$.
+\State Allocate storage for vectors $[d_1,d_2,\ldots,d_{P-1}]^T$~and
+$[\ell_1,\ell_2,\ldots,\ell_{P-2}]^T$.
+\State $\Delta x=L/P$ 
+\State$\Delta t=T/N$
+\For{$p=0:P$}
+    \State $x_p=p\,\Delta x$
+\EndFor
+\For{$n=0:N$}
+    \State $t_n=n\,\Delta t$
+    \State $U^n_0=\gamma_0$
+    \State $U^n_P=\gamma_L$
+\EndFor
+\State $\rho=a\,\Delta t/\Delta x^2$
+\For{$p=1:P-1$}
+    \State $d_p=1+2\rho$
+\EndFor
+\For{$p=1:P-2$}
+    \State $\ell_p=-\rho$
+\EndFor
+\State \textsc{Factorize!}($\boldsymbol{d}$, $\boldsymbol{\ell}$)
+\Comment Use Algorithm~\ref{alg: LDLT in place} to compute
+$\boldsymbol{I}+\Delta t\,\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}
+\boldsymbol{L}^T$ in place.
+\For{$p=1:P-1$}
+    \State $U^0_p=u_0(x_p)$
+\EndFor
+\For{$n=1:N$}
+    \For{$p=1:P-1$}
+        \State $U^n_p\gets U^{n-1}_p+\Delta t\,f(x_p,t_n)$
+    \EndFor
+    \State $U^n_1\gets U^n_1+a\gamma_0/\Delta x^2$
+    \State $U^n_{P-1}\gets U^n_{P-1}+a\gamma_L/\Delta x^2$
+    \State \textsc{Solve}!($\boldsymbol{U}^n_{1:P-1}$,
+$\boldsymbol{d}$, $\boldsymbol{\ell}$)
+\Comment Use Algorithm~\ref{alg: solve symmetric tridiagonal in place} to solve
+for $\boldsymbol{U}^n_{1:P-1}$ in place.
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+The implicit Euler method is unconditionally stable: for any choice of 
+$\Delta x$~and $\Delta t$,
+\[
+\|\boldsymbol{U}^n_{0:P}\|_\infty
+	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
+		|\gamma_0|,|\gamma_L|\bigr\}
+	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
+\quad\text{for $0\le n\le N$.}
+\]
+\end{theorem}
+\begin{proof}
+We use finite induction on~$n$.  When~$n=0$, we have
+$U^0_p=u_{0p}$ for~$1\le p\le P-1$, with $U^0_0=\gamma_0$~and $U^0_P=\gamma_L$,
+so 
+\[
+\|\boldsymbol{U}^0_{0:P}\|_\infty=
+\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\},
+\]
+which agrees with the formula since the empty sum vanishes. Now let 
+$1\le n\le N$ and make the induction hypothesis that
+\[
+\|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
+	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
+		|\gamma_0|,|\gamma_L|\bigr\}
+	+\sum_{j=1}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t.
+\]
+We see from~\eqref{eq: implicit Euler stencil} that, for $1\le p\le P-1$,
+\[
+(1+2\rho)U^n_p=\rho U^n_{p-1}+\rho U^n_{p+1}+U^{n-1}_p+f^n_p\,\Delta t
+\]
+and so
+\[
+(1+2\rho)|U^n_p|\le2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty
+	+\|\boldsymbol{U}^{n-1}_{1:P-1}\|_\infty
+	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t.
+\]
+Thus,
+\[
+(1+2\rho)\|\boldsymbol{U}^n_{1:P-1}\|_\infty
+	\le2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty
+	+\|\boldsymbol{U}^{n-1}_{1:P-1}\|_\infty
+	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t,
+\]
+and since $U^n_0=\gamma_0=U^{n-1}_0$~and $U^n_P=\gamma_L=U^{n-1}_P$, 
+\[
+(1+2\rho)\|\boldsymbol{U}^n_{0:P}\|_\infty
+	\le2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty
+	+\|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
+	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t.
+\]
+After canceling $2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty$, it follows that
+\begin{align*}
+\|\boldsymbol{U}^n_{1:P-1}\|_\infty&\le\|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
+	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
+	&\le
+\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\}
+	+\sum_{j=1}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
+	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
+	&=
+\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\}
+	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
+\end{align*}
+as required.
+\end{proof}
+
+The local truncation error for the \emph{im}plicit Euler method is defined by
+\[
+\tau(x,t)=f(x,t)-\frac{u(x,t)-u(x,t-\Delta t)}{\Delta t}
+	+a\,\frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x,t)}{\Delta x^2},
+\]
+and we can again estimate $\tau^n_p=\tau(x_p,t_n)$ by Taylor expansion
+(Exercise~\ref{ex: forward diff} and Theorem~\ref{thm: 2nd central diff}):
+\[
+|\tau^n_p|\le\frac{\Delta t}{2}\max_{[0,L]\times[0,T]}|u_{tt}|
+	+a\,\frac{\Delta x^2}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|
+\]
+for $1\le p\le P-1$~and $1\le n\le N$, which leads to the following error bound.
+
+\begin{theorem}\label{thm: implicit Euler error}
+Assume that $u_{tt}$~and $u_{xxxx}$ are continuous on~$[0,L]\times[0,T]$. Then 
+the error for the implicit Euler method satisfies
+\[
+|U^n_p-u(x_p,t_n)|\le Ct_n(\Delta t+\Delta x^2)
+\quad\text{for $0\le p\le P-1$ and $0\le n\le N$,}
+\]
+where $C$ is defined by~\eqref{eq: error const explicit Euler}.
+\end{theorem}
+\begin{proof}
+See Exercise~\ref{ex: implicit Euler error}.
+\end{proof}
+
+
+\begin{Exercises}
+\exercise\label{ex: forward diff}
+Use Theorem~\ref{thm: Taylor remainder} to show that that if $f$ is $C^2$ on 
+the closed interval~$[x,x+h]$, then
+\[
+\biggl|f'(x)-\frac{f(x+h)-f(x)}{h}\biggr|
+	\le\frac{h}{2}\max_{x\le y\le x+h}|f''(y)|,
+\]
+and, similarly, if $f$ is $C^2$ on~$[x-h,x]$, then
+\[
+\biggl|f'(x)-\frac{f(x)-f(x-h)}{h}\biggr|
+	\le\frac{h}{2}\max_{x-h\le y\le x}|f''(y)|,
+\]
+
+\exercise\label{ex: implicit Euler error}
+Prove Theorem~\ref{thm: implicit Euler error} by adapting the proof of 
+Theorem~\ref{thm: explicit Euler error}.
+\end{Exercises}

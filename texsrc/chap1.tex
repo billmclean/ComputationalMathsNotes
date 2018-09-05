@@ -37,7 +37,7 @@ u(x)=\frac{L-x}{L}\biggl(\gamma_0+\int_0^x yf(y)\,dy\biggr)
 To derive a finite difference approximation to the second derivative~$u''(x)$, 
 we will use Taylor's theorem in the following form.
 
-\begin{theorem}
+\begin{theorem}\label{thm: Taylor remainder}
 Let $h>0$. If $f$ is $C^{k+1}$ on the closed interval~$[x,x+h]$ then
 \[
 f(x+h)=\sum_{j=0}^k\frac{1}{j!}\,f^{(j)}(x)\,h^j+(R_kf)(x,h)
@@ -70,7 +70,7 @@ f''(x)=\frac{f(x+h)-2f(x)+f(x-h)}{h^2}+O(h^2)\quad\text{as $h\to0$;}
 \]
 more precisely, the following result holds.
 
-\begin{theorem}
+\begin{theorem}\label{thm: 2nd central diff}
 If $f$ is $C^4$ on the closed interval~$[x-h,x+h]$, then
 \[
 \biggl|f''(x)-\frac{f(x+h)-2f(x)+f(x-h)}{h^2}\biggr|\le\frac{h^2}{12}
@@ -340,6 +340,60 @@ $\boldsymbol{y}=[y_1,y_2,\ldots,y_n]$ and $\boldsymbol{z}=[z_1,z_2,\ldots,z_n]$.
 \State $x_j=y_j-\ell_jx_{j+1}$
 \EndFor
 \State\Return{$\boldsymbol{x}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+Once $d_j$ has been computed, the value of $\alpha_j$ is never used in 
+subsequent steps of Algorithm~\ref{alg: LDLT}. Similarly, once $\ell_j$ has been 
+computed, the value of~$\beta_j$ is never used subsequently.  It is therefore 
+possible to economize on storage by computing the factorization 
+\emph{in place}, using the same storage location to hold $\alpha_j$~and $d_j$,
+and same storage location to hold $\beta_j$~and $\ell_j$, as shown in 
+Algorithm~\ref{alg: LDLT in place}.  The solution of the triangular and 
+diagonal linear systems can also be performed in place, as shown in 
+Algorithm~\ref{alg: solve symmetric tridiagonal in place}.
+
+\begin{algorithm}
+\caption{Compute the factorization \eqref{eq: L D LT} in place.}
+\label{alg: LDLT in place}
+\begin{algorithmic}
+\Require{$\boldsymbol{d}=[\alpha_1,\alpha_2,\ldots,\alpha_n]$ holds the main
+diagonal of $\boldsymbol{A}$.}
+\Require{$\boldsymbol{\ell}=[\beta_1,\beta_2,\ldots,\beta_{n-1}]$ holds the 
+off-diagonal of $\boldsymbol{A}$.}
+\Statex
+\Function{Factorize!}{$\boldsymbol{d}$, $\boldsymbol{\ell}$}
+\For{$j=1:n-1$}
+\State $\ell_j\gets\ell/d_j$
+\State $d_{j+1}\gets d{j+1}-\ell_j^2d_j$
+\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Solve a symmetric, tridiagonal linear system 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ in place.}
+\label{alg: solve symmetric tridiagonal in place}
+\begin{algorithmic}
+\Require{$\boldsymbol{x}=[b_1,b_2,\ldots,b_n]$ stores the right-hand side 
+vector.}
+\Require{$\boldsymbol{d}=[d_1, d_2, \ldots, d_n]$ the main diagonal of 
+$\boldsymbol{D}$.}
+\Require{$\boldsymbol{\ell}=[\ell_1,\ell_2,\ldots,\ell_{n-1}]$ the first 
+sub-diagonal of~$\boldsymbol{L}$.}
+\Statex
+\Function{Solve!}{$\boldsymbol{x},\boldsymbol{d},\boldsymbol{\ell}$}
+\For{$j=1:n-1$}
+    \State $x_{j+1}\gets x_{j+1}-\ell_jx_j$
+\EndFor
+\For{$j=1:n$}
+    \State $x_j\gets x_j/d_j$
+\EndFor
+\For{$j=n-1:-1:1$}
+    \State $x_j\gets x_j-\ell_jx_{j+1}$
+\EndFor
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
