@@ -1,6 +1,25 @@
 \chapter[Finite elements for parabolic problems]{Finite elements for \\
 parabolic problems in 1D}
 
+We now consider a more general parabolic PDE with mixed boundary conditions,
+\begin{equation}\label{eq: parabolic ivp 1d}
+\begin{aligned}
+u_t+\mathcal{L}u&=f(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
+u&=\gamma_0(t)&&\text{at $x=0$, for $0<t<T$,}\\
+au&=\gamma_L(t)&&\text{at $x=L$, for $0<t<T$,}\\
+u&=u_0(x)&&\text{for $0<x<L$ when $t=0$,}
+\end{aligned}
+\end{equation}
+where $\mathcal{L}u=-\bigl(a(x)u'\bigr)'+c(x)u$ as before 
+in~\eqref{eq: L self-adjoint}.  The identity~\eqref{eq: Lu v by parts} implies 
+that, for any test function~$v(x)$,
+\[
+\int_0^Lu_tv\,dx+\int_0^L\bigl(a(x)u_xv_x+c(x)uv\bigr)\,dx
+	=\gamma_L(t)v(L)+\int_0^Lf(x,t)v\,dx
+\quad\text{provided $v(0)=0$.}
+\]
+
+
 \section{Semidiscrete method}
 
 \section{Time stepping}

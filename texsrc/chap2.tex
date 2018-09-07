@@ -42,10 +42,10 @@ since
 v(x)=\frac{1}{h_k}\bigl((x_k-x)v(x_{k-1})+(x-x_{k-1})v(x_k)\bigr)
     \quad\text{for $x_{k-1}\le x\le x_k$.}
 \]
-In particular, the $k$th \emph{nodal basis function} $\phi_k\in V_h$ is the 
+In particular, the $k$th \emph{nodal basis function} $\chi_k\in V_h$ is the 
 unique continuous, piecewise-linear function satisfying
-\begin{equation}\label{eq: phi k x j}
-\phi_k(x_j)=\delta_{jk}\quad\text{for $j$, $k\in\{0, 1, 2, \ldots, M\}$,}
+\begin{equation}\label{eq: chi k x j}
+\chi_k(x_j)=\delta_{jk}\quad\text{for $j$, $k\in\{0, 1, 2, \ldots, M\}$,}
 \end{equation}
 where $\delta_{jk}$ is the Kronecker delta, that is,
 \[
@@ -53,14 +53,14 @@ where $\delta_{jk}$ is the Kronecker delta, that is,
 1,&\text{if $j=k$,}\\ 0,&\text{if $j\ne k$.} 
 \end{cases}
 \]
-The property~\eqref{eq: phi k x j} implies that each~$v\in V_h$ has the 
+The property~\eqref{eq: chi k x j} implies that each~$v\in V_h$ has the 
 representation
 \[
-v(x)=\sum_{k=0}^M v(x_k)\phi_k(x)\quad\text{for $0\le x\le L$,}
+v(x)=\sum_{k=0}^M v(x_k)\chi_k(x)\quad\text{for $0\le x\le L$,}
 \]
 since the sum on the right defines a continuous, piecewise-linear function that 
 equals $v(x_j)$ when~$x=x_j$, for~$0\le j\le M$.  It follows that 
-$\{\phi_k\}_{k=0}^M$ is a basis for~$V_h$, and therefore that $\dim V_h=M+1$.
+$\{\chi_k\}_{k=0}^M$ is a basis for~$V_h$, and therefore that $\dim V_h=M+1$.
 
 In the finite element method for our model 2-point boundary-value 
 problem~\eqref{eq: model 1d chap 2}, we define a \emph{solution set} (or
@@ -79,30 +79,30 @@ of~\eqref{eq: model 1d chap 2} is determined by requiring that
 u_h\in S_h\qquad\text{and}\qquad
 \int_0^L u_h'(x)v'(x)\,dx=\int_0^L f(x)v(x)\,dx \quad\text{for all $v\in T_h$.}
 \]
-Since $\{\phi_k\}_{k=1}^{M-1}$ is a basis for~$T_h$, it suffices that $u_h$ 
+Since $\{\chi_k\}_{k=1}^{M-1}$ is a basis for~$T_h$, it suffices that $u_h$ 
 satisfies
-\begin{equation}\label{eq: model FEM phi j}
-\int_0^L u_h'(x)\phi_j'(x)\,dx=\int_0^L f(x)\phi_j(x)\,dx 
+\begin{equation}\label{eq: model FEM chi j}
+\int_0^L u_h'(x)\chi_j'(x)\,dx=\int_0^L f(x)\chi_j(x)\,dx 
     \quad\text{for $1\le j\le M-1$.}
 \end{equation}
 Moreover, 
 \begin{equation}\label{eq: uh U 1d}
-u_h(x)=\sum_{k=0}^M U_k\phi_k(x)\quad\text{for $0\le x\le L$,}\quad
+u_h(x)=\sum_{k=0}^M U_k\chi_k(x)\quad\text{for $0\le x\le L$,}\quad
 \text{where $U_k=u_h(x_k)$,}
 \end{equation}
 so
 \[
-\int_0^Lu_h'(x)\phi_j'(x)\,dx
-    =\int_0^L\biggl(\sum_{k=0}^MU_k\phi_k'(x)\biggr)\phi_j'(x)\,dx
-    =\sum_{k=0}^M\biggl(\int_0^L\phi_k'(x)\phi_j'(x)\,dx\biggr)U_k.
+\int_0^Lu_h'(x)\chi_j'(x)\,dx
+    =\int_0^L\biggl(\sum_{k=0}^MU_k\chi_k'(x)\biggr)\chi_j'(x)\,dx
+    =\sum_{k=0}^M\biggl(\int_0^L\chi_k'(x)\chi_j'(x)\,dx\biggr)U_k.
 \]
 Therefore, by letting
 \[
-a_{jk}=\int_0^L\phi_k'(x)\phi_j'(x)\,dx
+a_{jk}=\int_0^L\chi_k'(x)\chi_j'(x)\,dx
 \quad\text{and}\quad
-f_j=\int_0^Lf(x)\phi_j(x)\,dx,
+f_j=\int_0^Lf(x)\chi_j(x)\,dx,
 \]
-we can write \eqref{eq: model FEM phi j} as
+we can write \eqref{eq: model FEM chi j} as
 \[
 \sum_{k=0}^M a_{jk}U_k=f_j\quad\text{for $1\le j\le M-1$.}
 \]
@@ -133,24 +133,24 @@ matrix~$\boldsymbol{A}=[a_{jk}]_{j, k=1}^{M-1}$ is strictly positive-definite.
 \begin{proof}
 It is easy to see that for~$1\le j\le M-1$,
 \[
-\phi_j'(x)=\begin{cases}
+\chi_j'(x)=\begin{cases}
 1/h_j,&x_{j-1}<x<x_j,\\
 -1/h_{j+1},&x_j<x<x_{j+1},\\
 0,&\text{otherwise,}
 \end{cases}
 \]
 with the first case missing when~$j=0$, and the second when~$j=M$.  Thus,
-the supports of $\phi_j'$ and $\phi_k'$ overlap iff $|j-k|\le1$, and so 
+the supports of $\chi_j'$ and $\chi_k'$ overlap iff $|j-k|\le1$, and so 
 $a_{jk}=0$ otherwise, that is, if $|j-k|\ge2$.  The diagonal 
 values are
 \[
-a_{00}=\int_0^L\phi_0'(x)^2\,dx
+a_{00}=\int_0^L\chi_0'(x)^2\,dx
     =\int_{x_0}^{x_1}\biggl(\frac{1}{h_1}\biggr)^2\,dx
     =\frac{x_1-x_0}{h_1^2}=\frac{1}{h_1}
 \]
 and
 \[
-a_{MM}=\int_0^L\phi'_M(x)^2\,dx
+a_{MM}=\int_0^L\chi'_M(x)^2\,dx
     =\int_{x_{M-1}}^{x_M}\biggl(\frac{-1}{h_M}\biggr)^2\ , dx
     =\frac{x_M-x_{M-1}}{h_M^2}=\frac{1}{h_M},
 \]
@@ -162,7 +162,7 @@ a_{jj}=\int_{x_{j-1}}^{x_j}\biggl(\frac{1}{h_j}\biggr)^2\,dx
 \]
 for $1\le j\le M-1$.  The off-diagonal values are
 \[
-a_{j-1,j}=\int_0^L\phi'_j(x)\phi'_{j-1}(x)\,dx
+a_{j-1,j}=\int_0^L\chi'_j(x)\chi'_{j-1}(x)\,dx
     =\int_{x_{j-1}}^{x_j}\biggl(\frac{-1}{h_j}\biggr)
     \biggl(\frac{1}{h_j}\biggr)\,dx=\frac{-(x_j-x_{j-1})}{h_j^2}=\frac{-1}{h_j}
 \]
@@ -170,13 +170,13 @@ for $1\le j\le M$.
 
 The matrix~$\boldsymbol{A}$ is thus tridiagonal and symmetric.  Given
 $\boldsymbol{V}=[V_k]_{k=1}^{M-1}\in\mathbb{R}^{M-1}$
-we define $v\in T_h$ by $v(x)=\sum_{k=1}^{M-1}V_k\phi_k(x)$ and observe that
+we define $v\in T_h$ by $v(x)=\sum_{k=1}^{M-1}V_k\chi_k(x)$ and observe that
 \begin{align*}
 \boldsymbol{V}^T\boldsymbol{A}\boldsymbol{V}
     &=\sum_{j=1}^{M-1}\sum_{k=1}^{M-1}V_ja_{jk}V_k
-    =\sum_{j=1}^{M-1}\sum_{k=1}^{M-1}V_jV_k\int_0^L\phi_k'(x)\phi_j'(x)\,dx\\
-    &=\int_0^L\biggl(\sum_{k=0}^{M-1}V_k\phi_k'(x)\biggr)
-             \biggl(\sum_{j=0}^{M-1}V_j\phi_j'(x)\biggr)\,dx
+    =\sum_{j=1}^{M-1}\sum_{k=1}^{M-1}V_jV_k\int_0^L\chi_k'(x)\chi_j'(x)\,dx\\
+    &=\int_0^L\biggl(\sum_{k=0}^{M-1}V_k\chi_k'(x)\biggr)
+             \biggl(\sum_{j=0}^{M-1}V_j\chi_j'(x)\biggr)\,dx
     =\int_0^L\bigl(v'(x)\bigr)^2\,dx\ge0.
 \end{align*}
 Thus, $\boldsymbol{A}$ is positive-semidefinite.  To see that
@@ -210,9 +210,9 @@ described in section~\ref{sec: sym tridiagonal}.
 \section{General self-adjoint problems}
 A second-order linear differential operator~$\mathcal{L}$ is 
 \emph{formally self-adjoint} if it can be written in the form
-\[
+\begin{equation}\label{eq: L self-adjoint}
 (\mathcal{L}u)(x)=-\bigl(a(x)u'\bigr)'+c(x)u(x).
-\]
+\end{equation}
 Here, the coefficients $a(x)$ and $c(x)$ are assumed to have the same 
 properties as in Chapter~\ref{chap: finite diff 1d}; in particular, $a(x)$ must 
 satisfy the lower bound~\eqref{eq: ellipticity 1d}. For such an $\mathcal{L}$, 
@@ -223,11 +223,11 @@ boundary conditions},
 \text{with $u(0)=\gamma_0$ and $a(L)u'(L)=\gamma_L$.}
 \end{equation}
 Integration by parts implies that
-\[
+\begin{equation}\label{eq: Lu v by parts}
 \int_0^L(\mathcal{L}u)(x)v(x)\,dx
     =-\bigl[a(x)u'(x)v(x)\bigr]_0^L+\int_0^L\bigl(a(x)u'(x)v'(x)+c(x)u(x)v(x)
         \bigr)\,dx,
-\]
+\end{equation}
 so any solution~$u$ of~\eqref{eq: self-adjoint mixed} must satisfy
 \[
 \int_0^L\bigl(a(x)u'(x)v'(x)+c(x)u(x)v(x)\bigr)\,dx
@@ -247,29 +247,29 @@ and require that the finite element solution~$u_h\in S_h$ satisfy
     =\gamma_Lv(L)+\int_0^Lf(x)v(x)\,dx
     \quad\text{for all $v\in T_h$.}
 \end{equation}
-Equivalently, since $\{\phi_j\}_{j=1}^M$ is a basis for~$T_h$, we require
+Equivalently, since $\{\chi_j\}_{j=1}^M$ is a basis for~$T_h$, we require
 \[
-\int_0^L\bigl(a(x)u_h'(x)\phi_j'(x)+c(x)u_h(x)\phi_j(x)\bigr)\,dx
-    =\gamma_L\phi_j(L)+\int_0^Lf(x)\phi_j(x)\,dx
+\int_0^L\bigl(a(x)u_h'(x)\chi_j'(x)+c(x)u_h(x)\chi_j(x)\bigr)\,dx
+    =\gamma_L\chi_j(L)+\int_0^Lf(x)\chi_j(x)\,dx
     \quad\text{for $1\le j\le M$.}
 \]
 Inserting the representation~\eqref{eq: uh U 1d} yields the system of linear 
 equations
 \[
-\sum_{k=0}^M\bigl(a_{jk}U_k+c_{jk}U_k\bigr)=\gamma_L\phi_j(L)+f_j
+\sum_{k=0}^M\bigl(a_{jk}U_k+c_{jk}U_k\bigr)=\gamma_L\chi_j(L)+f_j
     \quad\text{for $1\le j\le M$,}
 \]
 where
 \[
-a_{jk}=\int_0^La(x)\phi_k'(x)\phi_j'(x)\,dx,\quad
-c_{jk}=\int_0^Lc(x)\phi_k(x)\phi_j(x)\,dx,\quad
-f_j=\int_0^Lf(x)\phi_j(x)\,dx.
+a_{jk}=\int_0^La(x)\chi_k'(x)\chi_j'(x)\,dx,\quad
+c_{jk}=\int_0^Lc(x)\chi_k(x)\chi_j(x)\,dx,\quad
+f_j=\int_0^Lf(x)\chi_j(x)\,dx.
 \]
 Moving $U_0=\gamma_0$ to the right-hand side leads to an $M\times M$ linear 
 system,
 \[
 \sum_{j=1}^M\bigl(a_{jk}+c_{jk})U_k
-    =\gamma_L\phi_j(L)+f_j-(a_{j0}+c_{j0})\gamma_0
+    =\gamma_L\chi_j(L)+f_j-(a_{j0}+c_{j0})\gamma_0
     \quad\text{for $1\le j\le M$,}
 \]
 or, in matrix notation,
@@ -291,7 +291,7 @@ the historical origins of finite element methods in structural engineering.
 
 \section{Matrix assembly element-by-element}
 
-In the previous section, we used the nodal basis functions~$\phi_k$ to set up 
+In the previous section, we used the nodal basis functions~$\chi_k$ to set up 
 the linear system~\eqref{eq: self-adjoint mixed equations}, but this approach 
 becomes very complicated in 2D~or 3D, or even in 1D with higher-order elements.
 Instead, a simpler method is to assemble the matrices $\boldsymbol{A}$~and 
@@ -440,13 +440,13 @@ $\boldsymbol{A}$~and $\boldsymbol{B}$ are constructed as \emph{sparse arrays}
 with an appropriate data structure.
 
 \begin{algorithm}
-\caption{Assemble the $\boldsymbol{A}$, $\boldsymbol{B}$~and $\boldsymbol{f}$
+\caption{Assemble the $\boldsymbol{A}$, $\boldsymbol{C}$~and $\boldsymbol{f}$
 from~\eqref{eq: A C f example}.}
 \label{alg: assembly example}
 \begin{algorithmic}
 \State Storage for $\boldsymbol{f}=[f_j]\in\mathbb{R}^M$,
 $\boldsymbol{A}=[a_{jk}]\in\mathbb{R}^{M\times(M+1)}$ and
-$\boldsymbol{B}=[b_{jk}]\in\mathbb{R}^{M\times(M+1)}$.
+$\boldsymbol{C}=[c_{jk}]\in\mathbb{R}^{M\times(M+1)}$.
 \For{$j=1:M$}
     \State $f_j=0$
     \For{$k=1:M+1$}
@@ -557,7 +557,7 @@ matrix~$\boldsymbol{C}=[\boldsymbol{C}'\quad\boldsymbol{C}'']$ is given by
 \end{example}
 
 
-\section{Quadratic elements}
+\section{Quadratic elements}\label{sec: quadratic elements}
 
 Let us again consider the self-adjoint, two-point boundary-value 
 problem~\eqref{eq: self-adjoint mixed} but now let $V_h$ denote the vector 
@@ -651,6 +651,94 @@ If $a(x)=1$~and $c(x)=1$, then
 
 \section{Sturm--Liouville problems}
 
+We will now consider a Sturm--Liouville equation,
+\begin{equation}\label{eq: Sturm Liouville ODE}
+-\bigl(a(x)\phi'\bigr)'+\bigl(c(x)-\lambda b(x)\bigr)\phi=0\quad
+	\text{for $0<x<L$,}
+\end{equation}
+subject to mixed boundary conditions
+\begin{equation}\label{eq: Sturm Liouville bc}
+\phi(0)=0\quad\text{and}\quad a(L)\phi'(L)=0.
+\end{equation}
+In addition to assuming that the leading coefficient~$a(x)$ 
+satisfies~\eqref{eq: ellipticity 1d}, we require that
+\begin{equation}\label{eq: b>0}
+b(x)>0\quad\text{for $0<x<L$.}
+\end{equation}
+A non-trivial solution~$\phi=\phi(x)$ is said to an \emph{eigenfunction} and 
+$\lambda$ is then the corresponding \emph{eigenvalue}.  
+
+The ODE~\eqref{eq: Sturm Liouville ODE} can be written as
+\[
+\mathcal{L}\phi=\lambda b\phi,
+\]
+where the self-adjoint differential operator~$\mathcal{L}$ is again given 
+by~\eqref{eq: L self-adjoint}.  Recalling the 
+identity~\eqref{eq: Lu v by parts}, we see that any \emph{eigenpair} 
+$(\phi,\lambda)$ satisfies, for any test function~$v$,
+\[
+\int_0^L\bigl(a(x)\phi'(x)v(x)+c(x)\phi(x)v(x)\bigr)\,dx
+	=\lambda\int_0^Lb(x)\phi(x)v(x)\,dx
+\quad\text{provided $v(0)=0$.}
+\]
+
+Let $V_h$ denote the continuous, piecewise-quadratic finite element space 
+discussed in Section~\ref{sec: quadratic elements}, and put
+\[
+S_h=T_h=\{\,v\in V_h:v(0)=0\,\}.
+\]
+We seek an approximate eigenfunction~$\phi_h\in S_h$ and corresponding 
+approximate eigenvalue~$\lambda_h$ such that
+\[
+\int_0^L\bigl(a(x)\phi_h'(x)v(x)+c(x)\phi_h(x)v(x)\bigr)\,dx
+	=\lambda\int_0^Lb(x)\phi_h(x)v(x)\,dx
+\quad\text{for all $v\in T_h$.}
+\]
+Let $\chi_0$, $\chi_1$, \ldots, $\chi_{2M}$ be the nodal basis for~$V_h$, so 
+that
+\[
+\chi_k(\mathsf{n}_j)=\delta_{jk}
+	\quad\text{for $j$, $k\in\{1,2,\ldots, 2M+1\}$,}
+\]
+and thus, since $\phi_h(\mathsf{n}_{2M+1})=\phi_h(x_0)=\phi_h(0)=0$,
+\[
+\phi_h(x)=\sum_{k=1}^{2M}\Phi_k\chi_k(x)
+	\quad\text{for $0\le x\le L$},
+	\quad\text{where $\Phi_k=\phi_h(\mathsf{n}_k)$.}
+\]
+Choosing $v=\Phi_j$ we see that
+\[
+\sum_{k=1}^{2M}\bigl(a_{jk}+c_{jk}\bigr)\Phi_k
+	=\lambda_h\sum_{k=1}^{2M}b_{jk}\Phi_k\quad\text{for $1\le j\le 2M$,}
+\]
+where
+\[
+a_{jk}=\int_0^La(x)\chi'_k(x)\chi'_j(x)\,dx,\qquad
+c_{jk}=\int_0^Lc(x)\chi_k(x)\chi_j(x)\,dx,
+\]
+and
+\[
+b_{jk}=\int_0^Lb(x)\chi_k(x)\chi_j(x)\,dx.
+\]
+In this way, we obtain a $(2M)\times(2M)$ \emph{generalized algebraic 
+eigenproblem},
+\[
+\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{\Phi}
+	=\Lambda\boldsymbol{B}\boldsymbol{\Phi},
+\]
+where $\boldsymbol{A}=[a_{jk}]$, $\boldsymbol{C}=[c_{jk}]$, 
+$\boldsymbol{B}=[b_{jk}]$, $\boldsymbol{\Phi}=[\Phi_k]$~and 
+$\Lambda=\lambda_h$.  Each of the three matrices is real and symmetric, and our 
+assumptions \eqref{eq: ellipticity 1d}~and \eqref{eq: b>0} on the coefficients 
+$a(x)$~and $b(x)$ ensure that $\boldsymbol{A}$~and $\boldsymbol{B}$ are 
+strictly positive-definite.  It follows that there exist eigenpairs 
+$(\Phi_n,\Lambda_n)$ for~$1\le n\le 2M$, with
+\[
+\Lambda_1\le\Lambda_2\le\cdots\le\Lambda_{2M},\qquad
+\boldsymbol{\Phi}_m^T\boldsymbol{A}\boldsymbol{\Phi}_n=\Lambda_n\delta_{mn},
+\qquad
+\boldsymbol{\Phi}_m^T\boldsymbol{B}\boldsymbol{\Phi}_n=\delta_{mn}.
+\]
 
 \begin{Exercises}
 \exercise

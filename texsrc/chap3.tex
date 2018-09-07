@@ -4,8 +4,8 @@ Consider the following \emph{initial-boundary value problem} for~$u=u(x,t)$,
 \begin{equation}\label{eq: heat ivp 1d}
 \begin{aligned}
 u_t-au_{xx}&=f(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
-u&=\gamma_0&&\text{at $x=0$, for $0<t<T$,}\\
-u&=\gamma_L&&\text{at $x=L$, for $0<t<T$,}\\
+u&=\gamma_0(t)&&\text{at $x=0$, for $0<t<T$,}\\
+u&=\gamma_L(t)&&\text{at $x=L$, for $0<t<T$,}\\
 u&=u_0(x)&&\text{for $0<x<L$ when $t=0$,}
 \end{aligned}
 \end{equation}
@@ -24,23 +24,19 @@ directions.
 
 \section{Separation of variables}
 
-Associated with~\eqref{eq: heat ivp 1d} is the \emph{steady-state} problem 
-for~$u_\infty=u_\infty(x)$ satisfying
+Let
 \[
--au_\infty''=f_\infty(x)\quad\text{for $0<x<L$,}\quad
-    \text{with $u_\infty(0)=\gamma_0$ and $u_\infty(L)=\gamma_L$,}
+\gamma(x,t)=\frac{1}{L}\bigl((L-x)\gamma_0(t)+x\gamma_L(t)\bigr),
 \]
-where we assume that $f(x,t)$ tends to a steady-state 
-limit~$f_\infty(x)$ as~$t\to\infty$.  By noting that 
-$-u_\infty''=f_\infty(x)/a$, and recalling the 
-formula~\eqref{eq: model 1d exact soln}, we conclude 
+so that
 \[
-u_\infty(x)=\frac{L-x}{L}\biggl(
-    \gamma_0+\frac{1}{a}\int_0^x yf_\infty(y)\,dy\biggr)
-    +\frac{x}{L}\biggl(\gamma_L+\frac{1}{a}\int_x^L(L-y)f_\infty(y)\,dy\biggr)
+\gamma(0,t)=\gamma_0(t)\quad\text{and}\quad\gamma(L,t)=\gamma_L(t),
 \]
-for $0\le x\le L$.  The difference $v(x,t)=u(x,t)-u_\infty(x)$ provides the 
-\emph{transient behaviour} of the system, and satisfies
+with
+\[
+\gamma_t-a\gamma_{xx}=\frac{1}{L}\bigl((L-x)\gamma_0'(t)+x\gamma_L'(t)\bigr).
+\]
+Thus, the difference $v=u-\gamma$ satisfies 
 \begin{equation}\label{eq: heat ivp homog 1d}
 \begin{aligned}
 v_t-av_{xx}&=g(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
@@ -49,8 +45,15 @@ v&=0&&\text{at $x=L$, for $0<t<T$,}\\
 v&=v_0(x)&&\text{for $0<x<L$ when $t=0$,}
 \end{aligned}
 \end{equation}
-where $g(x,t)=f(x,t)-f_\infty(x)$ and $v_0(x)=u_0(x,0)-u_\infty(x)$.  In this 
-way, it suffices to solve a problem with \emph{homogeneous boundary conditions}.
+where 
+\[
+g(x,t)=f(x,t)-\gamma_t(x,t)
+\quad\text{and}\quad
+v_0(x)=u_0(x)-\gamma(x,0).
+\]
+In this way, it suffices to solve a problem with \emph{homogeneous boundary 
+conditions}.
+
 
 Associated with the time-dependent problem~\eqref{eq: heat ivp homog 1d} is the 
 Sturm--Liouville \emph{eigenproblem},
@@ -96,8 +99,8 @@ Sf(x)=\sum_{n=1}^\infty\hat f_n\sin\frac{n\pi}{L}\,x
 converges to~$f(x)$ in the \emph{mean-square sense}.  The Fourier coefficients 
 of~$v(x,t)$ are functions of~$t$,
 \[
-\hat v_n(t)=\langle u(\cdot,t),\phi_n\rangle
-    =\frac{2}{L}\int_0^Lu(x,t)\sin\biggl(\frac{n\pi}{L}\,x\biggr)\,dx,
+\hat v_n(t)=\langle v(\cdot,t),\phi_n\rangle
+    =\frac{2}{L}\int_0^Lv(x,t)\sin\biggl(\frac{n\pi}{L}\,x\biggr)\,dx,
 \]
 and formal term-by-term differentiation of the Fourier expansion of~$v$ gives
 \[
@@ -174,10 +177,8 @@ v(x,t)=e^{-t\mathcal{A}}v_0(x)+\int_0^te^{-(t-s)\mathcal{A}}g(x,s)\,ds.
 This representation of~$v$ is known as the \emph{Duhamel formula}, and the 
 solution of our original problem~\eqref{eq: heat ivp 1d} is then given by
 \[
-u(x,t)=u_\infty(x)+v(x,t)\quad\text{for $0\le x\le L$ and $0\le t\le T$.}
+u(x,t)=\gamma(x,t)+v(x,t)\quad\text{for $0\le x\le L$ and $0\le t\le T$.}
 \]
-Since $\lambda_n>0$ for all $n\in\{1,2,3,\ldots\}$, if $t\to\infty$ then
-$(e^{-t\boldsymbol{A}}v)(x)\to0$ and hence $u(x,t)\to u_\infty(x)$.
 
 \section{Semidiscrete method}
 
@@ -201,15 +202,15 @@ value problem~\eqref{eq: heat ivp 1d},
 \begin{aligned}
 \frac{dU_p}{dt}-a\,\frac{U_{p+1}-2U_p+U_{p-1}}{\Delta x^2}&=f_p(t)&
 	&\text{for $1\le p\le P-1$ and $0<t<T$,}\\
-U_0&=\gamma_0&&\text{for $0<t<T$,}\\
-U_P&=\gamma_P&&\text{for $0<t<T$,}\\
+U_0&=\gamma_0(t)&&\text{for $0<t<T$,}\\
+U_P&=\gamma_P(t)&&\text{for $0<t<T$,}\\
 U_p&=u_{0p}&&\text{for $1\le p\le P-1$ when $t=0$.}
 \end{aligned}
 \end{equation}
 We can write this system in matrix notation as
 \begin{equation}\label{eq: ODE system}
 \frac{d\boldsymbol{U}}{dt}+\boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}(t)
-	+\boldsymbol{g},
+	+\boldsymbol{g}(t),
 \end{equation}
 where
 \[
@@ -226,8 +227,8 @@ and
 U_1(t)\\ U_2(t)\\ \vdots\\ U_{P-2}(t)\\ U_{P-1}(t)\end{bmatrix},\qquad
 \boldsymbol{f}(t)=\begin{bmatrix}
 f_1(t)\\ f_2(t)\\ \vdots\\ f_{P-2}(t)\\ f_{P-1}(t)\end{bmatrix},\qquad
-\boldsymbol{g}=\frac{a}{\Delta x^2}\begin{bmatrix}
-\gamma_0\\ 0\\ \vdots\\ 0\\ \gamma_L\end{bmatrix}.
+\boldsymbol{g}(t)=\frac{a}{\Delta x^2}\begin{bmatrix}
+\gamma_0(t)\\ 0\\ \vdots\\ 0\\ \gamma_L(t)\end{bmatrix}.
 \]
 Recall that for any square matrix~$\boldsymbol{A}$, the matrix exponential
 is defined by the convergent infinite series
@@ -248,22 +249,23 @@ for~\eqref{eq: ODE system}:
 	+e^{t\boldsymbol{A}}\,\frac{d\boldsymbol{U}}{dt}
 	=e^{t\boldsymbol{A}}\biggl(\frac{d\boldsymbol{U}}{dt}
 	+\boldsymbol{A}\boldsymbol{U}\biggr)
-	=e^{t\boldsymbol{A}}\bigl(\boldsymbol{f}(t)+\boldsymbol{g}\bigr),
+	=e^{t\boldsymbol{A}}\bigl(\boldsymbol{f}(t)+\boldsymbol{g}(t)\bigr),
 \]
 where we used the fact that $\boldsymbol{A}$ commutes 
 with~$e^{t\boldsymbol{A}}$.  If $t=0$ then $e^{t\boldsymbol{A}}=\boldsymbol{I}$
 is the identity matrix, so
 \[
 e^{t\boldsymbol{A}}\boldsymbol{U}(t)-\boldsymbol{U}(0)
-	=\int_0^te^{s\boldsymbol{A}}\bigl(\boldsymbol{f}(s)+\boldsymbol{g}\bigr)\,ds
+	=\int_0^te^{s\boldsymbol{A}}\bigl(
+		\boldsymbol{f}(s)+\boldsymbol{g}(s)\bigr)\,ds
 \]
 Using $e^{-t\boldsymbol{A}}=(e^{t\boldsymbol{A}})^{-1}$~and 
 $e^{-t\boldsymbol{A}}e^{s\boldsymbol{A}}=e^{-(t-s)\boldsymbol{A}}$, we obtain
 a semidiscrete Duhamel formula,
 \[
 \boldsymbol{U}(t)=e^{-t\boldsymbol{A}}\boldsymbol{u}_0
-	+\int_0^te^{-(t-s)\boldsymbol{A}}\bigl(\boldsymbol{f}(s)+\boldsymbol{g}
-	\bigr)\,ds,
+	+\int_0^te^{-(t-s)\boldsymbol{A}}\bigl(
+		\boldsymbol{f}(s)+\boldsymbol{g}(s)\bigr)\,ds,
 \]
 where $\boldsymbol{u}_0=[u_0(x_p)]_{p=1}^{P-1}$ is the vector of initial data.
 
@@ -276,8 +278,10 @@ t_n=n\,\Delta t\quad\text{for $0\le n\le N$,}
 \]
 and let
 \[
-U^n_p\approx u(x_p,t_n),\qquad
-f^n_p=f(x_p,t_n),\qquad
+U^n_p\approx u(x_p,t_n),\quad
+f^n_p=f(x_p,t_n),\quad
+\gamma_0^n=\gamma_0(t_n),\quad
+\gamma_L^n=\gamma_L(t_n),\quad
 u_{0p}=u_0(x_p).
 \]
 The \emph{forward difference} approximation in time,
@@ -297,8 +301,8 @@ lead to the \emph{explicit Euler method} for~\eqref{eq: heat ivp 1d}:
 \frac{U^{n+1}_p-U^n_p}{\Delta t}
 	-a\,\frac{U^n_{p+1}-2U^n_p+U^n_{p-1}}{\Delta x^2}&=f^n_p&
 &\text{for $1\le p\le P-1$ and $0\le n\le N-1$,}\\
-U^n_0&=\gamma_0&&\text{for $0\le n\le N$,}\\
-U^n_P&=\gamma_L&&\text{for $0\le n\le N$,}\\
+U^n_0&=\gamma_0^n&&\text{for $0\le n\le N$,}\\
+U^n_P&=\gamma_L^n&&\text{for $0\le n\le N$,}\\
 U^0_p&=u_{0p}&&\text{for $1\le p\le P-1$.}
 \end{aligned}
 \end{equation}
@@ -363,8 +367,8 @@ $0\le n\le N$.
 \EndFor
 \For{$n=0:N$}
     \State $t_n=n\,\Delta t$
-    \State $U^n_0=\gamma_0$
-    \State $U^n_P=\gamma_L$
+    \State $U^n_0=\gamma_0^n$
+    \State $U^n_P=\gamma_L^n$
 \EndFor
 \State $\rho=a\,\Delta t/\Delta x^2$
 \For{$p=1:P-1$}
@@ -392,7 +396,7 @@ stable:
 \[
 \|\boldsymbol{U}^n_{0:P}\|_\infty
 	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
-		|\gamma_0|,|\gamma_L|\bigr\}
+		\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
 	+\sum_{j=0}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
 \quad\text{for $0\le n\le N$.}
 \]
@@ -417,20 +421,26 @@ and thus
 		+(2\rho+|1-2\rho|)\|\boldsymbol{U}^n_{0:P}\|_\infty
 \quad\text{for $1\le p\le P-1$.} 
 \]
-If $\rho\le1/2$, then $2\rho+|1-2\rho|=2\rho+1-2\rho=1$, and
-since $U^{n+1}_0=\gamma_0=U^n_0$~and $U^{n+1}_P=\gamma_L=U^n_P$ we see that
+If $\rho\le1/2$, then $2\rho+|1-2\rho|=2\rho+1-2\rho=1$ so
 \begin{align*}
-\|\boldsymbol{U}^{n+1}_{0:P}\|_\infty
+\|\boldsymbol{U}^{n+1}_{1:P-1}\|_\infty
 	&\le\|\boldsymbol{U}^n_{0:P}\|_\infty
 		+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
 	&\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
-		|\gamma_0|,|\gamma_L|\bigr\}
+		\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
 	+\sum_{j=0}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
 		+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
 	&=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
-		|\gamma_0|,|\gamma_L|\bigr\}
+		\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
 	+\sum_{j=0}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
 \end{align*}
+and since $U^{n+1}_0=\gamma_0^{n+1}$~and $U^{n+1}_P=\gamma_L^{n+1}$
+\[
+\|\boldsymbol{U}^{n+1}_{0:P}\|_\infty
+	=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
+		\|\gamma_0^{0:n+1}\|_\infty,\|\gamma_L^{0:n+1}\|_\infty\bigr\}
+	+\sum_{j=0}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
+\]
 as required.
 \end{proof}
 
@@ -506,15 +516,16 @@ In addition, the boundary and initial conditions satisfied by $U^n_p$~and $u$
 imply that
 \[
 \begin{aligned}
-E^n_0&=U^n_0-u(x_0,t_n)=\gamma_0-\gamma_0=0&&\text{for $0\le n\le N$,}\\
-E^n_P&=U^n_P-u(x_P,t_n)=\gamma_L-\gamma_L=0&&\text{for $0\le n\le N$,}\\
+E^n_0&=U^n_0-u(x_0,t_n)=\gamma_0^n-\gamma_0^n=0&&\text{for $0\le n\le N$,}\\
+E^n_P&=U^n_P-u(x_P,t_n)=\gamma_L^n-\gamma_L^n=0&&\text{for $0\le n\le N$,}\\
 E^0_p&=U^0_p-u(x_p,t_0)=u_0(x_p)-u_0(x_p)=0&&\text{for $1\le p\le P-1$.}
 \end{aligned}
 \]
-Thus, $E^n_p$ is the explicit Euler solution obtained when $f^n_p$, $\gamma_0$,
-$\gamma_L$~and $u_{0p}$ are replaced by $\tau^n_p$, $0$, $0$~and $0$, 
-respectively.  The restriction on the step sizes allows us to apply the 
-stability estimate of Theorem~\ref{thm: explicit Euler stability} to deduce that
+Thus, $E^n_p$ is the explicit Euler solution obtained when $f^n_p$, 
+$\gamma_0^n$, $\gamma_L^n$~and $u_{0p}$ are replaced by $\tau^n_p$, $0$, 
+$0$~and $0$, respectively.  The restriction on the step sizes allows us to apply 
+the stability estimate of Theorem~\ref{thm: explicit Euler stability} to deduce 
+that
 \[
 \|\boldsymbol{E}^n_{0:P}\|_\infty
 	\le\sum_{j=0}^{n-1}\|\boldsymbol{\tau}^n_{1:P-1}\|_\infty\,\Delta t
@@ -543,8 +554,8 @@ which leads to the \emph{im}plicit Euler method,
 \frac{U^n_p-U^{n-1}_p}{\Delta t}
 	-a\,\frac{U^n_{p+1}-2U^n_p+U^n_{p-1}}{\Delta x^2}&=f^n_p&
 &\text{for $1\le p\le P-1$ and $1\le n\le N$,}\\
-U^n_0&=\gamma_0&&\text{for $0\le n\le N$,}\\
-U^n_P&=\gamma_L&&\text{for $0\le n\le N$,}\\
+U^n_0&=\gamma_0^n&&\text{for $0\le n\le N$,}\\
+U^n_P&=\gamma_L^n&&\text{for $0\le n\le N$,}\\
 U^0_p&=u_{0p}&&\text{for $1\le p\le P-1$.}
 \end{aligned}
 \end{equation}
@@ -592,7 +603,7 @@ method~\eqref{eq: ODE system}, and approximate $d\boldsymbol{U}/dt$ with a
 backward difference to obtain
 \begin{equation}\label{eq: implicit Euler 1d vector}
 \frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
-	+\boldsymbol{A}\boldsymbol{U}^n=\boldsymbol{f}^n+\boldsymbol{g}
+	+\boldsymbol{A}\boldsymbol{U}^n=\boldsymbol{f}^n+\boldsymbol{g}^n
 \quad\text{for $1\le n\le N$,}
 \end{equation}
 where
@@ -610,13 +621,13 @@ and
 U^n_1\\ U^n_2\\ \vdots\\ U^n_{P-2}\\ U^n_{P-1}\end{bmatrix},\qquad
 \boldsymbol{f}^n=\begin{bmatrix}
 f^n_1\\ f^n_2\\ \vdots\\ f^n_{P-2}\\ f^n_{P-1}\end{bmatrix},\qquad
-\boldsymbol{g}=\frac{a}{\Delta x^2}\begin{bmatrix}
-\gamma_0\\ 0\\ \vdots\\ 0\\ \gamma_L\end{bmatrix}.
+\boldsymbol{g}^n=\frac{a}{\Delta x^2}\begin{bmatrix}
+\gamma_0^n\\ 0\\ \vdots\\ 0\\ \gamma_L^n\end{bmatrix}.
 \]
 Rearranging \eqref{eq: implicit Euler 1d vector} we find that
 \[
 (\boldsymbol{I}+\Delta t\,\boldsymbol{A})\boldsymbol{U}^n
-	=\boldsymbol{U}^{n-1}+\Delta t(\boldsymbol{f}^n+\boldsymbol{g})
+	=\boldsymbol{U}^{n-1}+\Delta t\,(\boldsymbol{f}^n+\boldsymbol{g}^n)
 \quad\text{for $1\le n\le N$.}
 \]
 Here, the coefficient matrix is symmetric, tridiagonal and positive-definite, 
@@ -642,8 +653,8 @@ $[\ell_1,\ell_2,\ldots,\ell_{P-2}]^T$.
 \EndFor
 \For{$n=0:N$}
     \State $t_n=n\,\Delta t$
-    \State $U^n_0=\gamma_0$
-    \State $U^n_P=\gamma_L$
+    \State $U^n_0=\gamma_0^n$
+    \State $U^n_P=\gamma_L^n$
 \EndFor
 \State $\rho=a\,\Delta t/\Delta x^2$
 \For{$p=1:P-1$}
@@ -679,25 +690,27 @@ $\Delta x$~and $\Delta t$,
 \[
 \|\boldsymbol{U}^n_{0:P}\|_\infty
 	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
-		|\gamma_0|,|\gamma_L|\bigr\}
+		\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
 	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
 \quad\text{for $0\le n\le N$.}
 \]
 \end{theorem}
 \begin{proof}
 We use finite induction on~$n$.  When~$n=0$, we have
-$U^0_p=u_{0p}$ for~$1\le p\le P-1$, with $U^0_0=\gamma_0$~and $U^0_P=\gamma_L$,
+$U^0_p=u_{0p}$ for~$1\le p\le P-1$, with $U^0_0=\gamma_0^0$~and 
+$U^0_P=\gamma_L^0$,
 so 
 \[
 \|\boldsymbol{U}^0_{0:P}\|_\infty=
-\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\},
+\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
+	|\gamma_0^0|,|\gamma_L^0|\bigr\},
 \]
 which agrees with the formula since the empty sum vanishes. Now let 
 $1\le n\le N$ and make the induction hypothesis that
 \[
 \|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
 	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
-		|\gamma_0|,|\gamma_L|\bigr\}
+		\|\gamma_0^{0:n-1}\|_\infty,\|\gamma_L^{0:n-1}\|_\infty\bigr\}
 	+\sum_{j=1}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t.
 \]
 We see from~\eqref{eq: implicit Euler stencil} that, for $1\le p\le P-1$,
@@ -728,14 +741,21 @@ After canceling $2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty$, it follows that
 \begin{align*}
 \|\boldsymbol{U}^n_{1:P-1}\|_\infty&\le\|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
 	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
-	&\le
-\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\}
+	&\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
+	\|\gamma_0^{0:n-1}\|_\infty,\|\gamma_L^{0:n-1}\|_\infty\bigr\}
 	+\sum_{j=1}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
 	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
-	&=
-\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\}
+	&=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
+	\|\gamma_0^{0:n-1}\|_\infty,\|\gamma_L^{0:n-1}\|_\infty\bigr\}
 	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
 \end{align*}
+and so, since $U^n_0=\gamma_0^n$~and $U^n_P=\gamma_L^n$,
+\[
+\|\boldsymbol{U}^n_{0:P}\|_\infty
+	=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
+	\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
+	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
+\]
 as required.
 \end{proof}
 
