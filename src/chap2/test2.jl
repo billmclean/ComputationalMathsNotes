@@ -2,16 +2,19 @@ using FEM_P2
 using PyPlot
 
 bc = (Dirichlet, Neumann)
-L = 2.0
-γ0 = 1.0
-γL = -1.5
-a = 1.0
-c = 0.0
-f(x) = 2.0*a
-exact_u(x) = γ0 + (γL+2L)*x - x^2
+L = 3.0
+a(x) = exp(x)
+c(x) = exp(-x)
+f(x) = c(x) * sin(x) - exp(x) * ( cos(x) - sin(x) ) 
+exact_u(x) = sin(x)
+γ0 = 0.0
+γL = a(L) * cos(L)
 
-mesh = Mesh(L .* [0.0, 0.25, 0.6, 1.0], bc)
+#mesh = Mesh(L .* [0.0, 0.25, 0.6, 1.0], bc)
+mesh = Mesh(L .* collect(0.0:0.25:1.0), bc)
 A = assemble_matrix(mesh, deriv_times_deriv!, a)
+C = assemble_matrix(mesh, func_times_func!, c)
+A = A + C
 F = assemble_vector(mesh, f)
 G = Neumann_bc_vector(mesh, [γL])
 F .+= G

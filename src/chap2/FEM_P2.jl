@@ -157,12 +157,12 @@ function Neumann_bc_vector(mesh::Mesh, γ::Vector{Float64})
     if left == Neumann
         k += 1
         I[k] = leftnd
-        V[k] = γ[1]
+        V[k] = γ[k]
     end
     if right == Neumann
         k += 1
         I[k] = rightnd
-        V[k] = γ[2]
+        V[k] = γ[k]
     end
     return sparsevec(I, V, ndof)
 end
@@ -196,7 +196,15 @@ function func_times_func!(A::Matrix{Float64}, node::Vector{Float64},
                           coef::Float64)
     hm = node[3] - node[1]
     A .= MAT2
-    A .*= coef * hm / 30
+    A .*= hm / 30
+end
+
+function func_times_func!(A::Matrix{Float64}, node::Vector{Float64},
+                          coef::Function)
+    hm = node[3] - node[1]
+    for p = 1:3
+        A[p,p] = hm * SIMPSON_WT[p] * coef(node[p]) 
+    end
 end
 
 function evaluate_from_ndvals(mesh::Mesh, Und::Vector{Float64}, 
@@ -208,6 +216,7 @@ function evaluate_from_ndvals(mesh::Mesh, Und::Vector{Float64},
     x = zeros(r*M+1)
     U = zeros(r*M+1)
     x[1] = node[leftnd]
+    U[1] = Und[elm[1,1]]
     for m = 1:M
         lo = node[elm[1,m]]
         hi = node[elm[3,m]]
