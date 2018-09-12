@@ -646,6 +646,203 @@ If $a(x)=1$~and $c(x)=1$, then
 \end{equation}
 \end{example}
 
+To deal with non-constant coefficients $a(x)$~and $c(x)$, it is convenient to 
+approximate the integrals \eqref{eq: a mpq reference 1d}~and
+\eqref{eq: c mpq reference 1d} using a \emph{quadrature rule}
+\[
+\int_0^1 f(\xi)\,d\xi\approx\sum_{j=1}^J w_jf(\xi_j)
+\]
+with \emph{weights} $w_1$, $w_2$, \dots, $w_J$ and \emph{points}
+\[
+0\le\xi_1<\xi_2<\cdots<\xi_J\le1.
+\]
+Using such an approximation yields, for the element mass matrix,
+\[
+\boldsymbol{A}^\brak{m}\approx
+	\widetilde{\boldsymbol{A}}^\brak{m}=[\tilde a_{pq}^\brak{m}]
+\quad\text{where}\quad
+\tilde a^\brak{m}_{pq}=\frac{1}{h_m}\sum_{j=1}^Jw_ja(x_{m-1}+\xi_jh_m)
+	\Psi'_q(\xi_j)\Psi'_p(\xi_j),
+\]
+and for the element stiffness matrix,
+\[
+\boldsymbol{C}^\brak{m}\approx
+	\widetilde{\boldsymbol{C}}^\brak{m}=[\tilde c_{pq}^\brak{m}]
+\quad\text{where}\quad
+\tilde c^\brak{m}_{pq}=h_m\sum_{j=1}^Jw_jc(x_{m-1}+\xi_jh_m)
+	\Psi_q(\xi_j)\Psi_p(\xi_j).
+\]
+
+\section{Polynomial interpolation}
+
+Let $\mathbb{P}_r$ denote the vector space of real polynomials of degree at 
+most~$r$.  Let $x_1$, $x_2$, \dots, $x_{r+1}$ be distinct points in an 
+interval~$[a,b]$, and let $f:[a,b]\to\mathbb{R}$ be a continuous function.  We 
+say that a polynomial~$g\in\mathbb{P}_r$ \emph{interpolates} $f$ at the given 
+points if
+\begin{equation}\label{eq: g interpolates f}
+g(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
+\end{equation}
+To see that such a $g$ exists, we define the \emph{Lagrange 
+interpolation polynomials} $\psi_1$, $\psi_2$, \dots, $\psi_{r+1}$ by
+\[
+\psi_j(x)=\prod_{1\le k\le r+1, k\ne j}
+	\frac{x-x_k}{x_j-x_k}\quad\text{for $1\le j\le r+1$,}
+\]
+and then define the \emph{linear interpolation operator}~$\mathcal{Q}_r$ by
+\[
+(\mathcal{Q}_rf)(x)=\sum_{j=1}^{r+1}f(x_j)\ell_j(x).
+\]
+Since $\ell_j\in\mathbb{P}_r$ and $\psi_j(x_k)=\delta_{jk}$, we see that
+$\mathcal{Q}_rf\in\mathbb{P}_r$ interpolates~$f$, that is,
+\[
+(\mathcal{Q}_rf)(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
+\]
+Moreover, $\mathcal{Q}_rf$ is the only such interpolant, because if 
+$g\in\mathbb{P}_r$ satisfies \eqref{eq: g interpolates f} then the difference
+$g-\mathcal{Q}_rf$ is a polynomial satisfying
+\[
+(g-\mathcal{Q}_rf)(x_j)=g(x_j)-(\mathcal{Q}_rf)(x_j)=f(x_j)-f(x_j)=0
+	\quad\text{for $1\le j\le r+1$,}
+\]
+so, for some constant~$C$,
+\[
+g(x)-(\mathcal{Q}_rf)(x)=C(x-x_1)(x-x_2)\cdots(x-x_{r+1}) 
+	=Cx^{r+1}+\text{lower degree terms}.
+\]
+But $g-\mathcal{Q}_rf$ has degree at most~$r$, so $C=0$ and hence
+$g(x)=(\mathcal{Q}_rf)(x)$ for all~$x$. In particular, since any element 
+of~$\mathbb{P}_r$ interpolates itself, it follows that
+\[
+\mathcal{Q}_rf=f\quad\text{for every $f\in\mathbb{P}_r$,}
+\]
+and thus $\mathcal{Q}_r^2=\mathcal{Q}_r$.  Hence, $\mathcal{Q}_r$ is a 
+\emph{projection} onto~$\mathbb{P}_r$.
+
+Let 
+\[
+\pi_{r,y}(x)=\frac{(x-y)_+^r}{r!}=\begin{cases}
+	(x-y)^r/r!&\text{if $a\le y\le x\le b$,}\\
+	0&\text{if $a\le x<y\le b$.}
+\end{cases}
+\]
+If $f$ is $C^{r+1}$ on~$[a,b]$ then, by Theorem~\ref{thm: Taylor remainder}, 
+\[
+f(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
+	+\int_a^b\pi_{r,y}(x)f^{(r+1)}(y)\,dy\quad\text{for $a\le x\le b$.}
+\]
+Since the sum on the right defines a function in~$\mathbb{P}_r$,
+applying $\mathcal{Q}_r$ to both sides gives
+\[
+(\mathcal{Q}_rf)(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
+	+\int_a^b(\mathcal{Q}_r\pi_{r,y})(x)f^{(r+1)}(y)\,dy
+\quad\text{for $a\le x\le b$.}
+\]
+Hence, the \emph{interpolation error} has the integral representation
+\[
+(\mathcal{Q}_rf)(x)-f(x)=\int_a^b K_r(x,y)f^{(r+1)}(y)\,dy
+\quad\text{for $a\le x\le b$,}
+\]
+where the \emph{Peano kernel} is defined by
+\[
+K_r(x,y)=(\mathcal{Q}_r\pi_{r,y})(x)-\pi_{r,y}(x)
+	\quad\text{for $x$, $y\in[a,b]$.}
+\]
+
+\begin{figure}
+\caption{Peano kernel for linear interpolation at $0$~and $1$
+(Example~\ref{example: linear interp}.}
+\label{fig: linear Peano}
+\begin{center}
+\includegraphics[scale=0.6]{../src/chap2/Linear_PeanoK_3d.pdf}
+\includegraphics[scale=0.5]{../src/chap2/Linear_PeanoK_contour.pdf}
+\end{center}
+\end{figure}
+
+\begin{example}\label{example: linear interp}
+Consider \emph{linear interpolation}, that is, $r=1$, with interpolation points 
+$x_1=a$~and $x_2=b$.  In this case, the Lagrange polynomials are
+\[
+\ell_1(x)=\frac{x-x_2}{x_1-x_2}=\frac{b-x}{b-a}
+\quad\text{and}\quad
+\ell_2(x)=\frac{x-x_1}{x_2-x_1}=\frac{x-a}{b-a},
+\]
+and
+\[
+(\mathcal{Q}_1f)(x)=f(a)\ell_1(x)+f(b)\ell_2(x)
+	=f(a)\,\frac{b-x}{b-a}+f(b)\,\frac{x-a}{b-a}.
+\]
+In particular, since $\pi_{1,y}(a)=0$~and $\pi_{1,y}(b)=b-y$ for~$a\le y\le b$,
+\[
+(\mathcal{Q}_1\pi_{1,y})(x)=\pi_{1,y}(a)\ell_1(x)+\pi_{1,y}(b)\ell_2(x)
+	=\frac{(b-y)(x-a)}{b-a}\quad\text{for $x$, $y\in[a,b]$,}
+\]
+so
+\[
+K_1(x,y)=\frac{(b-y)(x-a)}{b-a}-(x-y)\quad\text{for $a\le y\le x\le b$,}
+\]
+and
+\[
+K_1(x,y)=\frac{(b-y)(x-a)}{b-a}\quad\text{for $a\le x\le y\le b$.}
+\]
+Thus, $K_1(x,y)$ is piecewise linear in~$x$ for fixed~$y$, and vice versa, with
+\[
+K_1(a,y)=0=K_1(b,y),\qquad K_1(x,a)=0=K_1(x,b),\qquad
+K_1(x,x)=\frac{(b-x)(x-a)}{b-a}.
+\]
+\end{example}
+
+\begin{figure}
+\caption{Peano kernel~\eqref{eq: quadratic Peano} for quadratic interpolation 
+at $-1$, $0$~and $+1$.}\label{fig: quadratic Peano}
+\begin{center}
+\includegraphics[scale=0.6]{../src/chap2/Quadratic_PeanoK_3d.pdf}
+\includegraphics[scale=0.5]{../src/chap2/Quadratic_PeanoK_contour.pdf}
+\end{center}
+\end{figure}
+
+\begin{example}\label{example: quadratic interp}
+Let $x_1=-1$, $x_2=0$~and $x_3=1$.  The quadratic Lagrange polynomials are
+\[
+\ell_1(x)=\frac{(x-0)(x-1)}{(-1-0)(-1-1)},\qquad
+\ell_2(x)=\frac{(x+1)(x-1)}{(0+1)(0-1)},\qquad
+\ell_3(x)=\frac{(x+1)(x-0)}{(1+1)(1-0)},
+\]
+that is,
+\[
+\ell_1(x)=\tfrac12x(x-1),\qquad
+\ell_2(x)=(1+x)(1-x),\qquad
+\ell_3(x)=\tfrac12x(x+1).
+\]
+Since $\pi_{2,y}(-1)=0$, $\pi_{2,y}(0)=\tfrac12(-y)_+^2$~and 
+$\pi_{2,y}(1)=\tfrac12(1-y)^2$ for~$-1\le y\le 1$,
+\begin{equation}\label{eq: quadratic Peano}
+K_2(x,y)=\tfrac12(-y)_+^2\ell_2(x)+\tfrac12(1-y)^2\ell_3(x)-\tfrac12(x-y)_+^2.
+\end{equation}
+Observe that $\ell_1(-x)=\ell_3(x)$ and $\ell_2(-x)=\ell_2(x)$, so
+\[
+K_2(-x,-y)=\tfrac12(y)_+^2\ell_2(x)+\tfrac12(1+y)^2\ell_1(x)-\tfrac12(y-x)_+^2
+\]
+and thus
+\[
+K_2(x,y)+K_2(-x,-y)=\tfrac12y^2\ell_2(x)+\tfrac12(1-y)^2\ell_3(x)
+	+\tfrac12(1+y)^2\ell_1(x)-\tfrac12(x-y)^2.
+\]
+We use the identity $\ell_1(x)+\ell_2(x)+\ell_3(x)=(\mathcal{Q}_21)(x)=1$ to
+replace $\ell_2(x)$ with~$1-\ell_1(x)-\ell_3(x)$ and deduce that
+\begin{align*}
+K_2(x,y)+K_2(-x,-y)&=\tfrac12\bigl[y^2-(x-y)^2\bigr]
+	+\tfrac12\bigl[(1+y)^2-y^2\bigr]\ell_1(x)
+	+\tfrac12\bigl[(1-y)^2-y^2\bigr]\ell_3(x)\\
+	&=\tfrac12x(2y-x)+\tfrac12(1+2y)\ell_1(x)+\tfrac12(1-2y)\ell_3(x)\\
+	&=\tfrac12\bigl[\ell_1(x)+\ell_3(x)-x^2\bigr]
+	+y\bigl[x+\ell_3(x)-\ell_1(x)\bigr]=0.
+\end{align*}
+Hence, $K_2$ possesses the symmetry property (Figure~\ref{fig: quadratic Peano})
+\begin{equation}\label{eq: K2 symmetry}
+K_2(-x,-y)=-K_2(x,y)\quad\text{for $x$, $y\in[-1,1]$.}
+\end{equation}
+\end{example}
 
 \section{Accuracy of piecewise-polynomial approximation}
 
@@ -741,6 +938,7 @@ $(\Phi_n,\Lambda_n)$ for~$1\le n\le 2M$, with
 \]
 
 \begin{Exercises}
+
 \exercise
 Recall the formulae \eqref{eq: a mpq reference 1d}~and
 \eqref{eq: c mpq reference 1d} for the element stiffness and mass matrices using 
@@ -754,6 +952,34 @@ $a^\brak{m}_{11}=a^\brak{m}_{33}$, $a^\brak{m}_{12}=a^\brak{m}_{32}$,
 $c^\brak{m}_{11}=c^\brak{m}_{33}$, $c^\brak{m}_{12}=c^\brak{m}_{32}$.
 \item{(iii)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
 for the element stiffness and mass matrices when $a(x)=1$~and $c(x)=1$.
+\end{description}
+
+\exercise
+Show that the Peano kernel for linear interpolation, discussed in 
+Example~\ref{example: linear interp}, satisfies
+\[
+\int_a^b K_1(x,y)\,dy=\frac{1}{2}\,(x-a)(b-x)\quad\text{for $a\le x\le b$.}
+\]
+Hence use the integral mean value theorem to show that if~$f$ is $C^2$ 
+on~$[a,b]$, then 
+\[
+(\mathcal{Q}_1f)(x)-f(x)=\frac{f''(\xi)}{2}\,(x-a)(b-x)
+\]
+for some~$\xi\in[a,b]$ (depending on~$x$).
+
+\exercise
+Let $x_1=-1$, $x_2=0$~and $x_3=+1$ as in 
+Example~\ref{example: quadratic interp}.  
+\begin{description}
+\item{(i)} Show that if $g(x)=f(-x)$, then 
+$(\mathcal{Q}_2g)(x)=(\mathcal{Q}_2f)(-x)$.
+\item{(ii)} Deduce that if $f$ is $C^3$ on~$[-1,1]$, then
+\[
+\int_{-1}^1K_2(-x,y)f'''(y)\,dy=\int_{-1}^1K_2(x,y)g'''(y)\,dy
+	\quad\text{for $-1\le x\le 1$.}
+\]
+\item{(iii)} Hence show that $K_2(-x,y)=-K_2(x,-y)$, in agreement 
+with~\eqref{eq: K2 symmetry}.
 \end{description}
 
 \end{Exercises}
