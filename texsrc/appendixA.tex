@@ -1,0 +1,129 @@
+\chapter{General tridiagonal linear systems}
+
+We consider solving an $n\times n$ linear system 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ where the matrix~$\boldsymbol{A}$
+is tridiagonal but not necessarily symmetric or positive-definite.  For concreteness,
+suppose at first that $n=5$ and write
+\[
+\boldsymbol{A}=\begin{bmatrix}
+\alpha_1&\gamma_1&        &        &\\
+ \beta_1&\alpha_2&\gamma_2&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}
+\]
+We will reduce $\boldsymbol{A}$ to upper triangular form by Gaussian 
+elimination.  
+
+If $|\beta_1|\le|\alpha_1|$ then we define the \emph{Gauss transformation}
+\[
+\boldsymbol{M}_1=\begin{bmatrix}
+     1& & & &\\
+-\ell_1&1& & &\\
+      & &1& &\\
+      & & &1&\\
+      & & & &1
+\end{bmatrix}
+\quad\text{where}\quad\ell_1=\frac{\beta_1}{\alpha_1},
+\]
+in order to eliminate the $21$-entry~$\beta_1$:
+\[
+\boldsymbol{M}_1\boldsymbol{A}=
+\begin{bmatrix}
+      1& & & &\\
+-\ell_1&1& & &\\
+       & &1& &\\
+       & & &1&\\
+       & & & &1
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_1&\gamma_1&        &        &\\
+ \beta_1&\alpha_2&\gamma_2&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}
+=\begin{bmatrix}
+\alpha_1& \gamma_1&        &        &\\
+        &\alpha_2'&\gamma_2&        &\\
+        &  \beta_2&\alpha_3&\gamma_3&\\
+        &         & \beta_3&\alpha_4&\gamma_4\\
+        &         &        & \beta_4&\alpha_5
+\end{bmatrix}
+\]
+where
+\[
+\alpha_2'=\alpha_2-\ell_1\gamma_1.
+\]
+
+However, if $|\alpha_1|<|\beta_1|$ then we swap the first two rows to move 
+$\beta_1$ to the pivot position.  To perform this operation, we swap the first 
+two rows of the $5\times5$ identity matrix to obtain a \emph{permutation matrix}
+\[
+\boldsymbol{P}_1=\begin{bmatrix}
+ &1& & &\\
+1& & & &\\
+ & &1& &\\
+ & & &1&\\
+ & & & &1
+\end{bmatrix},
+\]
+and observe that
+\[
+\boldsymbol{P}_1\boldsymbol{A}=
+\begin{bmatrix}
+ &1& & &\\
+1& & & &\\
+ & &1& &\\
+ & & &1&\\
+ & & & &1
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_1&\gamma_1&        &        &\\
+ \beta_1&\alpha_2&\gamma_2&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}
+=\begin{bmatrix}
+ \beta_1&\alpha_2&\gamma_2&        &\\
+\alpha_1&\gamma_1&        &        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}.
+\]
+We let
+\[
+\ell_1=\frac{\alpha_1}{\beta_1},\quad
+\alpha_1'=\beta,\quad\gamma_1'=\alpha_2,\quad\delta_1=\gamma_2,\quad
+\alpha_2'=\gamma_1-\ell_1\alpha_2,\quad\gamma_2'=-\ell_1\gamma_2,
+\]
+so that
+\[
+\boldsymbol{M}_1\boldsymbol{P_1}\boldsymbol{A}
+=\begin{bmatrix}
+      1& & & &\\
+-\ell_1&1& & &\\
+       & &1& &\\
+       & & &1&\\
+       & & & &1
+\end{bmatrix}
+\begin{bmatrix}
+ \beta_1&\alpha_2&\gamma_2&        &\\
+\alpha_1&\gamma_1&        &        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}
+=\begin{bmatrix}
+\alpha_1'&\gamma_1'& \delta_1&        &\\
+         &\alpha_2'&\gamma_2'&        &\\
+         & \beta_2 &\alpha_3 &\gamma_3&\\
+         &         & \beta_3 &\alpha_4&\gamma_4\\
+         &         &         & \beta_4&\alpha_5
+\end{bmatrix}.
+\]
+
+
