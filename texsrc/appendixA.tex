@@ -57,7 +57,7 @@ where
 \alpha_2'=\alpha_2-\ell_1\gamma_1.
 \]
 
-However, if $|\alpha_1|<|\beta_1|$ then we swap the first two rows to move 
+However, if $|\beta_1|>|\alpha_1|$ then we swap the first two rows to move 
 $\beta_1$ to the pivot position.  To perform this operation, we swap the first 
 two rows of the $5\times5$ identity matrix to obtain a \emph{permutation matrix}
 \[
@@ -97,7 +97,7 @@ and observe that
 We let
 \[
 \ell_1=\frac{\alpha_1}{\beta_1},\quad
-\alpha_1'=\beta,\quad\gamma_1'=\alpha_2,\quad\delta_1=\gamma_2,\quad
+\alpha_1'=\beta_1,\quad\gamma_1'=\alpha_2,\quad\delta_1=\gamma_2,\quad
 \alpha_2'=\gamma_1-\ell_1\alpha_2,\quad\gamma_2'=-\ell_1\gamma_2,
 \]
 so that
@@ -126,4 +126,336 @@ so that
 \end{bmatrix}.
 \]
 
+For both of the above cases, performing the computations in place will result 
+in a matrix 
+\[
+\boldsymbol{A}_1=
+\begin{bmatrix}
+\alpha_1&\gamma_1&\delta_1&        &\\
+        &\alpha_2&\gamma_2&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix},
+\]
+with~$\delta_1=0$ in the former case.  If $|\beta_2|\le|\alpha_2|$, then we put
+\[
+\boldsymbol{M}_2=\begin{bmatrix}
+1&       & & &\\
+ &      1& & &\\
+ &-\ell_2&1& &\\
+ &       & &1&\\
+ &       & & &1
+\end{bmatrix}\quad\text{where}\quad\ell_2=\frac{\beta_2}{\alpha_2}
+\]
+so that
+\[
+\boldsymbol{M}_2\boldsymbol{A}_1=
+\boldsymbol{M}_2=\begin{bmatrix}
+1&       & & &\\
+ &      1& & &\\
+ &-\ell_2&1& &\\
+ &       & &1&\\
+ &       & & &1
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_1&\gamma_1&\delta_1&        &\\
+        &\alpha_2&\gamma_2&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}=
+\begin{bmatrix}
+\alpha_1&\gamma_1& \delta_1&        &\\
+        &\alpha_2& \gamma_2&        &\\
+        &        &\alpha_3'&\gamma_3&\\
+        &        &  \beta_3&\alpha_4&\gamma_4\\
+        &        &         & \beta_4&\alpha_5
+\end{bmatrix},
+\]
+where
+\[
+\alpha_3'=\alpha_3-\ell_2\gamma_2.
+\]
+If $|\beta_2|>|\alpha_2|$ then we swap rows 2~and 3 to move $\beta_2$ to the 
+pivot position, letting
+\[
+\boldsymbol{P}_2=\begin{bmatrix}
+1& & & &\\
+ & &1& &\\
+ &1& & &\\
+ & & &1&\\
+ & & & &1
+\end{bmatrix}
+\]
+so that
+\[
+\boldsymbol{P}_2\boldsymbol{A}_1
+=\begin{bmatrix}
+1& & & &\\
+ & &1& &\\
+ &1& & &\\
+ & & &1&\\
+ & & & &1
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_1&\gamma_1&\delta_1&        &\\
+        &\alpha_2&\gamma_2&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}
+=\begin{bmatrix}
+\alpha_1&\gamma_1&\delta_1&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &\alpha_2&\gamma_2&        &\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}
+\]
+With
+\[
+\ell_2=\frac{\alpha_2}{\beta_2},\quad\alpha_2'=\beta_2,\quad
+\gamma_2'=\alpha_3,\quad\delta_2=\gamma_3,\quad
+\alpha_3'=\gamma_2-\ell_2\alpha_3,\quad\gamma_3'=-\ell_2\gamma_3,
+\]
+we obtain
+\[
+\boldsymbol{M}_2\boldsymbol{P}_2\boldsymbol{A}_1
+=\begin{bmatrix}
+1&       & & &\\
+ &      1& & &\\
+ &-\ell_2&1& &\\
+ &       & &1&\\
+ &       & & &1
+\end{bmatrix}
+\begin{bmatrix}
+\alpha_1&\gamma_1&\delta_1&        &\\
+        & \beta_2&\alpha_3&\gamma_3&\\
+        &\alpha_2&\gamma_2&        &\\
+        &        & \beta_3&\alpha_4&\gamma_4\\
+        &        &        & \beta_4&\alpha_5
+\end{bmatrix}
+=\begin{bmatrix}
+\alpha_1& \gamma_1& \delta_1&         &\\
+        &\alpha_2'&\gamma_2'&\delta_2 &\\
+        &         &\alpha_3'&\gamma_3'&\\
+        &         &  \beta_3&\alpha_4 &\gamma_4\\
+        &         &         & \beta_4 &\alpha_5
+\end{bmatrix}.
+\]
+Continuing in this way, we finish up with an upper triangular matrix
+\[
+\boldsymbol{U}=
+\boldsymbol{M}_4\boldsymbol{P_4}
+\boldsymbol{M}_3\boldsymbol{P_3}
+\boldsymbol{M}_2\boldsymbol{P_2}
+\boldsymbol{M}_1\boldsymbol{P_1}\boldsymbol{A}
+=\begin{bmatrix}
+\alpha_1&\gamma_1&\delta_1&        &\\
+        &\alpha_2&\gamma_2&\delta_2&\\
+        &        &\alpha_3&\gamma_3&\delta_3\\
+        &        &        &\alpha_4&\gamma_4\\
+        &        &        &        &\alpha_5
+\end{bmatrix},
+\]
+where each $\boldsymbol{P}_k$ is either the $5\times5$ identity matrix, or else 
+the permutation matrix that results from swapping rows $k$~and $k+1$.  
 
+\begin{algorithm}
+\caption{Compute the $LU$ factorization of a (possibly non-symmetric) 
+tridiagonal matrix.}
+\label{alg: tridiagonal LU}
+\begin{algorithmic}
+\Require $\boldsymbol{\beta}=[\beta_1,\beta_2,\ldots,\beta_{n-1}]$ is the 
+sub-diagonal of $\boldsymbol{A}$.
+\Require $\boldsymbol{\alpha}=[\alpha_1,\alpha_2,\ldots,\alpha_n]$ is the main 
+diagonal of $\boldsymbol{A}$.
+\Require $\boldsymbol{\gamma}=[\gamma-1,\gamma_2,\ldots,\gamma_{n-1}]$ is the 
+super-diagonal of $\boldsymbol{A}$.
+\Require $\boldsymbol{\delta}=[\delta_1,\delta_2,\ldots,\delta_{n-2}]$ is 
+storage to hold fill-in of the second super-diagonal.
+\Require $\boldsymbol{p}=[p_1,p_2,\ldots,p_{n-1}]$ is an boolean vector to 
+record which steps use a row swap.
+\Statex
+\Function{Factorize!}{$\boldsymbol{\beta}, \boldsymbol{\alpha},
+\boldsymbol{\gamma}, \boldsymbol{\delta}, \boldsymbol{p}$}
+\For{$j=1:n-2$}
+	\State $\delta_j\gets0$
+	\If{$|\alpha_j|<|\beta_j|$}\Comment{Swap rows $j$ and $j+1$}
+		\State $p_j\gets\mathbf{true}$
+		\State $\alpha_j\swap\beta_j$
+		\State $\gamma_j\swap\alpha_{j+1}$
+		\State $\delta_j\swap\gamma_{j+1}$
+	\Else
+		\State $p_j\gets\mathbf{false}$
+	\EndIf
+	\State $\beta_j\gets\beta_j/\alpha_j$
+	\State $\alpha_{j+1}\gets\alpha_{j+1}-\beta_j\gamma_j$
+	\If{$p_j$}
+		\State $\gamma_{j+1}\gets-\beta_j\delta_j$
+	\EndIf
+\EndFor
+\If{$|\alpha_{n-1}|<|\beta_{n-1}|$}
+	\State $p_{n-1}\gets\mathbf{true}$
+	\State $\alpha_{n-1}\swap\beta_{n-1}$
+	\State $\gamma_{n-1}\swap\alpha_n$
+\Else
+	\State $p_{n-1}\gets\mathbf{false}$
+\EndIf
+\State $\beta_{n-1}\gets\beta_{n-1}/\alpha_{n-1}$
+\State $\alpha_n\gets\alpha_n-\beta_{n-1}\gamma_{n-1}$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+Define the column vectors
+\[
+\boldsymbol{\ell}_k=\ell_k\boldsymbol{e}_k
+\quad\text{for $1\le k\le 4$,}
+\]
+and observe that
+\[
+\boldsymbol{M}_k=\boldsymbol{I}-\boldsymbol{\ell}_k\boldsymbol{e}_k^T
+\quad\text{and}\quad
+\boldsymbol{P_k}^T=\boldsymbol{P}_k
+\quad\text{for $1\le k\le 4$,}
+\]
+with
+\[
+\boldsymbol{P}_k\boldsymbol{e}_j=\boldsymbol{e}_j
+\quad\text{and}\quad
+\boldsymbol{e}_j^T=\boldsymbol{e}_j^T\boldsymbol{P}_k
+\quad\text{for $1\le j<k\le 4$.}
+\]
+Thus,
+\[
+\boldsymbol{P}_4\boldsymbol{M}_3
+	=\boldsymbol{P}_4-\boldsymbol{P}_4\boldsymbol{\ell}_3\boldsymbol{e}_3^T
+	=\bigl(\boldsymbol{I}-\boldsymbol{P}_4\boldsymbol{\ell}_3\boldsymbol{e}_3^T
+	\bigr)\boldsymbol{P}_4
+	=\widetilde{\boldsymbol{M}}_3\boldsymbol{P_4},
+\]
+where
+\[
+\widetilde{\boldsymbol{M}}_3
+	=\boldsymbol{I}-\tilde{\boldsymbol{\ell}}_3\boldsymbol{e}_3^T
+\quad\text{and}\quad
+\tilde{\boldsymbol{\ell}}_3=\boldsymbol{P}_4\boldsymbol{\ell}_3.
+\]
+In the same way,
+\[
+\boldsymbol{P}_4\boldsymbol{P}_3\boldsymbol{M}_2
+=\widetilde{\boldsymbol{M}}_2\boldsymbol{P}_4\boldsymbol{P}_3
+\quad\text{and}\quad
+\boldsymbol{P}_4\boldsymbol{P}_3\boldsymbol{P}_2\boldsymbol{M}_1
+=\widetilde{\boldsymbol{M}}_1\boldsymbol{P}_4\boldsymbol{P}_3\boldsymbol{P}_2
+\]
+where
+\[
+\widetilde{\boldsymbol{M}}_2
+	=\boldsymbol{I}-\tilde{\boldsymbol{\ell}}_2\boldsymbol{e}_2^T
+\quad\text{and}\quad
+\tilde{\boldsymbol{\ell}}_2=\boldsymbol{P}_4\boldsymbol{P}_3\boldsymbol{\ell}_2,
+\]
+with
+\[
+\widetilde{\boldsymbol{M}}_1
+	=\boldsymbol{I}-\tilde{\boldsymbol{\ell}}_1\boldsymbol{e}_1^T
+\quad\text{and}\quad
+\tilde{\boldsymbol{\ell}}_1
+	=\boldsymbol{P}_4\boldsymbol{P}_3\boldsymbol{P}_2\boldsymbol{\ell}_2.
+\]
+Thus,
+\[
+\boldsymbol{U}=\boldsymbol{M}_4\widetilde{\boldsymbol{M}}_3
+\widetilde{\boldsymbol{M}}_2\widetilde{\boldsymbol{M}}_1
+\boldsymbol{P}_4\boldsymbol{P}_3\boldsymbol{P}_2\boldsymbol{P}_1
+\boldsymbol{A},
+\]
+and so
+\[
+\boldsymbol{P}\boldsymbol{A}=\boldsymbol{L}\boldsymbol{U}
+\quad\text{where}\quad
+\boldsymbol{P}=\boldsymbol{P}_4\boldsymbol{P}_3\boldsymbol{P}_2\boldsymbol{P}_1
+\quad\text{and}\quad
+\boldsymbol{L}=\widetilde{\boldsymbol{M}}_1^{-1}
+\widetilde{\boldsymbol{M}}_2^{-1}\widetilde{\boldsymbol{M}}_3^{-1}
+\boldsymbol{M}_4^{-1}.
+\]
+We have
+\[
+\bigl(\boldsymbol{I}+\boldsymbol{\ell}_k\boldsymbol{e}_k^T\bigr)
+\bigl(\boldsymbol{I}-\boldsymbol{\ell}_k\boldsymbol{e}_k^T\bigr)
+=\boldsymbol{I}\quad\text{because $\boldsymbol{e}_k^T\boldsymbol{\ell}_k=0$,}
+\]
+and likewise when $\boldsymbol{\ell}_k$ is replaced 
+by~$\tilde{\boldsymbol{\ell}_k}$, showing that
+\[
+\boldsymbol{M}_k^{-1}=
+\boldsymbol{I}+\boldsymbol{\ell}_k\boldsymbol{e}_k^T
+\quad\text{and}\quad
+\widetilde{\boldsymbol{M}}_k^{-1}=
+\boldsymbol{I}+\tilde{\boldsymbol{\ell}}_k\boldsymbol{e}_k^T.
+\]
+It follows that
+\[
+\boldsymbol{L}=\boldsymbol{I}+\tilde{\boldsymbol{\ell}}_1\boldsymbol{e}_1
++\tilde{\boldsymbol{\ell}}_2\boldsymbol{e}_2
++\tilde{\boldsymbol{\ell}}_3\boldsymbol{e}_3
++\boldsymbol{\ell}_4\boldsymbol{e}_4,
+\]
+which is a unit lower triangular matrix.
+
+In practice, to solve the linear system 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ we simply compute
+\[
+\boldsymbol{y}_1=\boldsymbol{M}_1\boldsymbol{P}_1\boldsymbol{b},\qquad
+\boldsymbol{y}_2=\boldsymbol{M}_2\boldsymbol{P}_2\boldsymbol{y}_1,\qquad
+\boldsymbol{y}_3=\boldsymbol{M}_3\boldsymbol{P}_3\boldsymbol{y}_2,\qquad
+\boldsymbol{y}_4=\boldsymbol{M}_4\boldsymbol{P}_4\boldsymbol{y}_3,
+\]
+and then solve the upper triangular system
+\[
+\boldsymbol{U}\boldsymbol{x}=\boldsymbol{y}_4.
+\]
+Note that 
+\[
+(\boldsymbol{M}_k\boldsymbol{z})_j=\begin{cases}
+	z_j&\text{if $j\ne k+1$,}\\
+	z_{k+1}-\ell_kz_k&\text{if $j=k+1$,}
+\end{cases}
+\]
+so computing each successive $\boldsymbol{y}_k$ costs only one 
+fused-multiply-and-addition, plus possibly swapping entries $k$~and $k+1$ 
+of~$\boldsymbol{y}$.  Algorithm~\ref{alg: tridiagonal LU} sets out the 
+computation of the $LU$-factorization, and 
+Algorithm~\ref{alg: tridiagonal solve} sets out the procedure for then solving 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$.
+
+\begin{algorithm}
+\caption{Solve a tridiagonal linear system 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$.}
+\label{alg: tridiagonal solve}
+\begin{algorithmic}
+\Require $\boldsymbol{\beta}$, $\boldsymbol{\alpha}$, $\boldsymbol{\gamma}$, 
+$\boldsymbol{\delta}$, $\boldsymbol{p}$ as provided by 
+Algorithm~\ref{alg: tridiagonal LU}.
+\Require $\boldsymbol{b}=[b_1,b_2,\ldots,b_n]$ is the right-hand side vector.
+\Statex
+\Function{Solve!}{$\boldsymbol{b}, \boldsymbol{\beta}, \boldsymbol{\alpha},
+\boldsymbol{\gamma}, \boldsymbol{\delta}, \boldsymbol{p}$}
+\For{$j=1:n-1$}
+	\If{$p_j$}
+		\State $b_j\swap b_{j+1}$
+	\EndIf
+	\State $b_{j+1}\gets b_{j+1}-\beta_jb_j$
+\EndFor
+\State $b_n\gets b_n/\alpha_n$
+\State $b_{n-1}\gets(b_{n-1}-\gamma_{n-1}b_n)/\alpha_{n-1}$
+\For{$j=n-2:-1:1$}
+	\State $b_j\gets(b_j-\gamma_jb_{j+1}-\delta_jb_{j+2})/\alpha_j$
+\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
