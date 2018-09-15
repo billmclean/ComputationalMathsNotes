@@ -739,10 +739,10 @@ applying $\mathcal{Q}_r$ to both sides gives
 \quad\text{for $a\le x\le b$.}
 \]
 Hence, the \emph{interpolation error} has the integral representation
-\[
+\begin{equation}\label{eq: Qr f error}
 (\mathcal{Q}_rf)(x)-f(x)=\int_a^b K_r(x,y)f^{(r+1)}(y)\,dy
 \quad\text{for $a\le x\le b$,}
-\]
+\end{equation}
 where the \emph{Peano kernel} is defined by
 \[
 K_r(x,y)=(\mathcal{Q}_r\pi_{r,y})(x)-\pi_{r,y}(x)
@@ -844,7 +844,149 @@ K_2(-x,-y)=-K_2(x,y)\quad\text{for $x$, $y\in[-1,1]$.}
 \end{equation}
 \end{example}
 
+Since the $j$th derivative~$\pi_{r,y}^{(j)}(x)=\pi_{r-j,y}(x)$, we see that
+\[
+\partial_x^jK_r(x,y)=(\mathcal{Q}_r\pi_{r,y})^{(j)}(x)-\pi_{r-j,y}(x)
+\quad\text{for $0\le j\le r$,}
+\]
+and that the $j$th derivative of the interpolation error has the representation
+\begin{equation}\label{eq: Qr f error deriv}
+(\mathcal{Q}_rf-f)^{(j)}(x)=\int_a^b\partial_x^j K_r(x,y)f^{(r+1)}(y)\,dy
+\quad\text{for $a\le x\le b$.}
+\end{equation}
+
+
 \section{Accuracy of piecewise-polynomial approximation}
+
+Fix $r+1$~nodes in the reference element~$[0,1]$,
+\[
+0=\mathsf{n}_1<\mathsf{n}_2<\cdots<\mathsf{n}_{r+1}=1,
+\]
+and consider an element~$[x_{m-1},x_m]$ with length~$h_m=x_m-x_{m-1}$.  The 
+change of variable,
+\[
+x = x_{m-1} + \xi h_m\quad\text{for $\xi\in[0,1]$,}
+\]
+defines an affine bijection~$\xi\mapsto x$ from the reference element~$[0,1]$ 
+onto~$[x_{m-1},x_m]$.  We assume that the nodes in~$[x_{m-1},x_m]$ correspond 
+to the reference nodes under this affine bijection, that is,
+\[
+\mathsf{n}_j^\brak{m}=x_{m-1}+\mathsf{n}_jh_m\quad\text{for $1\le j\le r+1$.}
+\]
+Given a function $f(x)$, we define $\hat f$ on the reference element by
+\[
+\hat f(\xi)=f(x)\quad\text{where $x=x_{m-1}+\xi h_m$,}
+\]
+and let $\mathcal{Q}_r^\brak{m}$~and $\widehat{\mathcal{Q}}_r$ denote 
+polynomial interpolation operators for $[x_{m-1},x_m]$~and $[0,1]$, 
+respectively, so that
+\[
+\mathcal{Q}_r^\brak{m}f\in\mathbb{P}_{r+1}\quad\text{and}\quad
+(\mathcal{Q}_r^\brak{m}f)(\mathsf{n}_j^\brak{m})=f(\mathsf{n}_j^\brak{m})
+\quad\text{for $1\le j\le r+1$,}
+\]
+and
+\[
+\widehat{\mathcal{Q}}_r\hat f\in\mathbb{P}_{r+1}\quad\text{and}\quad
+\bigl(\widehat{\mathcal{Q}}_r\hat f\bigr)(\mathsf{n}_j)=\hat f(\mathsf{n}_j)
+\quad\text{for $1\le j\le r+1$.}
+\]
+Notice that if we let $g(x)=(\mathcal{Q}_r^\brak{m}f)(x)$, then 
+$\hat g(\xi)=\widehat{\mathcal{Q}}_r\hat f(\xi)$ because $\hat 
+g\in\mathbb{P}_r$~and 
+\[
+\hat g(\mathsf{n}_j)=g(\mathsf{n}_j^\brak{m})=f(\mathsf{n}_j^\brak{m})
+    =\hat f(\mathsf{n}_j)\quad\text{for $1\le j\le r+1$.}
+\]
+In other words, 
+$\widehat{\mathcal{Q}_r^\brak{m}f}=\widehat{\mathcal{Q}}_r\hat f$.
+
+\begin{theorem}
+Assume that $f$ is $C^{r+1}$ on~$[x_{m-1},x_m]$, and let $K_r$ denote the Peano 
+kernel for polynomial interpolation at the $r+1$~nodes of the reference 
+element~$[0,1]$.  Then,
+\[
+\int_{x_{m-1}}^{x_m}|(f-\mathcal{Q}_r^\brak{m}f)^{(j)}(x)|^2\,dx
+    \le C_{r,j}h_m^{2(r+1-j)}\int_{x_{m-1}}^{x_m}|\hat f^{(r+1)}(x)|^2\,dx
+    \quad\text{for $0\le j\le r$,}
+\]
+where the constant
+\[
+C_{r,j}=\int_0^1\int_0^1|\partial_\xi^jK_r(\xi,\eta)|^2\,d\eta\,d\xi
+\]
+depends only on $j$~and the choice of nodes.
+\end{theorem}
+\begin{proof}
+Since $dx/d\xi=h_m$ we see that
+\[
+\hat f^{(j)}(\xi)=h_m^j f^{(j)}(x),
+\]
+so using \eqref{eq: Qr f error deriv} and the Cauchy--Schwarz inequality,
+\begin{align*}
+\bigl|(f-\mathcal{Q}_r^\brak{m}f)^{(j)}(x)\bigr|^2
+    &=h_m^{-2j}\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2
+    =h_m^{-2j}\biggl|\int_0^1\partial_\xi^j K_r(\xi,\eta)
+        \hat f^{(r+1)}(\eta)\, d\eta\biggr|^2\\
+    &\le h_m^{-2j}\biggl(\int_0^1|\partial_\xi^jK_r(\xi,\eta)|^2\,d\eta\biggr)
+    \biggl(\int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta\biggr)
+\end{align*}
+for $0\le\xi\le1$.  Integrating with respect to~$x$, and noting that 
+$dx=h_m\,d\xi$, we have
+\begin{align*}
+\int_{x_{m-1}}^{x_m}\bigl|(f-\mathcal{Q}_rf)^{(j)}(x)\bigr|^2\,dx
+&=h_m^{1-2j}\int_0^1\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2\,d\xi\\
+&\le h_m^{1-2j}\biggl(
+    \int_0^1\int_0^1|\partial_\xi^jK_r(\xi,\eta)|^2\,d\eta\,d\xi\biggr)
+    \biggl(\int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta\biggr),
+\end{align*}
+and 
+\[
+\int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta=\int_{x_{m-1}}^{x_m}
+    |h_m^{r+1}f^{(r+1)}(y)|^2h_m^{-1}\,dy,
+\]
+which implies the desired estimate.
+\end{proof}
+
+For any continuous~$v:[0,L]\to\mathbb{R}$ we define $\mathcal{Q}_{r,h}v$, the 
+\emph{piecewise-polynomial interpolant} of degree at most~$r$, by
+\[
+(\mathcal{Q}_{r,h}v)(x)
+    =(\mathcal{Q}_r^\brak{m})(x)\quad\text{for $x\in[x_{m-1},x_m]$;}
+\]
+since $\mathsf{n}^\brak{m-1}_{r+1}=x_{m-1}=\mathsf{n}^\brak{m}_1$ we see 
+that
+\[
+(\mathcal{Q}_r^\brak{m-1}v)(x_{m-1})=v(x_{m-1})
+    =(\mathcal{Q}_r^\brak{m}v)(x_{m-1})\quad\text{for~$2\le m\le M-1$,}
+\]
+and hence the function~$\mathcal{Q}_{r,h}v$ is continuous on~$[0,L]$.
+
+\begin{theorem}
+If $v$ is $C^{r+1}$ on~$[0,L]$, then
+\[
+\|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}
+    \le C_{r,0}^{1/2}\,h^{r+1}\|v^{(r+1)}\|_{L_2(0,L)}
+\]
+and
+\[
+\|v'-(\mathcal{Q}_{r,h}v)'\|_{L_2(0,L)}
+    \le C_{r,1}^{1/2}\,h^r\|v^{(r+1)}\|_{L_2(0,L)}.
+\]
+\end{theorem}
+\begin{proof}
+We have
+\begin{align*}
+\|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}^2
+    &=\int_0^L|(v-\mathcal{Q}_{r,h}v)(x)|^2\,dx=\sum_{m=1}^M
+    \int_{x_{m-1}}^{x_m}|(v-\mathcal{Q}_r^\brak{m}v)(x)|^2\,dx\\
+    &\le\sum_{m=1}^M C_{r,0}h_m^{2(r+1)}\int_{x_{m-1}}^{x_m}
+        |\hat v^{(r+1)}(x)|^2\,dx\\
+    &\le C_{r,0}h^{2(r+1)}\sum_{m=1}^M\int_{x_{m-1}}^{x_m} 
+        |\hat v^{(r+1)}(x)|^2\,dx
+    =C_{r,0}h^{2(r+1)}\|v^{(r+1)}\|_{L_2(0,L)}^2,
+\end{align*}
+which proves the first estimate.  The second follows in the same way.
+\end{proof}
 
 \section{Sturm--Liouville problems}
 
