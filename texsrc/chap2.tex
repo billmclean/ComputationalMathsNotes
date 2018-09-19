@@ -1,5 +1,5 @@
 \chapter[Finite elements in 1D]{Finite elements for \\
-stationary problems in 1D}
+stationary problems in 1D}\label{chap: FEM 1d}
 
 Let $u$ be the solution of 
 Recall our model two-point boundary-value problem~\ref{eq: model 1d}, 
@@ -15,7 +15,7 @@ obtain
 Provided $v'$ exists and is continuous on~$[0,L]$, we can integrate by parts to 
 obtain
 \begin{equation}\label{eq: int by parts}
--\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx,
+-\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx
 \end{equation}
 and therefore
 \begin{equation}\label{eq: model 1d weak}
@@ -229,11 +229,11 @@ Integration by parts implies that
         \bigr)\,dx,
 \end{equation}
 so any solution~$u$ of~\eqref{eq: self-adjoint mixed} must satisfy
-\[
+\begin{equation}\label{eq: Lu=f weak 1d}
 \int_0^L\bigl(a(x)u'(x)v'(x)+c(x)u(x)v(x)\bigr)\,dx
     =\gamma_Lv(L)+\int_0^Lf(x)v(x)\,dx
     \quad\text{provided $v(0)=0$.}
-\]
+\end{equation}
 Given nodes~\eqref{eq: 1d nodes}, we therefore define the solution set~$S_h$ and 
 test space~$T_h$ by
 \[

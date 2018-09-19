@@ -1,13 +1,13 @@
-\chapter{Finite differences in 2D}
+\chapter{Finite differences in 2D}\label{chap: finite diff 2d}
 
 In this chapter, we study the numerical solution of the Dirichlet boundary-value 
 problem for the Poisson equation. Let $\Omega$ be a bounded, open subset 
-of~$\mathbb{R}^2$, with a piecewise smooth boundary~$\partial\Omega$.  Given 
-suiatble functions $f(x,y)$~and $g(x,y)$, we see $u=u(x,y)$ satisfying
+of~$\mathbb{R}^2$, with a piecewise smooth boundary~$\Gamma=\partial\Omega$.  
+Given suitable functions $f(x,y)$~and $g(x,y)$, we see $u=u(x,y)$ satisfying
 \begin{equation}\label{eq: Poisson bvp}
 \begin{aligned}
 -\nabla^2u&=f(x,y)&&\text{for $(x,y)\in\Omega$,}\\
-u&=g(x,y)&&\text{for $(x,y)\in\partial\Omega$.}
+u&=g(x,y)&&\text{for $(x,y)\in\Gamma$.}
 \end{aligned}
 \end{equation}
 Here, the \emph{Laplacian} is the second-order elliptic differential operator
@@ -60,7 +60,7 @@ With this notation, our finite difference scheme can be written compactly as
 \begin{aligned}
 -\bigl(\delta_x^2U_{p,q}+\delta_y^2U_{p,q}\bigr)&=f_{p,q}
     &&\text{for $(x_p,y_q)\in\Omega$,}\\
-U_{p,q}&=g_{p,q}&&\text{for $(x_p,y_q)\in\partial\Omega$,}
+U_{p,q}&=g_{p,q}&&\text{for $(x_p,y_q)\in\Gamma$,}
 \end{aligned}
 \end{equation}
 with the obvious abbreviations $f_{p,q}=f(x_p,y_q)$~and $g_{p,q}=g(x_p,y_q)$.

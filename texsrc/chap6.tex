@@ -1,8 +1,144 @@
 \chapter{Finite elements in 2D}
 
-\section{Elliptic boundary-value problem}
+In Chapter~\ref{chap: FEM 1d} we considered a formally self-adjoint, linear, 
+second-order differential operator~\eqref{eq: L self-adjoint}.  The 2D 
+equivalent has the form
+\begin{equation}\label{eq: L self-adjoint 2d}
+\begin{aligned}
+\mathcal{L}u&=-\nabla\cdot\bigl(a\nabla u\bigr)+cu\\
+	&=-\frac{\partial}{\partial x}\biggl(a\,\frac{\partial u}{\partial x}\biggr)
+	-\frac{\partial}{\partial y}\biggl(a\,\frac{\partial u}{\partial y}\biggr)
+	+cu,
+\end{aligned}
+\end{equation}
+where the coefficients $a$~and $c$ must be smooth functions of $x$~and $y$, and 
+there is a constant~$a_{\min}$ such that
+\[
+a(x,y)\ge a_{\min}>0\quad\text{for $(x,y)\in\Omega$,}
+\]
+ensuring that $\mathcal{L}$ is \emph{uniformly elliptic}.  Here, as in 
+Chapter~\ref{chap: finite diff 2d}, $\Omega$ is a bounded open subset 
+of~$\mathbb{R}^2$ with a piecewise smooth boundary~$\Gamma=\partial\Omega$, but 
+we will now suppose that
+\[
+\Gamma=\overline{\Gamma_{\mathrm{D}}\cup\Gamma_{\mathrm{N}}},
+\]
+where $\Gamma_{\mathrm{D}}$~and $\Gamma_{\mathrm{N}}$ are disjoint subsets 
+of~$\partial\Omega$ consisting of finitely many smooth curves.  Our aim is to 
+use the finite element method to compute numerical solutions to a \emph{mixed 
+boundary-value problem} of the form
+\begin{equation}\label{eq: self-adjoint bvp 2d}
+\begin{aligned}
+\mathcal{L}u&=f&&\text{in~$\Omega$,}\\
+u&=g_{\mathrm{D}}&&\text{on~$\Gamma_{\mathrm{D}}$,}\\
+a\,\frac{\partial u}{\partial n}&=g_{\mathrm{N}}&&
+	\text{on~$\Gamma_{\mathrm{N}}$.}
+\end{aligned}
+\end{equation}
+Here, $\partial u/\partial n$ is the derivative of~$u$ in the direction of the 
+\emph{outward unit normal}~$\boldsymbol{n}$ for~$\Omega$, that is,
+\[
+\frac{\partial u}{\partial n}(x,y)
+	=\boldsymbol{n}(x,y)\cdot\nabla u(x,y)
+	\quad\text{for $(x,y)\in\partial\Omega$.}
+\]
+We refer to~$\Gamma_{\mathrm{D}}$~and $\Gamma_{\mathrm{N}}$ as the 
+\emph{Dirichlet}~and \emph{Neumann} parts of the boundary, respectively, since 
+we specify a Dirichlet boundary condition~$u=g_{\mathrm{D}}$ 
+on~$\Gamma_{\mathrm{D}}$ and a Neumann boundary 
+condition~$a\partial u/\partial n=g_{\mathrm{N}}$ on~$\Gamma_{\mathrm{N}}$. 
 
-\section{Weak solution}
+In the special case of a \emph{pure Dirichlet problem}, the Neumann part of the 
+boundary is empty and so $u$ is specified on the whole of~$\Gamma$ (as 
+in Chapter~\ref{chap: finite diff 2d}).  In the opposite case of a 
+\emph{pure Neumann problem}, the Dirichlet part of the boundary is empty and so 
+$a\,\partial u/\partial n$ is specified on the whole of~$\Gamma$.
+
+\section{First Green identity}
+
+Recall the \emph{divergence theorem} from vector calculus; on the right-hand 
+side, the integral over~$\Gamma$ is with respect to \
+
+\begin{theorem}\label{thm: divergence}
+If the vector field $\boldsymbol{F}:\Omega\cup\Gamma\to\mathbb{R}^2$ is $C^1$, 
+then
+\[
+\int_\Omega\nabla\cdot\boldsymbol{F}
+	=\int_\Gamma\boldsymbol{F}\cdot\boldsymbol{n}.
+\]
+\end{theorem}
+
+Written out more explicitly, if 
+\[
+\boldsymbol{F}(x,y)=P(x,y)\,\boldsymbol{i}+Q(x,y)\,\boldsymbol{j}
+\quad\text{and}\quad
+\boldsymbol{n}=n_x\,\boldsymbol{i}+n_y\,\boldsymbol{j},
+\]
+then the divergence theorem says that
+\[
+\iint_\Omega\biggl(\frac{\partial P}{\partial x}+\frac{\partial Q}{\partial y}
+	\biggr)\,dx\,dy=\int_\Gamma\bigl(P\,n_x+Q\,n_y)\,ds,
+\]
+where $ds$ is the element of arc length along~$\Gamma$.  We also recall the 
+following vector field identity.
+
+\begin{lemma}\label{lem: div phi F}
+For a $C^1$ scalar field~$\phi$ and a $C^1$ vector field~$\boldsymbol{F}$,
+\[
+\nabla\cdot(\phi\boldsymbol{F})=(\nabla\phi)\cdot\boldsymbol{F}
+	+\phi\,\nabla\cdot\boldsymbol{F}.
+\]
+\end{lemma}
+
+Together, Theorem~\ref{thm: divergence}~and Lemma~\ref{lem: div phi F} may be 
+used to prove a 2D version of~\eqref{eq: int by parts}.
+
+\begin{theorem}[First Green Identity]\label{thm: first Green}
+If $u:\Omega\cup\Gamma\to\mathbb{R}$ is $C^2$, and if 
+$v:\Omega\cup\Gamma\to\mathbb{R}$ is $C^1$, then
+\[
+\int_\Omega(\mathcal{L}u)\,v
+	=\int_\Omega\bigl(a\nabla u\cdot\nabla v+cuv\bigr)
+	-\int_\Gamma a\,\frac{\partial u}{\partial n}\,v.
+\]
+\end{theorem}
+\begin{proof}
+Taking $\phi=v$~and $\boldsymbol{F}=a\nabla u$ in Lemma~\ref{lem: div phi F}, 
+we have
+\[
+\nabla\cdot(va\nabla u)=(\nabla v)\cdot(a\nabla u)+v\nabla\cdot(a\nabla u),
+\]
+so
+\begin{align*}
+(\mathcal{L}u)v&=\bigl(-\nabla\cdot(a\nabla u)+cu\bigr)v
+	=-v\nabla\cdot(a\nabla u)+cuv\\
+	&=(\nabla v)\cdot(a\nabla u)-\nabla\cdot(va\nabla u)+cuv
+	=\bigl(a\nabla u\cdot\nabla v+cuv)-\nabla\cdot(va\nabla u).
+\end{align*}
+Applying Theorem~\ref{thm: divergence} with~$\boldsymbol{F}=va\nabla u$, it 
+follows that
+\[
+\int_\Omega(\mathcal{L}u)v=\int_\Omega\bigl(a\nabla u\cdot\nabla v+cuv\bigr)
+	-\int_\Gamma\boldsymbol(va\nabla u)\cdot\boldsymbol{n},
+\]
+which gives the desired identity because 
+$(\nabla u)\cdot\boldsymbol{n}=\partial u/\partial n$.
+\end{proof}
+
+Since 
+\[
+\int_\Gamma a\,\frac{\partial u}{\partial n}\,v
+	=\int_{\Gamma_{\mathrm{D}}} a\,\frac{\partial u}{\partial n}\,v
+	+\int_{\Gamma_{\mathrm{N}}} a\,\frac{\partial u}{\partial n}\,v,
+\]
+we see that if $u$ is a $C^2$ solution of~\eqref{eq: self-adjoint bvp 2d}, and 
+if $v$ is $C^1$, then
+\begin{equation}\label{eq: Lu=f weak 2d}
+\int_\Omega\bigl(a\nabla u\cdot\nabla v+cuv\bigr)=\int_\Omega fv
+	-\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}v
+	\quad\text{provided $v=0$ on $\Gamma_{\mathrm{D}}$.}
+\end{equation}
+Compare this property with its 1D equivalent~\eqref{eq: Lu=f weak 1d}.
 
 \section{Triangulation}
 
