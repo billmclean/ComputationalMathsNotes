@@ -21,12 +21,14 @@ Chapter~\ref{chap: finite diff 2d}, $\Omega$ is a bounded open subset
 of~$\mathbb{R}^2$ with a piecewise smooth boundary~$\Gamma=\partial\Omega$, but 
 we will now suppose that
 \[
-\Gamma=\overline{\Gamma_{\mathrm{D}}\cup\Gamma_{\mathrm{N}}},
+\Gamma=\Gamma_{\mathrm{D}}\cup\Gamma_{\mathrm{N}},
 \]
-where $\Gamma_{\mathrm{D}}$~and $\Gamma_{\mathrm{N}}$ are disjoint subsets 
-of~$\partial\Omega$ consisting of finitely many smooth curves.  Our aim is to 
-use the finite element method to compute numerical solutions to a \emph{mixed 
-boundary-value problem} of the form
+where $\Gamma_{\mathrm{D}}$~and $\Gamma_{\mathrm{N}}$ are non-overlapping, 
+relatively closed subsets of~$\partial\Omega$ consisting of finitely many 
+smooth curves.  (Thus, the intersection 
+$\Gamma_{\mathrm{D}}\cap\Gamma_{\mathrm{N}}$ consists of finitely many
+\emph{collision points}.) Our aim is to use the finite element method to compute 
+numerical solutions to a \emph{mixed boundary-value problem} of the form
 \begin{equation}\label{eq: self-adjoint bvp 2d}
 \begin{aligned}
 \mathcal{L}u&=f&&\text{in~$\Omega$,}\\
@@ -140,10 +142,140 @@ if $v$ is $C^1$, then
 \end{equation}
 Compare this property with its 1D equivalent~\eqref{eq: Lu=f weak 1d}.
 
-\section{Triangulation}
+\section{Triangulation and nodal basis}
 
-\section{Matrix assembly algorithm}
+\begin{figure}
+\caption{A regular triangulation.}\label{fig: good Th}
+\begin{center}
+\includegraphics[scale=0.7]{../src/chap6/good_triangulation.pdf} 
+\end{center}
+\end{figure}
 
-\section{Barycentric coordinates}
+\begin{figure}
+\caption{This triangulation fails to be regular.}\label{fig: bad Th}
+\begin{center}
+\includegraphics[scale=0.7]{../src/chap6/bad_triangulation.pdf} 
+\end{center}
+\end{figure}
+
+Assume now that $\Omega$ is a polygon.  It follows by induction on the number 
+of vertices that there exists a \emph{triangulation} of~$\Omega$, that is, a 
+finite set~$\mathcal{T}$ of \emph{non-overlapping} closed triangles whose 
+union is the closure of~$\Omega$. A triangulation~$\mathcal{T}$ is 
+\emph{regular} if the following two conditions are satisfied:
+\begin{enumerate}
+\item No triangle in~$\mathcal{T}$ is \emph{degenerate}, that is, 
+no~$K\in\mathcal{T}$ has collinear vertices.
+\item The intersection $K_1\cap K_2$ of any two distinct triangles $K_1$, 
+$K_2\in\mathcal{T}$ is either empty, a common edge or a common vertex.
+\end{enumerate}
+For example, Figure~\ref{fig: good Th} shows a regular triangulation with 
+7~vertices, or \emph{nodes}, numbered in red, and 6~triangles, or 
+\emph{elements}, numbered in blue.  However, the triangulation in 
+Figure~\ref{fig: bad Th} is not regular: the intersection of triangles 2~and 6 
+is an edge of triangle~6 but is not (the whole of) an edge of triangle~2.
+Vertex~7 in Figure~\ref{fig: bad Th} is said to be a \emph{hanging node}.
+
+Denote the maximum element diameter 
+by~$h=\max_{K\in\mathcal{T}}\operatorname{diam}(K)$, and let $V_h$ denote the 
+vector space consisting of those functions~$v:\Omega\cup\Gamma\to\mathbb{R}$ 
+that are continuous and piecewise-linear with respect to~$\mathcal{T}$.  Thus,
+if $v\in V_h$ then for each~$K\in\mathcal{T}$ there are coefficients 
+$c^\brak{K}_0$, $c^\brak{K}_1$~and $c^\brak{K}_2$ such that
+\begin{equation}\label{eq: v K 1 x y}
+v(x,y)=c^\brak{K}_0+c^\brak{K}_1x+c^\brak{K}_2y
+	\quad\text{for $(x,y)\in K$.}
+\end{equation}
+Let $\mathsf{n}^\brak{K}_1$, $\mathsf{n}^\brak{K}_2$, $\mathsf{n}^\brak{K}_3$ 
+denote the vertices of the triangle~$K$, and let $\psi^\brak{K}_1$, 
+$\psi^\brak{K}_2$, $\psi^\brak{K}_3$ denote the unique linear functions 
+satisfying
+\begin{equation}\label{eq: psi node triangle}
+\psi^\brak{K}_p(\mathsf{n}^\brak{K}_p)=\delta_{p,q}
+	\quad\text{for $p$, $q\in\{1,2,3\}$.}
+\end{equation}
+In Section~\ref{sec: barycentric}, we will derive explicit representations of 
+these functions.  The property~\eqref{eq: psi node triangle} implies that if 
+$v\in V_h$ then
+\[
+v(x,y)=\sum_{q=1}^3v(\mathsf{n}^\brak{K}_q)\psi^\brak{K}_q(x,y)
+	\quad\text{for $(x,y)\in K$,}
+\]
+showing that $v$ is uniquely determined by its values at the nodes 
+of~$\mathcal{T}$.
+
+\begin{figure}
+\caption{A piecewise-linear ``tent function'', equal to~$1$ at one node, and 
+$0$ at all other nodes.}\label{fig: tent func}
+\begin{center}
+\includegraphics[scale=0.6]{../src/chap6/tent_func.pdf}
+\end{center}
+\end{figure}
+
+In fact, suppose that $\mathsf{n}_1$, $\mathsf{n}_2$, \dots, $\mathsf{n}_N$ is 
+an enumeration of the nodes of~$\mathcal{T}$.  For~$1\le j\le N$, we 
+define~$\chi_j\in V_h$ by requiring
+\[
+\chi_k(x_j)=\delta_{jk}\quad\text{for $j$, $k\in\{1, 2, \dots, N\}$.}
+\]
+Figure~\ref{fig: tent func} shows an example of such a ``tent function''.  
+If $v\in V_h$, then
+\[
+v(x,y)=\sum_{k=1}^N v(\mathsf{n}_k)\chi_k(x,y)
+	\quad\text{for $(x,y)\in\Omega\cup\Gamma$,}
+\]
+and we call $\{\chi_1,\chi_2,\ldots,\chi_N\}$ the \emph{nodal basis} for~$V_h$
+(Exercise~\ref{ex: nodal basis}).
+
+\section{Finite element method}
+
+Suppose that a regular triangulation~$\mathcal{T}$ is \emph{aligned} with 
+the decomposition $\Gamma=\Gamma_{\mathrm{D}}\cup\Gamma_{\mathrm{N}}$ of the 
+boundary of~$\Omega$.  This assumption means that $\Gamma_{\mathrm{D}}$ 
+is a union of edges of triangles in~$\mathcal{T}$ (in which 
+case, the same must be true of~$\Gamma_{\mathrm{N}}$).  The vertices lying on 
+the Dirichlet boundary~$\Gamma_{\mathrm{D}}$ are called the \emph{fixed nodes}, 
+because the values of the solution~$u$ are fixed at these points.  The 
+remaining vertices are called the \emph{free nodes}; these belong 
+to~$\Omega\cup\Gamma_{\mathrm{N}}$, but note that the collision points, where
+$\Gamma_{\mathrm{D}}$~and $\Gamma_{\mathrm{N}}$ meet, are among the fixed nodes.
+
+Suppose that there are $M$~free nodes and $R$~fixed nodes. It is convenient to 
+number the nodes so that free nodes come first, followed by the fixed nodes.
+That is, $\mathsf{n}_1$, $\mathsf{n}_2$, \dots, 
+$\mathsf{n}_M$ are free, and $\mathsf{n}_{M+1}$, $\mathsf{n}_{M+2}$, \dots, 
+$\mathsf{n}_{M+R}$ are fixed.  
+
+Let $g_{\mathrm{D},h}:\Gamma_{\mathrm{D}}\to\mathbb{R}$ be a piecewise-linear 
+approximation to~$g_{\mathrm{D}}$.  An obvious choice is the interpolant, so
+that
+\[
+g_{\mathrm{D},h}(\mathsf{n}_k)=g(\mathsf{n}_k)\quad\text{for $M+1\le k\le M+R$.}
+\]
+We define the trial set
+\[
+S_h=\{\,v\in V_h:\text{$v=g_{\mathrm{D},h}$ on $\Gamma_{\mathrm{D}}$}\,\}
+\]
+and the test space
+\[
+S_h=\{\,v\in V_h:\text{$v=0$ on $\Gamma_{\mathrm{D}}$}\,\}.
+\]
+Recalling \eqref{eq: Lu=f weak 2d}, the finite element 
+solution~$u_h\in S_h$ is then defined by requiring that
+\begin{equation}\label{eq: FEM 2d}
+\int_\Omega\bigl(a\nabla u_h\cdot\nabla v+cu_hv\bigr)=\int_\Omega fv
+	-\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}v
+	\quad\text{for all $v\in T_h$.}
+\end{equation}
+
+\section{Barycentric coordinates}\label{sec: barycentric}
 
 \section{Error bounds}
+
+\begin{Exercises}
+
+\exercise\label{ex: nodal basis}
+Prove that the functions~\eqref{eq: chi 2d} form a basis for the 
+piecewise-linear, finite element space~$V_h$, that is, prove that the nodal 
+basis really is a basis. 
+\end{Exercises}
