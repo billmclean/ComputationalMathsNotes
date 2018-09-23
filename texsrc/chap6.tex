@@ -142,7 +142,7 @@ if $v$ is $C^1$, then
 \end{equation}
 Compare this property with its 1D equivalent~\eqref{eq: Lu=f weak 1d}.
 
-\section{Triangulation and nodal basis}
+\section{Triangulation and nodal basis}\label{sec: triangulation}
 
 \begin{figure}
 \caption{A regular triangulation.}\label{fig: good Th}
@@ -258,7 +258,7 @@ S_h=\{\,v\in V_h:\text{$v=g_{\mathrm{D},h}$ on $\Gamma_{\mathrm{D}}$}\,\}
 \]
 and the test space
 \[
-S_h=\{\,v\in V_h:\text{$v=0$ on $\Gamma_{\mathrm{D}}$}\,\}.
+T_h=\{\,v\in V_h:\text{$v=0$ on $\Gamma_{\mathrm{D}}$}\,\}.
 \]
 Recalling \eqref{eq: Lu=f weak 2d}, the finite element 
 solution~$u_h\in S_h$ is then defined by requiring that
@@ -268,9 +268,328 @@ solution~$u_h\in S_h$ is then defined by requiring that
 	\quad\text{for all $v\in T_h$.}
 \end{equation}
 
-\section{Barycentric coordinates}\label{sec: barycentric}
+We expand the finite element solution in the nodal basis, and enforce the 
+Dirichlet boundary condition to obtain the representation
+\begin{equation}\label{eq: uh U 2d}
+u_h(x,y)=\sum_{k=1}^NU_k\chi_k(x,y)=\sum_{k=1}^MU_k\chi_k(x,y)
+    +\sum_{k=M+1}^{M+R}g_{D,h}(\mathsf{n}_k)\chi_k(x,y).
+\end{equation}
+Since $\{\chi_1,\chi_2,\ldots,\chi_M\}$ is a basis for the trial space~$T_h$, 
+the requirement~\eqref{eq: FEM 2d} is equivalent to
+\begin{equation}\label{eq: FEM 2d alt}
+\int_\Omega\bigl(a\nabla u_h\cdot\nabla\chi_j+cu_h\chi_j\bigr)
+    =\int_\Omega f\chi_j
+    -\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}\chi_j
+    \quad\text{for $1\le j\le M$,}
+\end{equation}
+and so, after inserting the representation~\eqref{eq: uh U 2d}, we obtain an 
+$M\times M$~linear system
+\[
+\sum_{k=1}^M\bigl(a_{jk}+c_{jk}\bigr)U_k
+    =f_j+g_{\mathrm{N},j}-\sum_{k=M+1}^{M+R}(a_{jk}+c_{jk})g_{\mathrm{D},k}
+    \quad\text{for $1\le j\le M$,}
+\]
+where
+\[
+a_{jk}=\int_\Omega a\nabla\chi_k\cdot\nabla\chi_j,\qquad
+c_{jk}=\int_\Omega c\chi_k\chi_j,\qquad
+f_j=\int_\Omega f\chi_j,\qquad
+g_{\mathrm{N},j}=\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}\chi_j,
+\]
+and $g_{\mathrm{D},k}=g_{\mathrm{D},h}(\boldsymbol{n}_k)$. Let 
+\[
+\boldsymbol{U}=[U_k]_{k=1}^{M+R}
+    =\begin{bmatrix}\boldsymbol{U}'\\ \boldsymbol{U}'' \end{bmatrix}
+\quad\text{where}\quad
+\boldsymbol{U}'=[U_k]_{k=1}^M
+\quad\text{and}\quad
+\boldsymbol{U}''=[U_{M+k}]_{k=1}^R,
+\]
+and let $a'_{jk}=a_{jk}$~and $a''_{jk}=a_{j,M+k}$ so that
+\[
+\boldsymbol{A}=[\,\boldsymbol{A}'\quad\boldsymbol{A}''\,]
+\quad\text{where}\quad
+\boldsymbol{A}'=[a'_{jk}]_{j,k=1}^M
+\quad\text{and}\quad
+\boldsymbol{A}''=[a''_{jk}]_{1\le j\le M,1\le k\le R}.
+\]
+Similarly, $c_{jk}'=c_{jk}$ and $c_{jk}''=c_{j,M+k}$ with
+\[
+\boldsymbol{C}=[\,\boldsymbol{C}'\quad\boldsymbol{C}''\,]
+\quad\text{where}\quad
+\boldsymbol{C}'=[c'_{jk}]_{j,k=1}^M
+\quad\text{and}\quad
+\boldsymbol{C}''=[c''_{jk}]_{1\le j\le M,1\le k\le R}.
+\]
+Then, 
+\[
+\bigl(\boldsymbol{A}'+\boldsymbol{C}'\bigr)\boldsymbol{U}'
+    =\boldsymbol{f}+\boldsymbol{g}_{\mathrm{N}}
+    -\bigl(\boldsymbol{A}''+\boldsymbol{C}''\bigr)\boldsymbol{g}_{\mathrm{D}}
+\quad\text{and}\quad
+\boldsymbol{U}''=\boldsymbol{g}_{\mathrm{D}},
+\]
+where $\boldsymbol{A}=[a_{jk}]_{j,k=1}^M$ is the stiffness matrix, 
+$\boldsymbol{C}=[c_{jk}]_{j,k=1}^M$ is the mass matrix, 
+$\boldsymbol{f}=[f_j]_{j=1}^M$ is the load vector, and
+$\boldsymbol{g}_{\mathrm{D}}=[g_{\mathrm{D},M+k}]_{k=1}^R$~and
+$\boldsymbol{g}_{\mathrm{N}}=[g_{\mathrm{N},j}]_{j=1}^M$ provide the Dirichlet 
+and Neumann boundary data, respectively.
 
-\section{Error bounds}
+\section{Barycentric coordinates and element matrices}\label{sec: barycentric}
+
+Consider a triangle~$K$ with vertices $\boldsymbol{a}_1$, 
+$\boldsymbol{a}_2$~and $\boldsymbol{a}_3$.  The \emph{barycentric coordinates} 
+$(\xi_1,\xi_2,\xi_3)$ of a point~$\boldsymbol{x}$ with respect to~$K$ are 
+defined by the relations
+\[
+\boldsymbol{x}=\xi_1\boldsymbol{a}_1+\xi_2\boldsymbol{a}_2
+    +\xi_3\boldsymbol{a}_3
+    \quad\text{and}\quad
+\xi_1+\xi_2+\xi_3=1.    
+\]
+Thus, $\boldsymbol{a}_1$, $\boldsymbol{a}_2$, $\boldsymbol{a}_3$ have
+barycentric coordinates $(1,0,0)$, $(0,1,0)$, $(0,0,1)$, respectively. We will 
+see below that each~$\xi_p$ is a linear function of~$\boldsymbol{x}$, so 
+\begin{equation}\label{eq: xi psi}
+\xi_p=\psi_p^\brak{K}(\boldsymbol{x})
+    \quad\text{for $1\le p\le 3$,}
+\end{equation}
+where the $\psi_p^\brak{K}$ are the linear linear shape functions introduced in 
+Section~\ref{sec: triangulation}.  Thus, a level set of any
+barycentric coordinate is a straight line, as illustrated 
+in~\ref{fig: barycentric}.
+
+\begin{figure}
+\caption{Level sets of the barycentric coordinates 
+$(\xi_1,\xi_2,\xi_3)$, and the centroid~$\boldsymbol{c}$.}
+\label{fig: barycentric}
+\begin{center}
+\includegraphics[scale=0.75]{../src/chap6/barycentric.pdf}
+\end{center}
+\end{figure}
+
+Let $\boldsymbol{B}$ denote the inverse transpose 
+(Exercise~\ref{ex: inv transpose}) of the matrix with columns 
+$\boldsymbol{a}_1-\boldsymbol{a}_3$~and $\boldsymbol{a}_1-\boldsymbol{a}_3$, 
+that is,
+\[
+\boldsymbol{B}=[\,(\boldsymbol{a}_1-\boldsymbol{a}_3)\quad
+    (\boldsymbol{a}_1-\boldsymbol{a}_3)\,]^{-T},
+\]
+and write
+\[
+\boldsymbol{B}=[\,\boldsymbol{b}_1\quad\boldsymbol{b}_2\,]
+\quad\text{with}\quad\boldsymbol{b}_3=-(\boldsymbol{b}_1+\boldsymbol{b}_2).
+\]
+The \emph{centroid} of~$K$ is the point
+\[
+\boldsymbol{c}=\tfrac13\boldsymbol{a}_1+\tfrac13\boldsymbol{a}_2
++\tfrac13\boldsymbol{a}_3
+\]
+with barycentric coordinates~$(\tfrac13,\tfrac13,\tfrac13)$. The barycentric 
+coordinates of a given point~$\boldsymbol{x}$ can be computed as follows.
+
+\begin{theorem}\label{thm: barycentric}
+With the notation above,
+\[
+\xi_p=\tfrac13+\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{c})
+\quad\text{for $p\in\{1,2,3\}$.}
+\]
+\end{theorem}
+\begin{proof}
+Since $\xi_1+\xi_2+\xi_3=1$ we can express $\boldsymbol{x}$ in terms of 
+$\xi_1$~and $\xi_2$ only,
+\[
+\boldsymbol{x}=\xi_1\boldsymbol{a}_1+\xi_2\boldsymbol{a}_2
+    +(1-\xi_1-\xi_2)\boldsymbol{a}_3
+    =\boldsymbol{a}_3+\xi_1(\boldsymbol{a}_1-\boldsymbol{a}_3)
+    +\xi_2(\boldsymbol{a}_2-\boldsymbol{a}_3).
+\]
+Thus,
+\[
+\boldsymbol{x}-\boldsymbol{a}_3
+=[\,(\boldsymbol{a}_1-\boldsymbol{a}_3)\quad
+    (\boldsymbol{a}_2-\boldsymbol{a}_3\,]
+\begin{bmatrix}\xi_1\\ \xi_2 \end{bmatrix}
+=B^{-T}\begin{bmatrix}\xi_1\\ \xi_2 \end{bmatrix}
+\]
+and so
+\[
+\begin{bmatrix}\xi_1\\ \xi_2 \end{bmatrix}=B^T(\boldsymbol{x}-\boldsymbol{a}_3)
+=\begin{bmatrix}\boldsymbol{b}_1^T\\ \boldsymbol{b}_2^T\end{bmatrix}
+    (\boldsymbol{x}-\boldsymbol{a}_3)
+=\begin{bmatrix}\boldsymbol{b}_1\cdot(\boldsymbol{x}-\boldsymbol{a}_3)\\
+\boldsymbol{b}_2\cdot(\boldsymbol{x}-\boldsymbol{a}_3)\end{bmatrix},
+\]
+that is,
+\[
+\xi_1=\boldsymbol{b}_1\cdot(\boldsymbol{x}-\boldsymbol{a}_3)
+\quad\text{and}\quad
+\xi_2=\boldsymbol{b}_2\cdot(\boldsymbol{x}-\boldsymbol{a}_3),
+\]
+Since $\boldsymbol{a}_1$, $\boldsymbol{a}_2$, $\boldsymbol{a}_3$ have
+barycentric coordinates $(1,0,0)$, $(0,1,0)$, $(0,0,1)$, respectively,
+\[
+\boldsymbol{b}_1\cdot(\boldsymbol{a}_1-\boldsymbol{a}_3)
+=1=\boldsymbol{b}_2\cdot(\boldsymbol{a}_2-\boldsymbol{a}_3)
+\]
+whereas
+\[
+\boldsymbol{b}_1\cdot(\boldsymbol{a}_2-\boldsymbol{a}_3)
+=0=\boldsymbol{b}_2\cdot(\boldsymbol{a}_1-\boldsymbol{a}_3),
+\]
+so, for $p\in\{1,2\}$,
+\[
+\boldsymbol{b}_p\cdot(\boldsymbol{c}-\boldsymbol{a}_3)
+    =\boldsymbol{b}_p\cdot(
+\tfrac13\boldsymbol{a}_1+\tfrac13\boldsymbol{a}_2+\tfrac13\boldsymbol{a}_3
+    -\boldsymbol{a}_3)
+    =\tfrac13\boldsymbol{b}_p\cdot(\boldsymbol{a}_1-\boldsymbol{a}_3)
+    +\tfrac13\boldsymbol{b}_p\cdot(\boldsymbol{a}_2-\boldsymbol{a}_3)
+    =\tfrac13
+\]
+and hence
+\[
+\xi_p=\boldsymbol{b}_p\cdot(
+    \boldsymbol{x}-\boldsymbol{c}+\boldsymbol{c}-\boldsymbol{a}_3)
+    =\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{c})+\tfrac13.
+\]
+Finally,
+\[
+\xi_3=1-\xi_2-\xi_3=(1-\tfrac13-\tfrac13)
+    -(\boldsymbol{b}_1+\boldsymbol{b}_2)\cdot
+    (\boldsymbol{x}-\boldsymbol{a}_3)
+    =\tfrac13+\boldsymbol{b}_3\cdot(\boldsymbol{x}-\boldsymbol{a}_3).
+\]
+\end{proof}
+
+We define the triangular reference element
+\[
+K_{\mathrm{ref}}=\{\,(\xi_1,\xi_2):
+    \text{$0\le\xi_1\le1$ and $0\le\xi_2\le\xi_1$}\,\}
+\]
+with reference nodes $\boldsymbol{n}_p=\boldsymbol{a}_p$ for~$1\le p\le 3$,
+and observe that the affine transformation $K_{\mathrm{ref}}\to K$ defined by
+\[
+(\xi_1,\xi_2)\mapsto\boldsymbol{x}(\xi_1,\xi_2)=\boldsymbol{a}_3
+    +\xi_1(\boldsymbol{a}_1-\boldsymbol{a}_3)
+    +\xi_2(\boldsymbol{a}_2-\boldsymbol{a}_3)
+\]
+is one-one and onto, with Jacobian determinant
+\[
+\frac{\partial(x_1,x_2)}{\xi_1,\xi_2})
+    =\det[\,(\boldsymbol{a}_1-\boldsymbol{a}_3)\quad
+            (\boldsymbol{a}_2-\boldsymbol{a}_3)\,].
+\]
+Since $\bigl|\det[\,(\boldsymbol{a}_1-\boldsymbol{a}_3)\quad
+(\boldsymbol{a}_2-\boldsymbol{a}_3)\,]\bigr|$ equals the area of the 
+parallelogram spanned by the vectors $\boldsymbol{a}_1-\boldsymbol{a}_3$~and 
+$\boldsymbol{a}_2-\boldsymbol{a}_3$, which in turns equals $2\mathrm{area}(K)$, 
+it follows that
+\begin{equation}\label{eq: int K f}
+\int_Kf=2\mathrm{area}(K)\int_0^1\int_0^{1-\xi_1}
+    f\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\,d\xi_2\,d\xi_1.
+\end{equation}
+The formula in the next theorem allows us to compute $\int_Kf$ for any 
+polynomial~$f$.
+
+\begin{theorem}\label{thm: int xi}
+For all non-negative integers $n_1$, $n_2$, $n_3$,
+\[
+\int_K\xi_1^{n_1}\xi_2^{n_2}\xi_3^{n_3}=2\,\mathrm{area}(K)\,
+    \frac{n_1!\,n_2!\,n_3!}{(n_1+n_2+n_3+2)!}.
+\]
+\end{theorem}
+\begin{proof}
+By~\eqref{eq: int K f},
+\begin{align*}
+\int_K\xi_1^{n_1}\xi_2^{n_2}\xi_3^{n_3}&=2\,\mathrm{area}(K)
+    \int_0^1\int_0^{1-\xi_1}\xi_1^{n_1}\xi_2^{n_2}(1-\xi_1-\xi_2)^{n_3}
+        \,d\xi_2\,d\xi_1\\
+    &=2\,\mathrm{area}(K)
+    \int_0^1\xi_1^{n_1}\int_0^{1-\xi_1}\xi_2^{n_2}(1-\xi_1-\xi_2)^{n_3}
+        \,d\xi_2\,d\xi_1.
+\end{align*}
+Integrating by parts $m$~times, we see that for any~$a>0$,
+\begin{align*}
+\int_0^a\,\frac{\xi^n}{n!}\,\frac{(a-\xi)^m}{m!}\,d\xi
+&=\int_0^a\,\frac{\xi^{n+1}}{(n+1)!}\,\frac{(a-\xi)^{m-1}}{(m-1)!}\,d\xi\\
+&=\cdots
+=\int_0^a\,\frac{\xi^{n+m}}{(n+m)!}\,d\xi=\frac{a^{n+m+1}}{(n+m+1)!},
+\end{align*}
+so
+\begin{multline*}
+\int_0^1\xi_1^{n_1}\int_0^{1-\xi_1}\xi_2^{n_2}(1-\xi_1-\xi_2)^{n_3}
+        \,d\xi_2\,d\xi_1
+    =n_2!\,n_3!\int_0^1\xi_1^{n_1}\int_0^{1-\xi_1}
+    \frac{\xi_2^{n_2}}{n_2!}\,\frac{(1-\xi_1-\xi_2)^{n_3}}{n_3!}
+        \,d\xi_1\,d\xi_1\\
+    =n_1!\,n_2!\,n_3!\int_0^1\frac{\xi_1^{n_1}}{n_1!}\,
+        \frac{(1-\xi_1)^{n_2+n_3+1}}{(n_2+n_3+1)!}\,d\xi_1
+    =\frac{n_1!\,n_2!\,n_3!}{(n_1+n_2+n_3+2)!},
+\end{multline*}
+giving the desired formula.
+\end{proof}
+
+Using the same approach as in the 1D case in 
+Section~\ref{sec: matrix assembly 1d}, we will assemble the 
+$M\times(M+R)$ global stiffness 
+matrix~$\boldsymbol{A}=[\,\boldsymbol{A}'\quad\boldsymbol{A}'']$ from 
+the $3\times3$ element stiffness matrices
+\[
+\boldsymbol{A}^\brak{K}=\bigl[a^\brak{K}_{pq}\bigr]_{p,q=1}^3
+\quad\text{where}\quad
+a^\brak{K}_{pq}=\int_Ka\nabla\psi_q^\brak{K}\cdot\nabla\psi^\brak{K}_p.
+\]
+Likewise, the $M\times(M+R)$ global mass 
+matrix~$\boldsymbol{C}=[\,\boldsymbol{C}'\quad\boldsymbol{C}'']$ will be 
+assembled from the $3\times3$ element mass matrices,
+\[
+\boldsymbol{C}^\brak{K}=\bigl[c^\brak{K}_{pq}\bigr]_{p,q=1}^3
+\quad\text{where}\quad
+c^\brak{K}_{pq}=\int_Kc\psi_q^\brak{K}\psi^\brak{K}_p.
+\]
+Recalling \eqref{eq: x psi}~and Theorem~\ref{thm: barycentric}, the linear 
+shape functions are given by
+\[
+\psi_p(\boldsymbol{x})=\xi_p
+    =\tfrac13+\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{a}_p)
+    \quad\text{for $p\in\{1,2,3\}$,}
+\]
+and so
+\[
+\nabla\psi_p=\boldsymbol{b}_p\quad\text{for $p\in\{1,2,3\}$.}
+\]
+Thus, the entries of the element stiffness matrix are
+\[
+a^\brak{K}_{pq}=\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_K a,
+    =\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_0^1\int_0^{1-\xi_1}
+        a\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\,d\xi_2\,d\xi_1,
+\]
+and those of the element mass matrix are
+\[
+c^\brak{K}_{pq}=\int_Kc\xi_q\xi_p=\int_0^1\int_0^{1-\xi_1}
+        c\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_q\xi_p\,d\xi_2\,d\xi_1.
+\]
+In particular, if $a(\boldsymbol{x})=1$~and $c(\boldsymbol{x})=1$, then
+Theorem~\ref{thm: int xi} shows that 
+\[
+\newcommand{\bb}{\boldsymbol{b}}
+\boldsymbol{A}^\brak{K}=\mathrm{area}(K)\begin{bmatrix}
+\bb_1\cdot\bb_1&\bb_2\cdot\bb_1&\bb_3\cdot\bb_1\\
+\bb_1\cdot\bb_2&\bb_2\cdot\bb_2&\bb_3\cdot\bb_2\\
+\bb_1\cdot\bb_3&\bb_2\cdot\bb_3&\bb_3\cdot\bb_3
+\end{bmatrix}
+\quad\text{and}\quad
+\boldsymbol{C}^\brak{K}=\frac{\mathrm{area}(K)}{12}\begin{bmatrix}
+2&1&1\\ 1&2&1\\ 1&1&2 \end{bmatrix}.
+\]
+
+
+
+
+\section{Optimality property}
 
 \begin{Exercises}
 
@@ -278,4 +597,9 @@ solution~$u_h\in S_h$ is then defined by requiring that
 Prove that the functions~\eqref{eq: chi 2d} form a basis for the 
 piecewise-linear, finite element space~$V_h$, that is, prove that the nodal 
 basis really is a basis. 
+
+\exercise\label{ex: inv transpose}
+Let $\boldsymbol{A}$ be a nonsingular matrix.
+Show that $(\boldsymbol{A}^{-1})^T=(\boldsymbol{A}^T)^{-1}$; we denote this 
+\emph{inverse transpose} matrix by~$\boldsymbol{A}^{-T}$.
 \end{Exercises}
