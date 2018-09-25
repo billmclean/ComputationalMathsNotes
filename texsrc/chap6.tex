@@ -152,7 +152,7 @@ Compare this property with its 1D equivalent~\eqref{eq: Lu=f weak 1d}.
 \end{figure}
 
 \begin{figure}
-\caption{This triangulation fails to be regular.}\label{fig: bad Th}
+\caption{A triangulation that fails to be regular.}\label{fig: bad Th}
 \begin{center}
 \includegraphics[scale=0.7]{../src/chap6/bad_triangulation.pdf} 
 \end{center}
@@ -171,10 +171,41 @@ $K_2\in\mathcal{T}$ is either empty, a common edge or a common vertex.
 \end{enumerate}
 For example, Figure~\ref{fig: good Th} shows a regular triangulation with 
 7~vertices, or \emph{nodes}, numbered in red, and 6~triangles, or 
-\emph{elements}, numbered in blue.  However, the triangulation in 
+\emph{elements}, numbered in blue.  (The six boundary edges are 
+numbered in green.) However, the triangulation in 
 Figure~\ref{fig: bad Th} is not regular: the intersection of triangles 2~and 6 
 is an edge of triangle~6 but is not (the whole of) an edge of triangle~2.
 Vertex~7 in Figure~\ref{fig: bad Th} is said to be a \emph{hanging node}.
+
+A simple data structure to store a triangulation consists of two arrays,
+$\boldsymbol{P}$~and $\boldsymbol{T}$.  The first stores the coordinates of the 
+$j$th node in its $j$th column, and the second stores the node numbers of the
+$k$th triangle in its $k$th column. A third matrix~$\boldsymbol{E}$ is required 
+to deal with boundary conditions: the $j$th column stores the node numbers of 
+the $j$th boundary edge.  Thus, the triangulation in 
+Figure~\ref{fig: good Th} may be described by
+\[
+\boldsymbol{P}=\begin{bmatrix}
+-2& 2& 2& 1&-1&-2& 0\\                
+-2&-2& 0& 2& 2& 0& 0
+\end{bmatrix}
+\quad\text{and}\quad
+\boldsymbol{T}=\begin{bmatrix}
+0&0&1&2&3&4\\
+6&1&2&3&4&5\\
+5&6&6&6&6&6\end{bmatrix},
+\]
+with
+\[
+\boldsymbol{E}=\begin{bmatrix}
+1&2&3&4&5&6\\
+2&3&4&5&6&1\end{bmatrix}.
+\]
+To simplify some geometric computations, it is best to ensure that the node
+numbering within each triangle proceeds counterclockwise, and that the edge
+node numbering follows the induced orientation of~$\partial\Omega$. (Even with 
+this restriction, there are $3$~possibilities for each column 
+of~$\boldsymbol{T}$.)
 
 Denote the maximum element diameter 
 by~$h=\max_{K\in\mathcal{T}}\operatorname{diam}(K)$, and let $V_h$ denote the 
@@ -378,10 +409,10 @@ that is,
     (\boldsymbol{a}_1-\boldsymbol{a}_3)\,]^{-T},
 \]
 and write
-\[
+\begin{equation}\label{eq: bp vector def}
 \boldsymbol{B}=[\,\boldsymbol{b}_1\quad\boldsymbol{b}_2\,]
 \quad\text{with}\quad\boldsymbol{b}_3=-(\boldsymbol{b}_1+\boldsymbol{b}_2).
-\]
+\end{equation}
 The \emph{centroid} of~$K$ is the point
 \[
 \boldsymbol{c}=\tfrac13\boldsymbol{a}_1+\tfrac13\boldsymbol{a}_2
@@ -532,6 +563,29 @@ so
 giving the desired formula.
 \end{proof}
 
+\begin{figure}
+\caption{The vectors $\boldsymbol{b}_1$, $\boldsymbol{b}_2$~and 
+$\boldsymbol{b}_3$ defined in~\eqref{eq: bp vector def}.}\label{fig: b vectors}
+\begin{center}
+\includegraphics[scale=0.8]{../src/chap6/b_vectors.pdf}
+\end{center}
+\end{figure}
+
+Recalling \eqref{eq: xi psi}~and Theorem~\ref{thm: barycentric}, the linear 
+shape functions are given by
+\[
+\psi_p(\boldsymbol{x})=\xi_p
+    =\tfrac13+\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{a}_p)
+    \quad\text{for $p\in\{1,2,3\}$,}
+\]
+and so
+\[
+\nabla\psi_p=\boldsymbol{b}_p\quad\text{for $p\in\{1,2,3\}$.}
+\]
+Thus, $\boldsymbol{b}_p$ is orthogonal to the level sets of~$\psi_p$ and in 
+particular to the side of~$K$ opposite~$\boldsymbol{a}_p$, as shown in 
+Figure~\ref{fig: b vectors}.
+
 Using the same approach as in the 1D case in 
 Section~\ref{sec: matrix assembly 1d}, we will assemble the 
 $M\times(M+R)$ global stiffness 
@@ -550,28 +604,18 @@ assembled from the $3\times3$ element mass matrices,
 \quad\text{where}\quad
 c^\brak{K}_{pq}=\int_Kc\psi_q^\brak{K}\psi^\brak{K}_p.
 \]
-Recalling \eqref{eq: x psi}~and Theorem~\ref{thm: barycentric}, the linear 
-shape functions are given by
+Explicitly, the entries of the element stiffness matrix are
 \[
-\psi_p(\boldsymbol{x})=\xi_p
-    =\tfrac13+\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{a}_p)
-    \quad\text{for $p\in\{1,2,3\}$,}
-\]
-and so
-\[
-\nabla\psi_p=\boldsymbol{b}_p\quad\text{for $p\in\{1,2,3\}$.}
-\]
-Thus, the entries of the element stiffness matrix are
-\[
-a^\brak{K}_{pq}=\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_K a,
+a^\brak{K}_{pq}=\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_K a
     =\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_0^1\int_0^{1-\xi_1}
         a\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\,d\xi_2\,d\xi_1,
 \]
 and those of the element mass matrix are
 \[
 c^\brak{K}_{pq}=\int_Kc\xi_q\xi_p=\int_0^1\int_0^{1-\xi_1}
-        c\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_q\xi_p\,d\xi_2\,d\xi_1.
+        c\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_q\xi_p\,d\xi_2\,d\xi_1,
 \]
+remembering that $\xi_3=1-\xi_1-\xi_2$.
 In particular, if $a(\boldsymbol{x})=1$~and $c(\boldsymbol{x})=1$, then
 Theorem~\ref{thm: int xi} shows that 
 \[
@@ -584,6 +628,15 @@ Theorem~\ref{thm: int xi} shows that
 \quad\text{and}\quad
 \boldsymbol{C}^\brak{K}=\frac{\mathrm{area}(K)}{12}\begin{bmatrix}
 2&1&1\\ 1&2&1\\ 1&1&2 \end{bmatrix}.
+\]
+
+The 3-dimensional element load vector is defined by
+\[
+\boldsymbol{f}^\brak{K}=[f^\brak{K}_p]_{p=1}^3
+\quad\text{where}\quad
+f^\brak{K}_p=\int_K f\psi^\brak{K}_p
+	=\int_0^1\int_0^{1-\xi_1}f\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_p
+	\,d\xi_2 \,d\xi_1
 \]
 
 
