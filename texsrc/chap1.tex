@@ -18,9 +18,10 @@ One can easily verify that for a constant source term~$f(x)=c$, the solution is
 given by
 \[
 u(x)=\frac{1}{L}\bigl((L-x)\gamma_0+x\gamma_L\bigr)+\frac{c}{2}\,x(L-x)
-	\quad\text{for $0\le x\le L$.}
+	\quad\text{for $0\le x\le L$;}
 \]
-For a general~$f$, the variation-of-parameters technique can be used to show 
+see Figure~\ref{fig: bvp 1d f const}. For a general~$f$, the 
+variation-of-parameters technique can be used to show 
 that
 \begin{equation}\label{eq: model 1d exact soln}
 u(x)=\frac{L-x}{L}\biggl(\gamma_0+\int_0^x yf(y)\,dy\biggr)
@@ -28,9 +29,14 @@ u(x)=\frac{L-x}{L}\biggl(\gamma_0+\int_0^x yf(y)\,dy\biggr)
 	\quad\text{for $0\le x\le L$.}
 \end{equation}
 
-\begin{theorem}
-
-\end{theorem}
+\begin{figure}
+\caption{Solutions of the simple two-point boundary-value 
+problem~\eqref{eq: model 1d} with $L=1$ and right-hand side~$f(x)=c$, for 
+various choices of the constant~$c$.}\label{fig: bvp 1d f const}
+\begin{center}
+\includegraphics[scale=0.75]{../src/chap1/bvp_1d_example.pdf}
+\end{center}
+\end{figure}
 
 
 \section{Second-order central difference}
@@ -947,7 +953,58 @@ constant~$C$ --- independent of $f_p$, $\gamma_0$, $\gamma_L$~and $\Delta x$
 \]
 
 \begin{Exercises}
- 
+
+\exercise
+Use Taylor expansion to find the coefficient~$c$ such that, as~$x\to0$,
+\begin{description}
+\item{(i)}
+$\dfrac{x}{1-x^2}-\sin x=cx^3+O(x^5)$.
+\item{(ii)}
+$\log\cos x=cx^2+O(x^4)$.
+\item{(iii)}
+$\dfrac{x-\sinh x}{x^3}=c+O(x^2)$.
+\end{description}
+\begin{ans}
+(i) $7/6$\quad (ii) $-1/2$\quad (iii) $-1/6$
+\end{ans}
+
+\exercise
+Consider the boundary value problem
+\[
+\begin{aligned}
+-u''+2u'-u&=1&&\text{for $0<x<2$,}\\
+u&=1&&\text{at $x=0$,}\\
+u&=-1&&\text{at $x=2$.}
+\end{aligned}
+\]
+\begin{description}
+\item{(i)}
+Set up a finite difference approximation as explained in lectures
+with $P=4$ (so $\Delta x=1/2$).
+\item{(ii)}
+Eliminate the variables $U_0$ and $U_4$ to obtain a $3\times3$ linear
+system.
+\item{(iii)}
+Solve the linear system to find $U_1$, $U_2$~and $U_3$.  (You can use
+for favourite software.)
+\item{(iv)}
+Find the exact solution~$u(x)$, and hence compute the errors~$E_p=U_p-u(x_p)$ 
+in your numerical solution.
+\end{description}
+\begin{ans}
+(i) $-6U_{p-1}+7U_p-2U_{p-1}=1$ for $1\le p\le3$\quad
+(ii) Since $U_0=1$ and $U_4=-1$,
+\[
+\begin{bmatrix}7&-2& 0\\ -6& 7&-2\\  0&-6& 7\end{bmatrix}
+\begin{bmatrix}U_1\\ U_2\\ U_3\end{bmatrix}
+=\begin{bmatrix}7\\ 1\\ -1\end{bmatrix}
+\]
+(iii) $U_1=269/175=1.5371$, $U_2=47/25=1.88$,
+$U_3=257/175=1.4686$\\
+(iv) $u=(2-x)e^x-1$ so the errors $E_p=U_p-u(x_p)$ are
+$E_1=0.06406$, $E_2=-0.16172$, $E_3=0.22773$.
+\end{ans}
+
 \exercise
 Consider the two-point boundary-value problem
 \[
@@ -989,5 +1046,68 @@ $[U_p+C]$.
 \item{(vi)} If we interpret the ODE as a steady-state heat equation, what is 
 the physical meaning of the condition in~(ii)?
 \end{description}
+
+\exercise
+Use Taylor expansion to find the coefficient~$c$ such that
+\begin{description}
+\item{(i)} $\dfrac{3u(x)-4u(x-\Delta x)+u(x-2\Delta x)}{2\Delta x}
+=u'(x)+cu'''(x)\,\Delta x^2+O(\Delta x^3)$.
+\item{(ii)} $\dfrac{-u(x+2\Delta x)+4u(x+\Delta)-3u(x)}{2\Delta x}
+=u'(x)+cu'''(x)\,\Delta x^2+O(\Delta x^3)$.
+\end{description}
+\begin{ans}
+(i) $c=-1/3$ \quad(ii) $c=-1/3$
+\end{ans}
+
+\exercise
+Consider the ODE in \emph{divergence form}:
+\begin{equation}\label{eq: ODE divergence form}
+-\frac{d}{dx}\biggl(a(x)\,\frac{du}{dx}\biggr)=f(x)\quad\text{for $0<x<L$.}
+\end{equation}
+\begin{description}
+\item{(i)}
+Find $w(x)$ such that
+\begin{multline*}
+\frac{1}{\Delta x}\biggl(
+ a(x+\tfrac12\Delta x)\,\frac{u(x+\Delta x)-u(x)}{\Delta x}
+-a(x-\tfrac12\Delta x)\,\frac{u(x)-u(x-\Delta x)}{\Delta x}\\
+    =\frac{d}{dx}\biggl(a(x)\,\frac{du}{dx}\biggr)+w(x)\Delta x^2+O(\Delta x^4)
+    \quad\text{as $\Delta x\to0$.}
+\end{multline*}
+Hint: for $h=\tfrac12\Delta$, let 
+\[
+v(x)=a(x)\,\frac{u(x+h)-u(x-h)}{2h}
+\]
+and use the result
+\[
+\frac{v(x+h)-v(x-h)}{2h}=v'(x)+\frac{1}{6}\,v'''(x)h^2+O(h^4)
+    \quad\text{as $h\to0$.}
+\]
+\item{(ii)} Hence devise a finite difference scheme with $\Delta x=L/P$ to 
+solve \eqref{eq: ODE divergence form} subject to the Dirichlet boundary 
+conditions $u(0)=\gamma_0$~and $u(L)=\gamma_L$.
+\item{(iii)} Write out the linear system in matrix form when~$P=5$.
+\end{description}
+\begin{ans}
+(i) $w(x)=\bigl[(au')'''(x)+(au''')'(x)\bigr]/24$\quad (ii) Putting
+$a_{p\pm1/2}=a(x_p\pm\tfrac12\Delta x)$ we have
+\[
+-\frac{1}{\Delta x}\biggl(a_{p+1/2}\,\frac{U_{p+1}-U_p}{\Delta x}
+    -a_{p-1/2}\,\frac{U_p-U_{p-1}}{\Delta x}\biggr)=f_p
+    \quad\text{for $1\le p\le P-1$,}
+\]
+with $U_0=\gamma_0$~and $U_P=\gamma_L$.\quad (iii)
+\begin{multline*}
+\frac{1}{\Delta x^2}\begin{bmatrix}
+            (a_{1/2}+a_{3/2})&-a_{3/2}&&\\
+   -a_{3/2}&(a_{3/2}+a_{5/2})&-a_{5/2}&\\
+  &-a_{5/2}&(a_{5/2}+a_{7/2})&-a_{7/2}\\
+ &&-a_{7/2}&(a_{7/2}+a_{9/2})
+\end{bmatrix}
+\begin{bmatrix}U_1\\ U_2\\ U_3\\ U_4\end{bmatrix}\\
+=\begin{bmatrix}f_1\\ f_2\\ f_3\\ f_4 \end{bmatrix}+\frac{1}{\Delta x^2}
+\begin{bmatrix}a_{1/2}\gamma_0\\ \\ \\ a_{9/2}\gamma_L \end{bmatrix}.
+\end{multline*}
+\end{ans}
 
 \end{Exercises}
