@@ -658,22 +658,44 @@ Show that $(\boldsymbol{A}^{-1})^T=(\boldsymbol{A}^T)^{-1}$; we denote this
 
 \exercise
 Consider a three-point quadrature rule of the form
-\[
+\begin{equation}\label{eq: 3 quad}
 \int_Kf\approx\frac{\mathrm{area}(K)}{3}\sum_{p=1}^3 
     f(\boldsymbol{x}^\brak{K}_p)
-\]
+\end{equation}
 where, for some choice of the parameter~$\lambda\in(0,1)$, 
-\begin{align*}
-\boldsymbol{x}^\brak{K}_1=\lambda\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
-    +(1-2\lambda)\boldsymbol{a}_3,\\
-\boldsymbol{x}^\brak{K}_2=(1-2\lambda)\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
+\begin{equation}\label{eq: 3 quad points}
+\begin{aligned}
+\boldsymbol{x}^\brak{K}_1=(1-2\lambda)\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
     +\lambda\boldsymbol{a}_3,\\
-\boldsymbol{x}^\brak{K}_3=\lambda\boldsymbol{a}_1+(1-2\lambda)\boldsymbol{a}_2
-    +\lambda\boldsymbol{a}_3.
-\end{align*}
+\boldsymbol{x}^\brak{K}_2=\lambda\boldsymbol{a}_1+(1-2\lambda)\boldsymbol{a}_2
+    +\lambda\boldsymbol{a}_3,\\
+\boldsymbol{x}^\brak{K}_3=\lambda\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
+    +(1-2\lambda)\boldsymbol{a}_3.
+\end{aligned}
+\end{equation}
 Verify that this rule integrates all quadratic polynomials exactly iff
-$\lambda=1/6$~or $1/2$.  Sketch the locations of the 
-points~$\boldsymbol{x}^\brak{K}_p$.
+$\lambda=1/6$~or $1/2$.  See Figure~\ref{fig: quadrature points}.
+\begin{figure}
+\caption{Quadrature points \eqref{eq: 3 quad points} for the 
+rule~\eqref{eq: 3 quad} with $\lambda=1/6$ (left) and $\lambda=1/2$ (right).}
+\label{fig: quadrature points}
+\begin{center}
+\includegraphics[scale=0.85]{../src/chap6/quadrature_points.pdf}
+\end{center}
+\end{figure}
+
+\begin{exercise}
+To achieve higher accuracy, we can consider a six-point quadrature rule
+\[
+\int_K f\approx\frac{\mathrm{area}(K)}{3}\biggl(
+	w\sum_{p=1}^3 f\bigl(\boldsymbol{x}^\brak{K}_p(\lambda_1)\bigr)
+	+(1-w)\sum_{p=1}^3 f\bigl(\boldsymbol{x}^\brak{K}_p(\lambda_2)\bigr)\biggr),
+\]
+depending on the parameters $w$, $\lambda_1$~and $\lambda_2$, with 
+$\boldsymbol{x}^\brak{K}_p=\boldsymbol{x}^\brak{K}_p(\lambda)$ defined as 
+in~\eqref{eq: 3 quad points}.
+
+\end{exercise}
 
 
 \end{Exercises}
