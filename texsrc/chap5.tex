@@ -374,8 +374,202 @@ $\boldsymbol{w}\in\mathbb{R}^{Q-1}$.
 \end{proof}
 
 
-
-
 \section{Band Cholesky factorization}
 
+A matrix~$\boldsymbol{A}=[a_{ij}]$ has \emph{upper bandwidth}~$s$ 
+if $a_{ij}=0$ whenever $j-i>s$, or equivalently if $\boldsymbol{A}$ has $s$ 
+non-zero superdiagonals.  Similarly, $\boldsymbol{A}$ has \emph{lower 
+bandwidth}~$s$ if $a_{ij}=0$ whenever $i-j>s$, so that there are $s$ non-zero 
+subdiagonals.  For example, the following matrix has upper bandwidth~$2$
+and lower bandwidth~$3$:
+\[
+\begin{bmatrix}
+ 5& 2&-1& 0& 0& 0& 0\\
+ 1& 6& 0& 8& 0& 0& 0\\
+ 2& 3& 9& 1& 8& 0& 0\\
+-3& 4& 7& 2& 5& 8& 0\\
+ 0& 0& 2& 8& 3&-7& 1\\
+ 0& 0& 4&-5& 6& 9& 3
+\end{bmatrix}.
+\]
+If a matrix is symmetric, then its upper and lower bandwidths must be equal, so 
+we refer to both as just the \emph{bandwidth}.
+
+Let $\boldsymbol{A}$ be an $n\times n$ symmetric, positive-definite matrix
+with bandwith~$s$.  We will seek a \emph{band Cholesky factorization}
+\begin{equation}\label{eq: Chol fact}
+\boldsymbol{A}=\boldsymbol{R}^T\boldsymbol{R},
+\end{equation}
+where the $n\times n$ matrix~$\boldsymbol{R}=[r_{ij}]$ is upper triangular with 
+upper bandwidth~$s$.  By the definition of matrix multiplication,
+\[
+\bigl(\boldsymbol{R}^T\boldsymbol{R}\bigr)_{ij}
+	=\sum_{k=1}^n\bigl(\boldsymbol{R}^T\bigr)_{ik}\boldsymbol{R}_{kj}
+	=\sum_{k=1}^n r_{ki}r_{kj}.
+\]
+Since $\boldsymbol{R}$ is upper triangular, $r_{ki}r_{kj}=0$ if $k>i$~or $k>j$,
+that is, if $k>\in(i,j)$, so in fact
+\[
+\bigl(\boldsymbol{R}^T\boldsymbol{R}\bigr)_{ij}
+	=\sum_{k=1}^{\min(i,j)} r_{ki}r_{kj}.
+\]
+In addition, $\boldsymbol{R}$ has upper bandwidth~$s$ so $r_{ki}r_{kj}=0$ if 
+$i>k+s$~or $j>k+s$.  Thus, taking account of symmetry, \eqref{eq: Chol fact}
+is satisfied iff
+\[
+a_{ij}=\sum_{k=\max(1,j-s)}^ir_{ki}r_{kj}
+	\quad\text{for $\max(1,j-s)\le i\le j\le n$.}
+\]
+We split the last term off the sum, writing
+\[
+a_{ij}=r_{ii}r_{ij}+\sum_{k=\max(1,j-s)}^{i-1}r_{ki}r_{kj}
+	\quad\text{for $\max(1,j-s)\le i<j\le n$,}
+\]
+in the off-diagonal case, and
+\[
+a_{jj}=r_{jj}^2+\sum_{k=\max(1,j-s)}^{j-1}r_{kj}^2
+	\quad\text{for $1\le j\le n$.}
+\]
+in the diagonal case.  Rearranging these equations leads to the formulae
+\[
+r_{ij}=\frac{1}{r_{jj}}\biggl(a_{ij}-\sum_{k=\max(1,j-s)}^{i-1}r_{ki}r_{kj}
+	\biggr)\quad\text{for $\max(1,j-s)\le i\le j\le n$,}
+\]
+and
+\[
+r_{jj}=\sqrt{a_{jj}-\sum_{k=\max(1,j-s)}^{j-1}r_{kj}^2}
+	\quad\text{for $1\le j\le n$,}
+\]
+which yield Algorithm~\ref{alg: band Chol}.
+
+\begin{algorithm}
+\caption{Compute the band Cholesky factorization \eqref{eq: Chol fact}.}
+\label{alg: band Chol}
+\begin{algorithmic}
+\Require{$\boldsymbol{A}=[a_{ij}]$ is a real, $n\times n$, symmetric 
+positive-definite matrix.}
+\State
+\Function{Factorize}{$\boldsymbol{A}$}
+\State Allocate storage for the $n\times n$ Cholesky 
+factor~$\boldsymbol{R}=[r_{ij}]$ and initialize to zero.
+\For{$j=1:n$}
+    \State $s=0$
+    \For{$k=\max(1,j-s):j-1$}
+        \State $s=s+r_{kj}^2$
+    \EndFor
+    \If{$a_{jj}\le s$} 
+        \State Error: $\boldsymbol{A}$ is not positive-definite.
+    \EndIf
+    \State $r_{jj}=\sqrt{a_{jj}-s}$
+    \For{$i=\max(1,j-s):j$}
+        \State $s=0$
+        \For{$k=\max(1,j-s):i-1$}
+            \State $s=s+r_{ki}r_{kj}$
+        \EndFor
+        \State $r_{ij}=(a_{ij}-s)/r_{jj}$
+    \EndFor
+\EndFor
+\State\Return{$\boldsymbol{R}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Solve the linear system $\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ 
+given the band Cholesky factorization~\eqref{eq: Chol fact}.}
+\label{alg: band Chol solve}
+\begin{algorithmic}
+\Require{$\boldsymbol{b}=[b_i]_{i=1}^n$ is the right-hand side vector.}
+\Require{$\boldsymbol{R}=[r_{ij}]_{i,j=1}^n$ is the band Cholesky factor 
+of~$\boldsymbol{A}$, computed via Algorithm~\ref{alg: band Chol}.}
+\State
+\Function{Solve}{$\boldsymbol{b}, \boldsymbol{R}$}
+\State Allocate storage for $\boldsymbol{x}=[x_i]_{i=1}^n$~and
+$\boldsymbol{y}=[y_i]_{i=1}^n$.
+\For{$i=1:n$}
+    \State $s=b_i$
+    \For{$k=\max(1,i-s):i-1$}
+        \State $s=s-r_{ji}y_j$
+    \EndFor
+    \State $y_i=s/r_{ii}$
+\EndFor
+\For{$i=n:-1:1$}
+    \State $s=y_i$
+    \For{$j=i+1:\min(n,i+s)$}
+        \State $s=s-r_{ij}x_j$
+    \EndFor
+    \State $x_i=s/r_{ii}$
+\EndFor
+\State\Return{$\boldsymbol{x}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+Once the Cholesky factor~$\boldsymbol{R}$ is known, we can solve a linear 
+system~$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ by first solving the lower 
+triangular system $\boldsymbol{R}^T\boldsymbol{y}=\boldsymbol{b}$, and then 
+solving the upper triangular 
+system~$\boldsymbol{R}\boldsymbol{x}=\boldsymbol{y}$, so that
+\[
+\boldsymbol{A}\boldsymbol{x}=\boldsymbol{R}^T\boldsymbol{R}\boldsymbol{x}
+	=\boldsymbol{R}^T\boldsymbol{y}=\boldsymbol{b}.
+\]
+Since $r_{ji}=0$ if $j>i$~or $i-j>s$,
+\[
+(\boldsymbol{R}^T\boldsymbol{y})_i=\sum_{j=1}^nr_{ji}y_j
+	=\sum_{j=\max(1,i-s)}^ir_{ji}y_j
+	=r_{ii}y_i+\sum_{j=\max(1,i-s)}^{i-1}r_{ji}y_j
+\]
+and so $\boldsymbol{R}^T\boldsymbol{y}=\boldsymbol{b}$ iff
+\[
+y_i=\frac{1}{r_{ii}}\biggl(b_i-\sum_{j=\max(1,i-s)}^{i-1}r_{ji}y_j\biggr)
+\quad\text{for $1\le i\le n$.}
+\]
+Similarly, since $r_{ij}=0$ if $i>j$~or $j-i>s$,
+\[
+(\boldsymbol{R}\boldsymbol{x})_i=\sum_{j=1}^nr_{ij}x_j
+	=\sum_{j=i}^{\min(n,i+s)}r_{ij}x_j
+	=r_{ii}x_i+\sum_{j=i+1}^{\min(n,i+s)}r_{ij}x_j
+\]
+and so $\boldsymbol{R}\boldsymbol{x}=\boldsymbol{y}$ iff
+\[
+x_i=\frac{1}{r_{ii}}\biggl(y_i-\sum_{j=i+1}^{\min(n,i+s)}r_{ij}x_j\biggr)
+	\quad\text{for $1\le i\le n$.}
+\]
+These formula lead to Algorithm~\ref{alg: band Chol solve} for solving 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$.
+
+When $s$ is small compared to~$n$, storing $\boldsymbol{A}$ as an 
+$n\times n$~array wastes a lot of space.  A more efficient method is to use 
+the \emph{symmetric band storage scheme} in which an 
+$(s+1)\times n$~matrix~$\boldsymbol{A}_{\textrm{b}}$ holds the non-zero 
+superdiagonals of~$\boldsymbol{A}$ by putting
+\[
+(\boldsymbol{A}_{\mathrm{b}})_{s+1+i-j,j}=a_{ij}
+	\quad\text{for $\max(1,j-s)\le i\le j$ and $1\le j\le n$.}
+\]
+For example, if $n=9$ and $s=3$, then
+\[
+\boldsymbol{A}_{\mathrm{b}}=\begin{bmatrix}
+     *&     *&     *&a_{14}&a_{25}&a_{36}&a_{47}&a_{58}&a_{69}\\
+     *&     *&a_{13}&a_{24}&a_{35}&a_{46}&a_{57}&a_{68}&a_{79}\\
+     *&a_{12}&a_{23}&a_{34}&a_{45}&a_{56}&a_{67}&a_{78}&a_{89}\\
+a_{11}&a_{22}&a_{33}&a_{44}&a_{55}&a_{66}&a_{77}&a_{88}&a_{99}           
+\end{bmatrix}.
+\]
+
 \section{Parabolic problems in 2D}
+
+\begin{Exercises}
+
+\exercise
+Suppose that the matrices $\boldsymbol{A}$~and $\boldsymbol{B}$ have upper 
+bandwidth $s_{\boldsymbol{A}}$~and $s_{\boldsymbol{B}}$, respectively, and that 
+the number of columns of~$\boldsymbol{A}$ equals the number of rows 
+of~$\boldsymbol{B}$.  Show that the matrix 
+product~$\boldsymbol{A}\boldsymbol{B}$ has upper 
+bandwidth~$\min(s_{\boldsymbol{A}},s_{\boldsymbol{B}})$.  State and prove the 
+corresponding result for lower bandwidths.
+
+
+\end{Exercises}
