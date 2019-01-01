@@ -1,7 +1,6 @@
 \chapter[Finite elements in 1D]{Finite elements for \\
 stationary problems in 1D}\label{chap: FEM 1d}
 
-Let $u$ be the solution of 
 Recall our model two-point boundary-value problem~\ref{eq: model 1d}, 
 \begin{equation}\label{eq: model 1d chap 2}
 -u''=f(x)\quad\text{for $0<x<L$,}
@@ -33,13 +32,22 @@ necessarily of equal length, by choosing grid points, or \emph{nodes},
 Denote the length of the $k$th subinterval, or \emph{element}, 
 by~$h_k=x_k-x_{k-1}$, for~$1\le k\le M$, and denote the maximum width 
 by~$h=\max_{1\le k\le M}h_k$.  A function $v:[0,L]\to\mathtt{R}$ is 
-\emph{piecewise-linear} (with respect to the chosen grid points~$x_k$) if its 
-restriction~$v|_{(x_{k-1},x_k)}$ to the $k$th element is linear, for~$1\le k\le 
-M$.  The set of all continuous, piecewise-linear functions forms a vector 
+\emph{piecewise-linear} (with respect to the chosen grid points~$x_k$) if 
+there exist polynomials $v_1$, $v_2$, \dots, $v_M$, each of degree at most~$1$, 
+such that
+\begin{equation}\label{eq: v piecewise}
+v(x)=v_k(x)\quad\text{for $x_{k-1}<x<x_k$ and $1\le k\le M$.}
+\end{equation}
+Such a function~$v$ is continuous on~$[0,L]$ if and only if the $M$~polynomials 
+satisfy
+\begin{equation}\label{eq: v cts}
+v_k(x_k)=v_{k+1}(x_k)\quad\text{for $1\le k\le M-1$.}
+\end{equation}
+The set of all continuous, piecewise-linear functions forms a vector 
 space~$V_h$.  Each $v\in V_h$ is determined by its values at the grid points, 
 since
 \[
-v(x)=\frac{1}{h_k}\bigl((x_k-x)v(x_{k-1})+(x-x_{k-1})v(x_k)\bigr)
+v(x)=v_k(x)=\frac{1}{h_k}\bigl((x_k-x)v(x_{k-1})+(x-x_{k-1})v(x_k)\bigr)
     \quad\text{for $x_{k-1}\le x\le x_k$.}
 \]
 In particular, the $k$th \emph{nodal basis function} $\chi_k\in V_h$ is the 
@@ -63,12 +71,12 @@ equals $v(x_j)$ when~$x=x_j$, for~$0\le j\le M$.  It follows that
 $\{\chi_k\}_{k=0}^M$ is a basis for~$V_h$, and therefore that $\dim V_h=M+1$.
 
 In the finite element method for our model 2-point boundary-value 
-problem~\eqref{eq: model 1d chap 2}, we define a \emph{solution set} (or
+problem~\eqref{eq: model 1d chap 2}, we define the \emph{solution set} (or
 \emph{trial set})
 \[
 S_h=\{\,v\in V_h:\text{$v(0)=\gamma_0$ and $v(L)=\gamma_L$}\,\}
 \]
-and a \emph{test space}
+and the \emph{test space}
 \[
 T_h=\{\,v\in V_h:\text{$v(0)=0$ and $v(L)=0$}\,\}.
 \]
@@ -79,8 +87,8 @@ of~\eqref{eq: model 1d chap 2} is determined by requiring that
 u_h\in S_h\qquad\text{and}\qquad
 \int_0^L u_h'(x)v'(x)\,dx=\int_0^L f(x)v(x)\,dx \quad\text{for all $v\in T_h$.}
 \]
-Since $\{\chi_k\}_{k=1}^{M-1}$ is a basis for~$T_h$, it suffices that $u_h$ 
-satisfies
+Since $\{\chi_k\}_{k=1}^{M-1}$ is a basis for~$T_h$, and since the equations 
+are linear in~$v$, it suffices that $u_h$ satisfies
 \begin{equation}\label{eq: model FEM chi j}
 \int_0^L u_h'(x)\chi_j'(x)\,dx=\int_0^L f(x)\chi_j(x)\,dx 
     \quad\text{for $1\le j\le M-1$.}
@@ -107,7 +115,7 @@ we can write \eqref{eq: model FEM chi j} as
 \sum_{k=0}^M a_{jk}U_k=f_j\quad\text{for $1\le j\le M-1$.}
 \]
 Since $u_h\in S_h$, we have $U_0=u_h(x_0)=u_h(0)=\gamma_0$~and 
-$U_M=u_h(x_M)=u_h(L)=\gamma_L$, we obtain an $(M-1)\times(M-1)$ linear system 
+$U_M=u_h(x_M)=u_h(L)=\gamma_L$, leading to an $(M-1)\times(M-1)$ linear system 
 for the unknowns $U_1$, $U_2$, \dots, $U_{M-1}$, namely
 \begin{equation}\label{eq: model FEM eqns}
 \sum_{k=1}^{M-1}a_{jk}U_k=f_j-a_{j0}\gamma_0-a_{jM}\gamma_M
@@ -140,9 +148,8 @@ It is easy to see that for~$1\le j\le M-1$,
 \end{cases}
 \]
 with the first case missing when~$j=0$, and the second when~$j=M$.  Thus,
-the supports of $\chi_j'$ and $\chi_k'$ overlap iff $|j-k|\le1$, and so 
-$a_{jk}=0$ otherwise, that is, if $|j-k|\ge2$.  The diagonal 
-values are
+the supports of $\chi_j'$ and $\chi_k'$ overlap iff $|j-k|\le1$; otherwise,
+if $|j-k|\ge2$, then $a_{jk}=0$. The diagonal values are
 \[
 a_{00}=\int_0^L\chi_0'(x)^2\,dx
     =\int_{x_0}^{x_1}\biggl(\frac{1}{h_1}\biggr)^2\,dx
@@ -151,7 +158,7 @@ a_{00}=\int_0^L\chi_0'(x)^2\,dx
 and
 \[
 a_{MM}=\int_0^L\chi'_M(x)^2\,dx
-    =\int_{x_{M-1}}^{x_M}\biggl(\frac{-1}{h_M}\biggr)^2\ , dx
+    =\int_{x_{M-1}}^{x_M}\biggl(\frac{-1}{h_M}\biggr)^2\,dx
     =\frac{x_M-x_{M-1}}{h_M^2}=\frac{1}{h_M},
 \]
 with
@@ -398,7 +405,7 @@ Thus, \eqref{eq: self-adjoint mixed bc FEM} holds iff
 
 Let $\mathfrak{S}_j=\{\,(m,p):j=\mathsf{n}^\brak{m}_p\,\}$, and
 define the $M\times(M+1)$ matrices $\boldsymbol{A}=[a_{jk}]$~and 
-$\boldsymbol{B}=[b_{jk}]$, and the $M$-dimensional vector~$\boldsymbol{f}$, by
+$\boldsymbol{C}=[c_{jk}]$, and the $M$-dimensional vector~$\boldsymbol{f}$, by
 \[
 a_{jk}=\sum_{(m,p)\in\mathfrak{S}_j}
     \sum_{(m,q)\in\mathfrak{S}_k}a^\brak{m}_{pq},\qquad
@@ -420,24 +427,23 @@ and therefore
 \end{equation}
 Now partition the matrices as 
 $\boldsymbol{A}=[\boldsymbol{A}'\quad\boldsymbol{A}'']$~and
-$\boldsymbol{B}=[\boldsymbol{B}'\quad\boldsymbol{B}'']$, where 
-$\boldsymbol{A}'$~and $\boldsymbol{B}'$ are $M\times M$, and so
-$\boldsymbol{A}''$~and $\boldsymbol{B}''$ are $M\times1$.  Likewise partition 
+$\boldsymbol{C}=[\boldsymbol{C}'\quad\boldsymbol{C}'']$, where 
+$\boldsymbol{A}'$~and $\boldsymbol{C}'$ are $M\times M$, and so
+$\boldsymbol{A}''$~and $\boldsymbol{C}''$ are $M\times1$.  Likewise partition 
 the vector~$\boldsymbol{U}=[\boldsymbol{U}'\quad U'']^T$ where 
 $\boldsymbol{U}'$ is $M\times1$ and so $U''$ is $1\times1$, that is, a scalar.  
 Since $U''=U_{M+1}=u_h(\mathsf{n}_{M+1})=u_h(0)=\gamma_0$, we conclude that
 \[
 \bigl(\boldsymbol{A}'+\boldsymbol{C}'\bigr)\boldsymbol{U}'
-=\gamma_L\boldsymbol{e}_M-(\boldsymbol{A}''+\boldsymbol{B}'')\gamma_0
+=\gamma_L\boldsymbol{e}_M-(\boldsymbol{A}''+\boldsymbol{C}'')\gamma_0
     +\boldsymbol{f}.
 \]
-Algorithm~\ref{alg: assembly example} shows how the connectivity 
-matrix~$[e_{pm}]$ is used to the global load 
-vector~$\boldsymbol{f}$ can be assembled from the element load vectors, and 
-how the global stiffness and mass matrices $\boldsymbol{A}$~and $\boldsymbol{B}$ 
-can be assembled from the element mass and stiffness matrices.  In practice,
-$\boldsymbol{A}$~and $\boldsymbol{B}$ are constructed as \emph{sparse arrays}
-with an appropriate data structure.
+Algorithm~\ref{alg: assembly example} shows how, using the connectivity 
+matrix~$[e_{pm}]$, the global load vector~$\boldsymbol{f}$ can be assembled from 
+the element load vectors, and how the global stiffness and mass matrices 
+$\boldsymbol{A}$~and $\boldsymbol{C}$ can be assembled from the element mass 
+and stiffness matrices.  In practice, $\boldsymbol{A}$~and $\boldsymbol{C}$ are 
+constructed as \emph{sparse arrays} with an appropriate data structure.
 
 \begin{algorithm}
 \caption{Assemble the $\boldsymbol{A}$, $\boldsymbol{C}$~and $\boldsymbol{f}$
@@ -562,10 +568,10 @@ matrix~$\boldsymbol{C}=[\boldsymbol{C}'\quad\boldsymbol{C}'']$ is given by
 Let us again consider the self-adjoint, two-point boundary-value 
 problem~\eqref{eq: self-adjoint mixed} but now let $V_h$ denote the vector 
 space consisting of the continuous, piecewise-\emph{quadratic} functions with 
-respect to the grid points~$x_k$.  Thus, a continuous 
-function~$v:[0,L]\to\mathbb{R}$ belongs to~$V_h$ iff for each 
-element~$[x_{m-1},x_m]$ the restriction~$v|_{[x_{m-1},x_m]}$ is a polynomial of 
-degree at most~$2$.  We define the nodes
+respect to the grid points~$x_k$.  Thus, a function~$v:[0,L]\to\mathbb{R}$ 
+belongs to~$V_h$ iff there are polynomials $v_1$, $v_2$, \dots, $v_M$ of degree 
+at most~$2$ such that \eqref{eq: v piecewise}~and \eqref{eq: v cts} hold.
+We define the nodes
 \[
 \mathsf{n}^\brak{m}_1=x_{m-1},\qquad
 \mathsf{n}^\brak{m}_2=\tfrac12(x_{m-1}+x_m),\qquad
@@ -965,12 +971,12 @@ and hence the function~$\mathcal{Q}_{r,h}v$ is continuous on~$[0,L]$.
 If $v$ is $C^{r+1}$ on~$[0,L]$, then
 \[
 \|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}
-    \le C_{r,0}^{1/2}\,h^{r+1}\|v^{(r+1)}\|_{L_2(0,L)}
+    \le\sqrt{C_{r,0}}\,h^{r+1}\|v^{(r+1)}\|_{L_2(0,L)}
 \]
 and
 \[
 \|v'-(\mathcal{Q}_{r,h}v)'\|_{L_2(0,L)}
-    \le C_{r,1}^{1/2}\,h^r\|v^{(r+1)}\|_{L_2(0,L)}.
+    \le\sqrt{C_{r,1}}\,h^r\|v^{(r+1)}\|_{L_2(0,L)}.
 \]
 \end{theorem}
 \begin{proof}
