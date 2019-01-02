@@ -1088,6 +1088,72 @@ $(\Phi_n,\Lambda_n)$ for~$1\le n\le 2M$, with
 \begin{Exercises}
 
 \exercise
+Consider the model problem~\eqref{eq: model 1d chap 2}.  Define a uniform 
+mesh~$x_p=ph$ on~$[0,L]$ for $0\le p\le P=M$ where $h=\Delta x=L/P$.  Denote 
+the finite difference solution by~$U^{\mathrm{d}}_p\approx u(x_p)$, and denote 
+the nodal values of the piecewise-linear finite element solution 
+by~$U^{\mathrm{e}}_p=u_h(x_p)\approx u(x_p)$.  Let 
+\[
+f^{\,\mathrm{d}}_p=f(x_p)\quad\text{and}\quad
+f^{\,\mathrm{e}}_p=\frac{1}{h}\int_{x_{p-1}}^{x_p}f(x)\chi_p(x)\,dx
+\quad\text{for $1\le p\le P-1$,}
+\]
+where $\chi_p$ is the $p$th piecewise-linear nodal basis function (that is, the 
+``hat function'' centred on~$x_p$).  Let
+\[
+\boldsymbol{A}=\frac{1}{h^2}\begin{bmatrix}
+ 2&-1&      &      &      &\\
+-1& 2&    -1&      &      &\\
+  &  &\ddots&\ddots&\ddots&\\
+  &  &      &    -1&     2&-1\\
+  &  &      &      &    -1& 2
+\end{bmatrix},\quad
+\boldsymbol{f}^{\,\mathrm{d}}=\begin{bmatrix}
+f^{\,\mathrm{d}}_1\\                              
+f^{\,\mathrm{d}}_2\\                              
+\vdots\\
+f^{\,\mathrm{d}}_{P-2}\\                              
+f^{\,\mathrm{d}}_{P-1}                              
+\end{bmatrix},\quad
+\boldsymbol{g}=\frac{1}{h^2}\begin{bmatrix}
+\gamma_0\\ 0\\ \vdots\\ 0\\ \gamma_L                            
+\end{bmatrix},
+\]
+so that $\boldsymbol{A}\boldsymbol{U}^{\mathrm{d}}=\boldsymbol{f}^{\,\mathrm{d}}
++\boldsymbol{g}$ as in~\eqref{eq: model 1d linear system}.
+\begin{description}
+\item{(i)} Show that $\boldsymbol{A}\boldsymbol{U}^{\mathrm{e}}
+=\boldsymbol{f}^{\,\mathrm{e}}+\boldsymbol{g}$.
+\item{(ii)} By applying Theorem~\ref{thm: discrete apriori 1D} to the finite 
+difference equation satisfied by $U^{\mathrm{d}}_p-U^{\mathrm{e}}_p$, deduce 
+that
+\[
+\max_{0\le p\le P}\bigl|U^{\mathrm{d}}_p-U^{\mathrm{e}}_p\bigr|
+    \le\frac{L^2}{8a_{\mathrm{min}}}\,\max_{1\le q\le P-1}
+    \bigl|f^{\,\mathrm{d}}_q-f^{\,\mathrm{e}}_q\bigr|.
+\]
+\item{(iii)}
+Use Taylor expansion to show that
+\[
+f^{\,\mathrm{d}}_q-f^{\,\mathrm{e}}_q=\frac{1}{h^2}\int_{x_{q-1}}^{x_{q+1}}
+    K_q(y)f''(y)\,dy\quad\text{where}\quad
+    K_q(y)=\frac{1}{3!}\times\begin{cases}
+        (y-x_{q-1})^3,&x_{q-1}<y<x_q,\\
+        (x_{q+1}-y)^3,&x_q<y<x_{q+1}.
+\end{cases}
+\]
+\item{(iv)}
+Deduce using the Integral Mean Value Theorem that
+\[
+f^{\,\mathrm{d}}_q-f^{\,\mathrm{e}}_q=\frac{h^2}{4!}\,f''(\xi)
+\quad\text{for some $\xi\in[x_{q-1},x_{q+1}]$,}
+\]
+and hence conclude that the finite difference and finite element solutions 
+agree to~$O(h^2)$.
+\end{description}
+
+
+\exercise
 Recall the formulae \eqref{eq: a mpq reference 1d}~and
 \eqref{eq: c mpq reference 1d} for the element stiffness and mass matrices using 
 the quadratic shape functions~\eqref{eq: quadratic shape funcs 1d} on the 
