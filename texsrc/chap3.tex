@@ -11,16 +11,16 @@ u&=u_0(x)&&\text{for $0<x<L$ when $t=0$,}
 \end{equation}
 where $u_t=\partial u/\partial t$ and $u_{xx}=\partial^2u/\partial x^2$.  For 
 simplicity, we assume that the coefficient~$a$ is a positive constant.  The 
-problem~\eqref{eq: heat ivp 1d} provides a model of heat in 1D, where $u(x,t)$ 
-is the temperature at position~$x$ and time~$t$.  The coefficient~$a>0$ 
-is the \emph{thermal conductivity}: the value of~$a$ will be large for a 
-material that conducts heat well, whereas $a$ will be small a material that 
-conducts heat poorly.  The \emph{source term}~$f(x,t)$ gives the density of any 
-heat sources in the material, the \emph{boundary conditions} specify the 
-temperatures $\gamma_0$~and $\gamma_L$ at the two edges of the spatial domain, 
-and the \emph{initial condition} gives the temperature field~$u_0(x)$ 
-when~$t=0$.  In this 1D model, the temperature does not vary in the $y$~and $z$ 
-directions.
+problem~\eqref{eq: heat ivp 1d} provides a model of conduction heat in 1D, 
+where $u(x,t)$ is the temperature at position~$x$ and time~$t$.  The 
+coefficient~$a>0$ is the \emph{thermal conductivity}: the value of~$a$ will be 
+large for a material that conducts heat well, but small for a 
+material that conducts heat poorly (that is, for a thermal insulator).  The 
+\emph{source term}~$f(x,t)$ gives the density of any heat sources in the 
+material, the \emph{boundary conditions} specify the temperatures $\gamma_0$~and 
+$\gamma_L$ at the two edges of the spatial domain~$[0,L]$, and the 
+\emph{initial condition} gives the temperature field~$u_0(x)$ when~$t=0$.  In 
+this 1D model, the temperature does not vary in the $y$~and $z$ directions.
 
 \section{Separation of variables}
 
@@ -222,14 +222,14 @@ where
   &      &      &    -1& 2\end{bmatrix},\qquad
 \]
 and
-\[
+\begin{equation}\label{eq: U f g semidiscrete 1d}
 \boldsymbol{U}(t)=\begin{bmatrix}
 U_1(t)\\ U_2(t)\\ \vdots\\ U_{P-2}(t)\\ U_{P-1}(t)\end{bmatrix},\qquad
 \boldsymbol{f}(t)=\begin{bmatrix}
 f_1(t)\\ f_2(t)\\ \vdots\\ f_{P-2}(t)\\ f_{P-1}(t)\end{bmatrix},\qquad
 \boldsymbol{g}(t)=\frac{a}{\Delta x^2}\begin{bmatrix}
 \gamma_0(t)\\ 0\\ \vdots\\ 0\\ \gamma_L(t)\end{bmatrix}.
-\]
+\end{equation}
 Recall that for any square matrix~$\boldsymbol{A}$, the matrix exponential
 is defined by the convergent infinite series
 \[
@@ -375,8 +375,10 @@ $0\le n\le N$.
     \State $U^0_p=u_0(x_p)$
 \EndFor
 \For{$n=0:N-1$}
-    \State $U^n_{p+1}=f(x_p,t_n)\,\Delta t
-            +\rho U^n_{p-1}+(1-2\rho)U^n_p+\rho U^n_{p+1}$
+    \For{$p=1:P-1$}
+        \State $U^n_{p+1}=f^n_p\,\Delta t
+                +\rho U^n_{p-1}+(1-2\rho)U^n_p+\rho U^n_{p+1}$
+    \EndFor                
 \EndFor
 \end{algorithmic}
 \end{algorithm}
@@ -386,7 +388,7 @@ step~$\Delta t$ is sufficiently small compared to the spatial grid
 size~$\Delta x$.
 
 \begin{theorem}\label{thm: explicit Euler stability}
-If $\Delta x$ and $\Delta t$ satisfying
+If $\Delta x$ and $\Delta t$ satisfy
 \begin{equation}\label{eq: explicit Euler timestep}
 \Delta t\le\frac{\Delta x^2}{2a},                                        
 \end{equation}
@@ -403,8 +405,8 @@ stable:
 \end{theorem}
 \begin{proof}
 We use finite induction on~$n$.  When~$n=0$, we have
-$U^0_p=u_{0p}$ for~$1\le p\le P-1$, with $U^0_0=\gamma_0$~and $U^0_P=\gamma_L$,
-so 
+$U^0_p=u_{0p}$ for~$1\le p\le P-1$, with $U^0_0=\gamma_0^0$~and 
+$U^0_P=\gamma_L^0$, so 
 \[
 \|\boldsymbol{U}^0_{0:P}\|_\infty=
 \max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\},
@@ -413,7 +415,8 @@ which agrees with the formula since the empty sum vanishes. Now let
 $0\le n\le N-1$ and make the induction hypothesis.  We see 
 from~\eqref{eq: explicit Euler stencil} that
 \[
-|U^{n+1}_p|\le|f^n_p|\,\Delta t+\rho|U^n_{p-1}|+(1-2\rho)|U^n_p|+\rho|U^n_{p+1}|
+|U^{n+1}_p|\le|f^n_p|\,\Delta t+\rho|U^n_{p-1}|+|1-2\rho|\,|U^n_p|
+    +\rho|U^n_{p+1}|
 \]
 and thus
 \[
@@ -437,7 +440,7 @@ If $\rho\le1/2$, then $2\rho+|1-2\rho|=2\rho+1-2\rho=1$ so
 and since $U^{n+1}_0=\gamma_0^{n+1}$~and $U^{n+1}_P=\gamma_L^{n+1}$
 \[
 \|\boldsymbol{U}^{n+1}_{0:P}\|_\infty
-	=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
+	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
 		\|\gamma_0^{0:n+1}\|_\infty,\|\gamma_L^{0:n+1}\|_\infty\bigr\}
 	+\sum_{j=0}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
 \]
@@ -785,6 +788,141 @@ where $C$ is defined by~\eqref{eq: error const explicit Euler}.
 See Exercise~\ref{ex: implicit Euler error}.
 \end{proof}
 
+\section{Crank--Nicolson method}
+Let us introduce the half-time levels
+\[
+t_{n-1/2}=t_n-\tfrac12\Delta t=\frac{t_n+t_{n-1}}{2}
+    \quad\text{for $1\le n\le N$.}
+\]
+The implicit Euler method is only first-order accurate in time because the 
+first-order backward difference approximates $u_t(x_p,t_n)$ only to first order 
+in~$\Delta t$, that is,
+\[
+\frac{u(x,t_n)-u(x,t_{n-1})}{\Delta t}=u_t(x_p,t_n)+O(\Delta t).
+\]
+However, viewed as an approximation to~$u_t(x_p,t_{n-1/2})$, the backward 
+difference becomes a central difference (with step-size $\tfrac12\Delta t$), 
+and is therefore second-order accurate by Theorem~\ref{thm: first central diff}:
+\[
+\frac{u(x,t_n)-u(x,t_{n-1})}{\Delta t}=u_t(x_p,t_{n-1/2})+O(\Delta t^2).
+\]
+Similarly, the theorem below shows that
+\[
+\frac{u(x,t_n)+u(x,t_{n-1})}{2}=u(x_p,t_{n-1/2})+O(\Delta t^2).
+\]
+
+\begin{theorem}\label{thm: average}
+If $f$ is $C^2$ on the closed interval~$[x-h,x+h]$, then
+\[
+\biggl|f(x)-\frac{f(x+h)+f(x-h)}{2}\biggr|\le\frac{h^2}{2}
+    \max_{x-h\le y\le x+h}|f''(y)|.
+\]
+\end{theorem}
+\begin{proof}
+Since
+\[
+f(x+h)=f(x)+f'(x)h+(R_1f)(x,h)
+\quad\text{and}\quad
+f(x-h)=f(x)-f'(x)h+(R_1f)(x,-h),
+\]
+we have
+\[
+f(x+h)+f(x-h)=2f(x)+(R_1f)(x,h)+(R_1f)(x,-h).
+\]
+Thus,
+\[
+\frac{f(x+h)+f(x-h)}{2}-f(x)=\frac{(R_1f)(x,h)+(R_1f)(x,-h)}{2},
+\]
+so the result follows from Theorem~\ref{thm: Taylor remainder}.
+\end{proof}
+
+
+This observation leads us to consider the \emph{Crank--Nicolson method} 
+for~\eqref{eq: heat ivp 1d}:
+\begin{equation}\label{eq: implicit Euler 1d}
+\frac{U^n_p-U^{n-1}_p}{\Delta t}
+    -a\,\frac{U^{n-1/2}_{p+1}-2U^{n-1/2}_p+U^{n-1/2}_{p-1}}{\Delta x^2}
+    =f^{n-1/2}_p
+\end{equation}
+for $1\le p\le P-1$ and $1\le n\le N$, where we have used the notation
+\[
+U^{n-1/2}_p=\frac{U^n_p+U^{n-1}_p}{2}\approx u(x_p,t_{n-1/2}),
+\]
+and, on the right-hand side, 
+\[
+f^{n-1/2}_p=\frac{f^n_p+f^{n-1}_p}{2}\approx f(x_p,t_{n-1/2})
+\quad\text{or}\quad
+f^{n-1/2}_p=f(x_p,t_{n-1/2}).
+\]
+The usual discrete boundary conditions are imposed,
+\[
+U^n_0=\gamma_0^n\quad\text{and}\quad
+U^n_P=\gamma_L^n\quad\text{for $0\le n\le N$,}
+\]
+along with the usual discrete initial condition
+\[
+U^0_p=u_{0p}\quad\text{for $1\le p\le P-1$.}
+\]
+In matrix notation, the Crank--Nicolson method takes the form
+\begin{equation}\label{eq: Crank-Nicolson matrix}
+\frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
+    +\boldsymbol{A}\boldsymbol{U}^{n-1/2}=\boldsymbol{f}^{n-1/2}
+    +\boldsymbol{g}^{n-1/2},
+\end{equation}
+
+where the $(P-1)\times(P-1)$ matrix~$\boldsymbol{A}$ and 
+is same as in~\eqref{eq: implicit Euler 1d vector}, with 
+\[
+\boldsymbol{g}^{n-1/2}=\frac{\boldsymbol{g}(t_n)+\boldsymbol{g}(t_{n-1})}{2}
+\quad\text{or}\quad
+\boldsymbol{g}^{n-1/2}=\boldsymbol{g}(t_{n-1/2}),
+\]
+for $\boldsymbol{g}(t)$ as in~\eqref{eq: U f g semidiscrete 1d}.
+
+Rearranging \eqref{eq: Crank-Nicolson matrix}, we find that
+\[
+\boldsymbol{U}^n-\boldsymbol{U}^{n-1}
+    +\tfrac12\Delta t\,\boldsymbol{A}(\boldsymbol{U}^n+\boldsymbol{U}^{n-1})
+    =\Delta t\,\bigl(\boldsymbol{f}^{n-1/2}+\boldsymbol{g}^{n-1/2}\bigr)
+\]
+which yields linear system that must be solved at the $n$th time step,
+\[
+\bigl(\boldsymbol{I}+\tfrac12\Delta t\,\boldsymbol{A}\bigr)\boldsymbol{U}^n=
+\bigl(\boldsymbol{I}-\tfrac12\Delta t\,\boldsymbol{A}\bigr)\boldsymbol{U}^{n-1}
+    +\Delta t\,\bigl(\boldsymbol{f}^{n-1/2}+\boldsymbol{g}^{n-1/2}\bigr).
+\]
+The local truncation error for the Crank--Nicolson method is
+\begin{multline*}
+\tau^{n-1/2}_p=f^{n-1/2}_p-\frac{u(x_p,t_n)-u(x_p,t_{n-1})}{\Delta t}
+    +\frac{a}{\Delta x^2}\biggl(
+    \frac{u(x_{p+1},t_n)+u(x_{p+1},t_{n-1})}{2}\\
+    -2\,\frac{u(x_p,t_n)+u(x_p,t_{n-1})}{2}
+    +\frac{u(x_{p-1},t_n)+u(x_{p-1},t_{n-1})}{2}\biggr)r.
+\end{multline*}
+If we choose $f^{n-1/2}_p=f(x_p,t_{n-1/2})$ then
+$f^{n-1/2}_p=u_t(x_p,t_{n-1/2})-au_{xx}(x_p,t_{n-1/2)}$ so
+\begin{align*}
+\tau^{n-1/2}_p
+&=\biggl(u_t(x_p,t_{n-1/2})-\frac{u(x_p,t_n)-u(x_p,t_{n-1})}{\Delta t}\biggr)\\
+    &\qquad{}+a\biggl(\frac{u_{xx}(x_p,t_n)+u_{xx}(x_p,t_{n-1})}{2}
+        -u_{xx}(x_p,t_{n-1/2})\biggr)\\
+    &\qquad{}+\frac{a}{2}\biggl(
+    \frac{u(x_{p+1},t_n)-2u(x_p,t_n)+u(x_{p-1},t_n)}{\Delta x^2}-u_{xx}(x_p,t_n)
+    \biggr)\\
+    &\qquad{}+\frac{a}{2}\biggl(
+    \frac{u(x_{p+1},t_{n-1})-2u(x_p,t_{n-1})+u(x_{p-1},t_{n-1})}{\Delta x^2}
+        -u_{xx}(x_p,t_n)\biggr).
+\end{align*}
+Applying Theorems \ref{thm: first central diff}~and \ref{thm: average} with 
+$h=\tfrac12\Delta t$, and Theorem~\ref{thm: 2nd central diff} with~$h=\Delta 
+x$, we conclude that
+\[
+|\tau^{n-1/2}_p|
+    \le\frac{(\tfrac12\Delta t)^2}{6}\max_{[0,L]\times[0,T]}|u_{ttt}| 
+    +a\,\frac{(\tfrac12\Delta t)^2}{2}\max_{[0,L]\times[0,T]}|u_{xxxx}|
+    +a\,\frac{\Delta x^2}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|
+\]
+and hence $\tau^{n-1/2}_p=O(\Delta t^2+\Delta x^2)$.
 
 \begin{Exercises}
 \exercise\label{ex: forward diff}
@@ -803,4 +941,39 @@ and, similarly, if $f$ is $C^2$ on~$[x-h,x]$, then
 \exercise\label{ex: implicit Euler error}
 Prove Theorem~\ref{thm: implicit Euler error} by adapting the proof of 
 Theorem~\ref{thm: explicit Euler error}.
+
+\exercise
+Consider the BDF2 (backward differentiation formula, second-order)
+scheme for the heat equation,
+\[
+\frac{3U^n_p-4U^{n-1}_p+U^{n-2}_p}{2\Delta t}
+        -\kappa\,\frac{U^n_{p+1}-2U^n_p+U^n_{p-1}}{\Delta x^2}=f^n_p,
+\]
+where $1\le p\le P-1$ and $2\le n\le N$.  Assume homogenous Dirichlet
+boundary conditions,
+\[
+U^n_0=0=U^n_P\quad\text{for $1\le n\le N$,}
+\]
+and initial conditions $U^0_p=v(x_p)$ for~$0\le p\le P$.
+\begin{description}
+\item{(i)} Draw the stencil for the BDF2 scheme.
+\item{(ii)} Define the local truncation error~$\tau(x,t)$ for this
+scheme and show that $\tau=O(\Delta t^2+\Delta x^2)$.
+\item{(iii)} Write the BDF2 scheme in matrix--vector form, and hence
+describe the linear system that must be solved at the $n$th time step
+for~$2\le n\le N$.
+\item{(iv)} To compute $U^n_p$ when~$n=1$, we use the implicit Euler
+scheme,
+\[
+\frac{U^1_p-U^0_p}{\Delta t}
+        -\kappa\,\frac{U^1_{p+1}-2U^1_p+U^1_{p-1}}{\Delta x^2}=f^1_p.
+\]
+Why does the use of this method ensure that
+\[
+U^1_p=u(x_p,t_1)+O(\Delta t^2+\Delta x^2),
+\]
+when we saw in lectures that the implicit Euler method is only
+first-order accurate in time?  
+\end{description}
+
 \end{Exercises}
