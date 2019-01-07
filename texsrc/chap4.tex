@@ -23,79 +23,191 @@ solution~$u_h(x,t)\approx u(x,t)$ and then apply finite difference
 approximations in time to derive some fully-discrete schemes.
 
 \section{Semidiscrete method}
-
-Continuing with the notation of Chapter~\ref{chap: FEM 1d}, we introduce grid 
-points~\eqref{eq: 1d nodes} in the spatial interval~$[0,L]$ and construct the 
-corresponding space~$V_h$ of continuous, piecewise-linear functions.  The 
-time-dependent solution set is then defined by
+Let $V_h$ denote the space of continuous, piecewise-linear functions for a 
+given mesh~\eqref{eq: 1d nodes} on the spatial interval~$[0,L]$.  We define the 
+solution set (now dependent on~$t$) and test space by
 \[
-S_h(t)=\{\,v\in V_h: v(0)=\gamma_0(t)\,\},
+S_h(t)=\{\,v\in V_h:v(0)=\gamma_0(t)\,\}
+\quad\text{and}\quad
+T_h=\{\,v\in V_h:v(0)=0\,\}.
 \]
-and the test space by
-\[
-T_h=\{\,v\in V_h: v(0)=0\,\}.
-\]
-Based on the weak formulation~\eqref{eq: parabolic 1d weak}, the semidiscrete 
-finite element solution~$u_h:[0,L]\times[0,T]\to\mathbb{R}$ is determined by 
+We also choose $u_{0h}\in V_h$ such that $u_0\approx u_{0h}$; the simplest 
+choice would be the interpolant $u_{0h}=\mathcal{Q}_1u_0$. The semidiscrete
+finite element solution~$u_h(x,t)$ is then defined for~$0\le t\le T$ by 
 requiring that $u_h(\cdot,t)\in S_h(t)$ and
-\begin{equation}\label{eq: parabolic 1d semidiscrete}
-\int_0^L(u_h)_tv\,dx+\int_0^L\bigl(a(x)(u_h)_xv_x+c(x)u_hv\bigr)\,dx
-	=\gamma_L(t)v(L)+\int_0^Lf(x,t)v\,dx
+\begin{equation}\label{eq: semidiscrete fem 1d}
+\int_0^L(u_h)_tv\,dx+\int_0^L\bigl(a(x)u_xv_x+c(x)uv\bigr)\,dx
+    =\gamma_L(t)v(L)+\int_0^Lf(x,t)v\,dx
+\quad\text{for all $v\in T_h$,}
 \end{equation}
-for $v\in T_h$~and $0\le t\le T$, with 
+with $u_h(0)=u_{0h}$. The stiffness matrix~$\boldsymbol{A}$ and mass 
+matrix~$\boldsymbol{C}$ are the same as in the stationary problem 
+(section~\ref{sec: self-adjoint 1d}), but the nodal 
+values of the solution are now time-dependent, with
 \[
-u_h(x,0)=u_{0h}(x).  
-\] 
-Here, $u_{0h}\in V_h$ is a suitable piecewise-linear approximation to~$u_0$; 
-for example, we could choose the interpolant~$u_{0h}=(Q_{1,h}u_0)(x)$ 
-satisfying $u_{0h}(x_j)=u_0(x_j)$ for~$0\le j\le M$.  Note that, by the 
-definition of~$S_h(t)$, we have $u_h(0,t)=\gamma_0(t)$ for~$0\le t\le T$, so the 
-scheme implicitly assumes that $u_{0h}(0)=\gamma_0(t)$, which should not be a 
-problem if $u(x,t)$ is continuous at~$(x,t)=(0,0)$ since then 
-$u_0(0)=\gamma_0(0)$.
-
-Recall the nodal basis functions~$\chi_j\in V_h$ satisfying 
-\eqref{eq: chi k x j}.  Since
-\[
-u_h(x,t)=\sum_{k=0}^MU_k(t)\chi_k(x)
-	\quad\text{for $(x,t)\in[0,L]\times[0,T]$,}
-	\quad\text{where $U_k(t)=u_h(x_k,t)$,}
+u_h(x,t)=\sum_{q=0}^P U_q(t)\chi_q(x)\quad\text{for $0\le x\le L$,}\quad
+\text{where $U_q(t)=u_h(x_q,t)$.}
 \]
-by choosing $v=\chi_j$ in~\eqref{eq: parabolic 1d semidiscrete} we arrive at a 
-system of ODEs for nodal values~$U_k(t)$, namely,
+Likewise, the load vector is time-dependent in general, since
 \[
-\sum_{k=0}^M\biggl(m_{jk}\,\frac{dU_k}{dt}+a_{jk}U_k+c_{jk}U_k\biggr)
-	=\gamma_L(t)\chi_j(L)+f_j(t)\quad\text{for $1\le j\le M$,}
+f_p(t)=\int_0^Lf(x,t)\chi_p(x)\,dx,
+\]
+and since
+\[
+\int_0^L(u_h)_t\chi_p\,dx=\int_0^L\sum_{q=0}^P
+    \frac{dU_q}{dt}\,\chi_q(x)\chi_p(x)\,dx=\sum_{q=0}^P m_{pq}\,\frac{dU_q}{dt}
+    \quad\text{where $m_{pq}=\int_0^L\chi_q\chi_p\,dx$,}
+\]
+we see by choosing $v=\chi_p$ in~\eqref{eq: semidiscrete fem 1d} that
+\[
+\sum_{q=0}^P\biggl(m_{pq}\,\frac{dU_q}{dt}+a_{pq}U_q+c_{pq}U_q\biggr)
+    =\gamma_L(t)\chi_p(L)+f_p(t),
+\]
+with $U_q(0)=u_{0h}(x_q)$.  Since $U_0(t)=u_h(x_0,t)=\gamma_0(t)$,
+\[
+\sum_{q=1}^P\biggl(m_{pq}\,\frac{dU_q}{dt}+a_{pq}U_k+c_{pq}U_q\biggr)
+    =f_p(t)+g_p(t)
 \]
 where
-\begin{align*}
-m_{jk}&=\int_0^L\chi_k(x)\chi_j(x)\,dx,&
-a_{jk}&=\int_0^La(x)\chi_k'(x)\chi_j'(x)\,dx,\\
-c_{jk}&=\int_0^Lc(x)\chi_k(x)\chi_j(x)\,dx,&
-f_j&=\int_0^Lf(x,t)\chi_j(x)\,dx.
-\end{align*}
-Since $U_0(t)=\gamma_0(t)$, the system of ODEs can be re-written as
 \[
-\sum_{k=1}^M\biggl(m_{jk}\,\frac{dU_k}{dt}+(a_{jk}+c_{jk})U_k\biggr)
-	=f_j(t)+g_j(t)\quad\text{for $1\le j\le M$,}
+g_p(t)=\gamma_L(t)\delta_{pP}-m_{p0}\gamma_0'(t)-(a_{p0}+c_{p0})\gamma_0(t),
 \]
-by putting
-\[
-g_j(t)=\gamma_L(t)\chi_j(L)-\biggl(m_{j0}\,\frac{d\gamma_0}{dt}
-	+(a_{j0}+c_{j0})\gamma_0(t)\biggr).
-\]
-Equivalently, using the obvious matrix-vector notation,
-\[
+and so the nodal values satisfy the $P\times P$ system of linear ODEs,
+\begin{equation}\label{eq: semidiscrete fem 1d ODE}
 \boldsymbol{M}\,\frac{d\boldsymbol{U}}{dt}
-	+(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
-	=\boldsymbol{f}(t)+\boldsymbol{g}(t)\quad\text{for $0\le t\le T$,}
++(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}=\boldsymbol{f}(t)
+    +\boldsymbol{g}(t)\quad\text{for $0\le t\le T$,}
+    \quad\text{with $\boldsymbol{U}(0)=\boldsymbol{U}_0$,}
+\end{equation}
+where 
+\[
+\boldsymbol{M}=[m_{pq}]_{p,q=1}^P,\qquad 
+\boldsymbol{A}=[a_{pq}]_{p,q=1}^P,\qquad
+\boldsymbol{C}=[c_{pq}]_{p,q=1}^P,
 \]
-with the initial condition~$\boldsymbol{U}(0)=\boldsymbol{U}_0$.
+and
+\[
+\boldsymbol{f}(t)=[f_p(t)]_{p=1}^P,\qquad
+\boldsymbol{g}(t)=[g_p(t)]_{p=1}^P,\qquad
+\boldsymbol{U}_0=[u_{0h}(x_p)]_{p=1}^P.
+\]
 
+\section{Time stepping}\label{sec: time stepping}
+We can use finite differences for the time integration, putting
+\[
+t_n=n\,\Delta t\quad\text{for $0\le n\le N$,}
+    \quad\text{where $\Delta t=\frac{T}{N}$,}
+\]
+and seeking $U^n_p\approx u_h(x_p,t_n)\approx u(x_p,t_n)$.
 
+\begin{example}
+The \emph{forward Euler method} based on~\eqref{eq: semidiscrete fem 1d ODE} is
+\[
+\boldsymbol{M}\,\frac{\boldsymbol{U}^{n+1}-\boldsymbol{U}^n}{\Delta t}
++(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}^n=\boldsymbol{f}^n
+    +\boldsymbol{g}^n\quad\text{for $0\le n\le N-1$,}
+    \quad\text{with $\boldsymbol{U}^0=\boldsymbol{U}_0$,}
+\]
+where $\boldsymbol{U}^n=[U^n_p]_{p=1}^P$, 
+$\boldsymbol{f}^n=\boldsymbol{f}(t_n)$~and 
+$\boldsymbol{g}^n=\boldsymbol{g}(t_n)$.  Notice that this method is not 
+actually explicit, due to the presence of the matrix~$\boldsymbol{M}$: at the 
+$n$th time step we have to solve the linear system
+\[
+\boldsymbol{M}\boldsymbol{U}^{n+1}=\bigl(\boldsymbol{M}
+-\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr)\boldsymbol{U}^n
+    +\Delta t\,\bigl(\boldsymbol{f}^n+\boldsymbol{g}^n\bigr).
+\]
+\end{example}
 
+\begin{example}
+The \emph{backward Euler method} based on~\eqref{eq: semidiscrete fem 1d ODE} is
+\[
+\boldsymbol{M}\,\frac{\boldsymbol{U}^{n}-\boldsymbol{U}^{n-1}}{\Delta t}
++(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}^n=\boldsymbol{f}^n
+    +\boldsymbol{g}^n\quad\text{for $1\le n\le N$,}
+    \quad\text{with $\boldsymbol{U}^0=\boldsymbol{U}_0$,}
+\]
+which requires that we solve the linear systems
+\[
+\bigl(\boldsymbol{M}+\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr) 
+    \boldsymbol{U}^n=\boldsymbol{M}\boldsymbol{U}^{n-1}
+    +\Delta t\,\bigl(\boldsymbol{f}^n+\boldsymbol{g}^n\bigr).
+\]
+\end{example}
 
-
-\section{Time stepping}
+\begin{example}
+The \emph{Crank--Nicolson method} based on~\eqref{eq: semidiscrete fem 1d ODE} 
+is
+\[
+\boldsymbol{M}\,\frac{\boldsymbol{U}^{n}-\boldsymbol{U}^{n-1}}{\Delta t}
++(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}^{n-1/2}=\boldsymbol{f}^{n-1/2}
+    +\boldsymbol{g}^{n-1/2}\quad\text{for $1\le n\le N$,}
+    \quad\text{with $\boldsymbol{U}^0=\boldsymbol{U}_0$,}
+\]
+which requires that we solve the linear systems
+\[
+\bigl(\boldsymbol{M}+\tfrac12\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr) 
+    \boldsymbol{U}^n
+=\bigl(\boldsymbol{M}-\tfrac12\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr) 
+    \boldsymbol{U}^{n-1}
+    +\Delta t\,\bigl(\boldsymbol{f}^{n-1/2}+\boldsymbol{g}^{n-1/2}\bigr).
+\]
+\end{example}
 
 \section{Discrete separation of variables}
+Each of the matrices $\boldsymbol{A}$, $\boldsymbol{C}$~and $\boldsymbol{M}$ is 
+real and symmetric, and in addition $\boldsymbol{M}$ is positive-definite, so 
+there exist generalised eigenpairs $(\boldsymbol{\Phi}_k,\Lambda_k)$ such that 
+\[
+(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{\Phi}_k
+    =\Lambda_k\boldsymbol{M}\boldsymbol{\Phi}_k,\qquad
+\boldsymbol{\Phi}_j^T(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{\Phi}_k
+    =\Lambda_k\delta_{jk},\qquad
+\boldsymbol{\Phi}_j^T\boldsymbol{M}\boldsymbol{\Phi}_k=\delta_{jk}
+\]
+for $j$, $k\in\{1,2,\ldots,P\}$.
+
+We will consider the special case when $f(x,t)\equiv0$, 
+$\gamma_0(t)\equiv0$~and $\gamma_L(t)\equiv0$, for the special choice of 
+discrete initial data
+\[
+\boldsymbol{U}_0=\Phi_k.
+\]
+It follows that the semidiscrete initial-value 
+problem~\eqref{eq: semidiscrete fem 1d ODE} simplifies to
+\[
+\boldsymbol{M}\,\frac{d\boldsymbol{U}}{dt}
++(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}=\boldsymbol{0}
+    \quad\text{for $0\le t\le T$,}
+    \quad\text{with $\boldsymbol{U}(0)=\boldsymbol{\Phi}_k$,}
+\]
+which has the solution
+\begin{equation}
+\boldsymbol{U}(t)=e^{-\Lambda_kt}\boldsymbol{\Phi}_k.
+\end{equation}
+Let us compare this continuous-time solution with the discrete-time solutions 
+for the three time-stepping schemes described in 
+section~\ref{sec: time stepping}.
+
+\begin{example}
+The forward Euler method in this special case is
+\[
+\boldsymbol{M}\boldsymbol{U}^{n+1}=\bigl(\boldsymbol{M}
+-\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr)\boldsymbol{U}^n
+\]
+and since
+\[
+\bigl(\boldsymbol{M} 
+-\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr)\boldsymbol{\Phi}_k
+    =\boldsymbol{M}\Phi_k-\Delta t\,\Lambda_k\boldsymbol{M}\boldsymbol{\Phi}_k
+    =\boldsymbol{M}(1-\Delta t\,\Lambda_k)\boldsymbol{\Phi}_k
+\]
+we see by induction on $n$ that
+\[
+\boldsymbol{U}^n=(1-\Delta t\,\Lambda_k)^n\boldsymbol{\Phi}_k.
+\]
+\end{example}
+
+
+
