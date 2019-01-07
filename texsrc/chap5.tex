@@ -376,12 +376,12 @@ $\boldsymbol{w}\in\mathbb{R}^{Q-1}$.
 
 \section{Band Cholesky factorization}
 
-A matrix~$\boldsymbol{A}=[a_{ij}]$ has \emph{upper bandwidth}~$s$ 
-if $a_{ij}=0$ whenever $j-i>s$, or equivalently if $\boldsymbol{A}$ has $s$ 
-non-zero superdiagonals.  Similarly, $\boldsymbol{A}$ has \emph{lower 
-bandwidth}~$s$ if $a_{ij}=0$ whenever $i-j>s$, so that there are $s$ non-zero 
-subdiagonals.  For example, the following matrix has upper bandwidth~$2$
-and lower bandwidth~$3$:
+A matrix~$\boldsymbol{A}=[a_{ij}]$ has \emph{upper bandwidth}~$\beta$ 
+if $a_{ij}=0$ whenever $j-i>\beta$, or equivalently if $\boldsymbol{A}$ has 
+$\beta$~non-zero superdiagonals.  Similarly, $\boldsymbol{A}$ has \emph{lower 
+bandwidth}~$\beta$ if $a_{ij}=0$ whenever $i-j>\beta$, so that there are 
+$\beta$~non-zero subdiagonals.  For example, the following matrix has upper 
+bandwidth~$2$ and lower bandwidth~$3$:
 \[
 \begin{bmatrix}
  5& 2&-1& 0& 0& 0& 0\\
@@ -396,48 +396,48 @@ If a matrix is symmetric, then its upper and lower bandwidths must be equal, so
 we refer to both as just the \emph{bandwidth}.
 
 Let $\boldsymbol{A}$ be an $n\times n$ symmetric, positive-definite matrix
-with bandwith~$s$.  We will seek a \emph{band Cholesky factorization}
+with bandwith~$\beta$.  We will seek a \emph{band Cholesky factorization}
 \begin{equation}\label{eq: Chol fact}
 \boldsymbol{A}=\boldsymbol{R}^T\boldsymbol{R},
 \end{equation}
 where the $n\times n$ matrix~$\boldsymbol{R}=[r_{ij}]$ is upper triangular with 
-upper bandwidth~$s$.  By the definition of matrix multiplication,
+upper bandwidth~$\beta$.  By the definition of matrix multiplication,
 \[
 \bigl(\boldsymbol{R}^T\boldsymbol{R}\bigr)_{ij}
 	=\sum_{k=1}^n\bigl(\boldsymbol{R}^T\bigr)_{ik}\boldsymbol{R}_{kj}
 	=\sum_{k=1}^n r_{ki}r_{kj}.
 \]
 Since $\boldsymbol{R}$ is upper triangular, $r_{ki}r_{kj}=0$ if $k>i$~or $k>j$,
-that is, if $k>\in(i,j)$, so in fact
+that is, if $k>\min(i,j)$, so in fact
 \[
 \bigl(\boldsymbol{R}^T\boldsymbol{R}\bigr)_{ij}
 	=\sum_{k=1}^{\min(i,j)} r_{ki}r_{kj}.
 \]
-In addition, $\boldsymbol{R}$ has upper bandwidth~$s$ so $r_{ki}r_{kj}=0$ if 
-$i>k+s$~or $j>k+s$.  Thus, taking account of symmetry, \eqref{eq: Chol fact}
-is satisfied iff
+In addition, $\boldsymbol{R}$ has upper bandwidth~$\beta$ so $r_{ki}r_{kj}=0$ 
+if $i>k+\beta$~or $j>k+\beta$.  Thus, taking account of symmetry, 
+\eqref{eq: Chol fact} is satisfied iff
 \[
-a_{ij}=\sum_{k=\max(1,j-s)}^ir_{ki}r_{kj}
-	\quad\text{for $\max(1,j-s)\le i\le j\le n$.}
+a_{ij}=\sum_{k=\max(1,j-\beta)}^ir_{ki}r_{kj}
+	\quad\text{for $\max(1,j-\beta)\le i\le j\le n$.}
 \]
 We split the last term off the sum, writing
 \[
-a_{ij}=r_{ii}r_{ij}+\sum_{k=\max(1,j-s)}^{i-1}r_{ki}r_{kj}
-	\quad\text{for $\max(1,j-s)\le i<j\le n$,}
+a_{ij}=r_{ii}r_{ij}+\sum_{k=\max(1,j-\beta)}^{i-1}r_{ki}r_{kj}
+	\quad\text{for $\max(1,j-\beta)\le i<j\le n$,}
 \]
 in the off-diagonal case, and
 \[
-a_{jj}=r_{jj}^2+\sum_{k=\max(1,j-s)}^{j-1}r_{kj}^2
+a_{jj}=r_{jj}^2+\sum_{k=\max(1,j-\beta)}^{j-1}r_{kj}^2
 	\quad\text{for $1\le j\le n$.}
 \]
 in the diagonal case.  Rearranging these equations leads to the formulae
 \[
-r_{ij}=\frac{1}{r_{jj}}\biggl(a_{ij}-\sum_{k=\max(1,j-s)}^{i-1}r_{ki}r_{kj}
-	\biggr)\quad\text{for $\max(1,j-s)\le i\le j\le n$,}
+r_{ij}=\frac{1}{r_{ii}}\biggl(a_{ij}-\sum_{k=\max(1,j-\beta)}^{i-1}r_{ki}r_{kj}
+	\biggr)\quad\text{for $\max(1,j-\beta)\le i\le j\le n$,}
 \]
 and
 \[
-r_{jj}=\sqrt{a_{jj}-\sum_{k=\max(1,j-s)}^{j-1}r_{kj}^2}
+r_{jj}=\sqrt{a_{jj}-\sum_{k=\max(1,j-\beta)}^{j-1}r_{kj}^2}
 	\quad\text{for $1\le j\le n$,}
 \]
 which yield Algorithm~\ref{alg: band Chol}.
@@ -447,27 +447,27 @@ which yield Algorithm~\ref{alg: band Chol}.
 \label{alg: band Chol}
 \begin{algorithmic}
 \Require{$\boldsymbol{A}=[a_{ij}]$ is a real, $n\times n$, symmetric 
-positive-definite matrix.}
+positive-definite matrix with bandwidth~$\beta$.}
 \State
 \Function{Factorize}{$\boldsymbol{A}$}
 \State Allocate storage for the $n\times n$ Cholesky 
 factor~$\boldsymbol{R}=[r_{ij}]$ and initialize to zero.
 \For{$j=1:n$}
+    \For{$i=\max(1,j-\beta):j$}
+        \State $s=0$
+        \For{$k=\max(1,j-\beta):i-1$}
+            \State $s=s+r_{ki}r_{kj}$
+        \EndFor
+        \State $r_{ij}=(a_{ij}-s)/r_{ii}$
+    \EndFor
     \State $s=0$
-    \For{$k=\max(1,j-s):j-1$}
+    \For{$k=\max(1,j-\beta):j-1$}
         \State $s=s+r_{kj}^2$
     \EndFor
     \If{$a_{jj}\le s$} 
         \State Error: $\boldsymbol{A}$ is not positive-definite.
     \EndIf
     \State $r_{jj}=\sqrt{a_{jj}-s}$
-    \For{$i=\max(1,j-s):j$}
-        \State $s=0$
-        \For{$k=\max(1,j-s):i-1$}
-            \State $s=s+r_{ki}r_{kj}$
-        \EndFor
-        \State $r_{ij}=(a_{ij}-s)/r_{jj}$
-    \EndFor
 \EndFor
 \State\Return{$\boldsymbol{R}$}
 \EndFunction
@@ -488,14 +488,14 @@ of~$\boldsymbol{A}$, computed via Algorithm~\ref{alg: band Chol}.}
 $\boldsymbol{y}=[y_i]_{i=1}^n$.
 \For{$i=1:n$}
     \State $s=b_i$
-    \For{$k=\max(1,i-s):i-1$}
+    \For{$k=\max(1,i-\beta):i-1$}
         \State $s=s-r_{ji}y_j$
     \EndFor
     \State $y_i=s/r_{ii}$
 \EndFor
 \For{$i=n:-1:1$}
     \State $s=y_i$
-    \For{$j=i+1:\min(n,i+s)$}
+    \For{$j=i+1:\min(n,i+\beta)$}
         \State $s=s-r_{ij}x_j$
     \EndFor
     \State $x_i=s/r_{ii}$
@@ -517,38 +517,108 @@ system~$\boldsymbol{R}\boldsymbol{x}=\boldsymbol{y}$, so that
 Since $r_{ji}=0$ if $j>i$~or $i-j>s$,
 \[
 (\boldsymbol{R}^T\boldsymbol{y})_i=\sum_{j=1}^nr_{ji}y_j
-	=\sum_{j=\max(1,i-s)}^ir_{ji}y_j
-	=r_{ii}y_i+\sum_{j=\max(1,i-s)}^{i-1}r_{ji}y_j
+	=\sum_{j=\max(1,i-\beta)}^ir_{ji}y_j
+	=r_{ii}y_i+\sum_{j=\max(1,i-\beta)}^{i-1}r_{ji}y_j
 \]
 and so $\boldsymbol{R}^T\boldsymbol{y}=\boldsymbol{b}$ iff
 \[
-y_i=\frac{1}{r_{ii}}\biggl(b_i-\sum_{j=\max(1,i-s)}^{i-1}r_{ji}y_j\biggr)
+y_i=\frac{1}{r_{ii}}\biggl(b_i-\sum_{j=\max(1,i-\beta)}^{i-1}r_{ji}y_j\biggr)
 \quad\text{for $1\le i\le n$.}
 \]
-Similarly, since $r_{ij}=0$ if $i>j$~or $j-i>s$,
+Similarly, since $r_{ij}=0$ if $i>j$~or $j-i>\beta$,
 \[
 (\boldsymbol{R}\boldsymbol{x})_i=\sum_{j=1}^nr_{ij}x_j
-	=\sum_{j=i}^{\min(n,i+s)}r_{ij}x_j
-	=r_{ii}x_i+\sum_{j=i+1}^{\min(n,i+s)}r_{ij}x_j
+	=\sum_{j=i}^{\min(n,i+\beta)}r_{ij}x_j
+	=r_{ii}x_i+\sum_{j=i+1}^{\min(n,i+\beta)}r_{ij}x_j
 \]
 and so $\boldsymbol{R}\boldsymbol{x}=\boldsymbol{y}$ iff
 \[
-x_i=\frac{1}{r_{ii}}\biggl(y_i-\sum_{j=i+1}^{\min(n,i+s)}r_{ij}x_j\biggr)
+x_i=\frac{1}{r_{ii}}\biggl(y_i-\sum_{j=i+1}^{\min(n,i+\beta)}r_{ij}x_j\biggr)
 	\quad\text{for $1\le i\le n$.}
 \]
 These formula lead to Algorithm~\ref{alg: band Chol solve} for solving 
 $\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$.
 
-When $s$ is small compared to~$n$, storing $\boldsymbol{A}$ as an 
+\begin{algorithm}
+\newcommand{\rb}[1]{r^{\mathrm{band}}_{#1}}
+\caption{Compute the band Cholesky factorization \eqref{eq: Chol fact} in 
+place using symmetric band storage.}
+\label{alg: Chol band storage}
+\begin{algorithmic}
+\Require{The $(\beta+1)\times n$ 
+array~$\boldsymbol{R}_{\mathrm{band}}=[\rb{ij}]$
+stores a real, $n\times n$, symmetric positive-definite matrix with 
+bandwidth~$\beta$, using the symmetric band storage so
+$a_{ij}=\rb{\beta+1+i-j,j}$.}
+\State
+\Function{Factorize}{$\boldsymbol{R}_{\mathrm{band}}$}
+\For{$j=1:n$}
+    \For{$i=\max(1,j-\beta):j$}
+        \State $s=0$
+        \For{$k=\max(1,j-\beta):i-1$}
+            \State $s=s+\rb{\beta+1+k-i,i}\rb{\beta+1+k-j,j}$
+        \EndFor
+        \State $\rb{\beta+1+i-j,j}=(\rb{\beta+1+i-j,j}-s)/\rb{\beta+1,i}$
+    \EndFor
+    \State $s=0$
+    \For{$k=\max(1,j-\beta):j-1$}
+        \State $s=s+(\rb{\beta+1+k-j,j})^2$
+    \EndFor
+    \If{$\rb{s+1,j}\le s$} 
+        \State Error: $\boldsymbol{A}$ is not positive-definite.
+    \EndIf
+    \State $\rb{\beta+1,j}=\sqrt{\rb{\beta+1,j}-s}$
+\EndFor
+\State\Return{$\boldsymbol{R}_{\mathrm{band}}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\newcommand{\rb}[1]{r^{\mathrm{band}}_{#1}}
+\caption{Solve in place the linear system 
+$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ 
+given the band Cholesky factorization~\eqref{eq: Chol fact}.}
+\label{alg: band Chol solve in place}
+\begin{algorithmic}
+\Require{$\boldsymbol{x}=[b_i]_{i=1}^n$ stores the right-hand side vector.}
+\Require{The $(\beta+1)\times n$ array 
+$\boldsymbol{R}_{\mathrm{band}}=[\rb{ij}]$ stores 
+the band Cholesky factor~$\boldsymbol{R}=[r_{ij}]$ of~$\boldsymbol{A}$, as 
+computed via Algorithm~\ref{alg: band Chol} so that 
+$r_{ij}=\rb{\beta+1+i-j,j}$.}
+\State
+\Function{Solve}{$\boldsymbol{x},\boldsymbol{R}_{\mathrm{band}}$}
+\For{$i=1:n$}
+    \State $s=x_i$
+    \For{$j=\max(1,i-\beta):i-1$}
+        \State $s=s-\rb{\beta+1+j-i,i}x_j$
+    \EndFor
+    \State $x_i=s/\rb{\beta+1,i}$
+\EndFor
+\For{$i=n:-1:1$}
+    \State $s=x_i$
+    \For{$j=i+1:\min(n,i+\beta)$}
+        \State $s=s-\rb{\beta+1+i-j,j}x_j$
+    \EndFor
+    \State $x_i=s/\rb{\beta+1,i}$
+\EndFor
+\State\Return{$\boldsymbol{x}$}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+When $\beta$ is small compared to~$n$, storing $\boldsymbol{A}$ as an 
 $n\times n$~array wastes a lot of space.  A more efficient method is to use 
-the \emph{symmetric band storage scheme} in which an 
-$(s+1)\times n$~matrix~$\boldsymbol{A}_{\textrm{b}}$ holds the non-zero 
+the \emph{symmetric band storage scheme} that uses a
+$(\beta+1)\times n$~matrix 
+$\boldsymbol{A}_{\textrm{band}}=[a^{\mathrm{band}}_{ij}]$ to hold the non-zero 
 superdiagonals of~$\boldsymbol{A}$ by putting
-\[
-(\boldsymbol{A}_{\mathrm{b}})_{s+1+i-j,j}=a_{ij}
-	\quad\text{for $\max(1,j-s)\le i\le j$ and $1\le j\le n$.}
-\]
-For example, if $n=9$ and $s=3$, then
+\begin{equation}\label{eq: symm band storage}
+a^{\mathrm{band}}_{\beta+1+i-j,j}=a_{ij}
+	\quad\text{for $\max(1,j-\beta)\le i\le j$ and $1\le j\le n$.}
+\end{equation}
+For example, if $n=9$ and $\beta=3$, then
 \[
 \boldsymbol{A}_{\mathrm{b}}=\begin{bmatrix}
      *&     *&     *&a_{14}&a_{25}&a_{36}&a_{47}&a_{58}&a_{69}\\
@@ -570,6 +640,30 @@ of~$\boldsymbol{B}$.  Show that the matrix
 product~$\boldsymbol{A}\boldsymbol{B}$ has upper 
 bandwidth~$\min(s_{\boldsymbol{A}},s_{\boldsymbol{B}})$.  State and prove the 
 corresponding result for lower bandwidths.
+
+\exercise
+Write down $\boldsymbol{A}_{\mathrm{band}}$ given 
+by~\eqref{eq: symm band storage} if
+\[
+\boldsymbol{A}=\begin{bmatrix}
+ 5& 1& 7&  &  &\\
+ 1& 2& 0&-1&  &\\
+ 7& 0& 8& 2& 3&\\
+  &-1& 2& 5& 1& 6\\
+  &  & 3& 1& 7& 2\\
+  &  &  & 6& 2& 9
+\end{bmatrix}.
+\]
+\begin{ans}
+\[
+\boldsymbol{A}_{\mathrm{band}}=\begin{bmatrix}
+ *& *& 7&-1& 3& 6\\
+ *& 1& 0& 2& 1& 2\\
+ 5& 2& 8& 5& 7& 9                                
+\end{bmatrix}
+\]
+
+\end{ans}
 
 
 \end{Exercises}

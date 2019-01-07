@@ -13,14 +13,88 @@ u&=u_0(x)&&\text{for $0<x<L$ when $t=0$,}
 where $\mathcal{L}u=-\bigl(a(x)u'\bigr)'+c(x)u$ as before 
 in~\eqref{eq: L self-adjoint}.  The identity~\eqref{eq: Lu v by parts} implies 
 that, for any test function~$v(x)$,
-\[
+\begin{equation}\label{eq: parabolic 1d weak}
 \int_0^Lu_tv\,dx+\int_0^L\bigl(a(x)u_xv_x+c(x)uv\bigr)\,dx
 	=\gamma_L(t)v(L)+\int_0^Lf(x,t)v\,dx
 \quad\text{provided $v(0)=0$.}
-\]
-
+\end{equation}
+We will use this relation to formulate a semidiscrete finite element 
+solution~$u_h(x,t)\approx u(x,t)$ and then apply finite difference 
+approximations in time to derive some fully-discrete schemes.
 
 \section{Semidiscrete method}
+
+Continuing with the notation of Chapter~\ref{chap: FEM 1d}, we introduce grid 
+points~\eqref{eq: 1d nodes} in the spatial interval~$[0,L]$ and construct the 
+corresponding space~$V_h$ of continuous, piecewise-linear functions.  The 
+time-dependent solution set is then defined by
+\[
+S_h(t)=\{\,v\in V_h: v(0)=\gamma_0(t)\,\},
+\]
+and the test space by
+\[
+T_h=\{\,v\in V_h: v(0)=0\,\}.
+\]
+Based on the weak formulation~\eqref{eq: parabolic 1d weak}, the semidiscrete 
+finite element solution~$u_h:[0,L]\times[0,T]\to\mathbb{R}$ is determined by 
+requiring that $u_h(\cdot,t)\in S_h(t)$ and
+\begin{equation}\label{eq: parabolic 1d semidiscrete}
+\int_0^L(u_h)_tv\,dx+\int_0^L\bigl(a(x)(u_h)_xv_x+c(x)u_hv\bigr)\,dx
+	=\gamma_L(t)v(L)+\int_0^Lf(x,t)v\,dx
+\end{equation}
+for $v\in T_h$~and $0\le t\le T$, with 
+\[
+u_h(x,0)=u_{0h}(x).  
+\] 
+Here, $u_{0h}\in V_h$ is a suitable piecewise-linear approximation to~$u_0$; 
+for example, we could choose the interpolant~$u_{0h}=(Q_{1,h}u_0)(x)$ 
+satisfying $u_{0h}(x_j)=u_0(x_j)$ for~$0\le j\le M$.  Note that, by the 
+definition of~$S_h(t)$, we have $u_h(0,t)=\gamma_0(t)$ for~$0\le t\le T$, so the 
+scheme implicitly assumes that $u_{0h}(0)=\gamma_0(t)$, which should not be a 
+problem if $u(x,t)$ is continuous at~$(x,t)=(0,0)$ since then 
+$u_0(0)=\gamma_0(0)$.
+
+Recall the nodal basis functions~$\chi_j\in V_h$ satisfying 
+\eqref{eq: chi k x j}.  Since
+\[
+u_h(x,t)=\sum_{k=0}^MU_k(t)\chi_k(x)
+	\quad\text{for $(x,t)\in[0,L]\times[0,T]$,}
+	\quad\text{where $U_k(t)=u_h(x_k,t)$,}
+\]
+by choosing $v=\chi_j$ in~\eqref{eq: parabolic 1d semidiscrete} we arrive at a 
+system of ODEs for nodal values~$U_k(t)$, namely,
+\[
+\sum_{k=0}^M\biggl(m_{jk}\,\frac{dU_k}{dt}+a_{jk}U_k+c_{jk}U_k\biggr)
+	=\gamma_L(t)\chi_j(L)+f_j(t)\quad\text{for $1\le j\le M$,}
+\]
+where
+\begin{align*}
+m_{jk}&=\int_0^L\chi_k(x)\chi_j(x)\,dx,&
+a_{jk}&=\int_0^La(x)\chi_k'(x)\chi_j'(x)\,dx,\\
+c_{jk}&=\int_0^Lc(x)\chi_k(x)\chi_j(x)\,dx,&
+f_j&=\int_0^Lf(x,t)\chi_j(x)\,dx.
+\end{align*}
+Since $U_0(t)=\gamma_0(t)$, the system of ODEs can be re-written as
+\[
+\sum_{k=1}^M\biggl(m_{jk}\,\frac{dU_k}{dt}+(a_{jk}+c_{jk})U_k\biggr)
+	=f_j(t)+g_j(t)\quad\text{for $1\le j\le M$,}
+\]
+by putting
+\[
+g_j(t)=\gamma_L(t)\chi_j(L)-\biggl(m_{j0}\,\frac{d\gamma_0}{dt}
+	+(a_{j0}+c_{j0})\gamma_0(t)\biggr).
+\]
+Equivalently, using the obvious matrix-vector notation,
+\[
+\boldsymbol{M}\,\frac{d\boldsymbol{U}}{dt}
+	+(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
+	=\boldsymbol{f}(t)+\boldsymbol{g}(t)\quad\text{for $0\le t\le T$,}
+\]
+with the initial condition~$\boldsymbol{U}(0)=\boldsymbol{U}_0$.
+
+
+
+
 
 \section{Time stepping}
 

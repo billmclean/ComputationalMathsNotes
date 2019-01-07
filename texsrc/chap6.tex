@@ -212,24 +212,24 @@ by~$h=\max_{K\in\mathcal{T}}\operatorname{diam}(K)$, and let $V_h$ denote the
 vector space consisting of those functions~$v:\Omega\cup\Gamma\to\mathbb{R}$ 
 that are continuous and piecewise-linear with respect to~$\mathcal{T}$.  Thus,
 if $v\in V_h$ then for each~$K\in\mathcal{T}$ there are coefficients 
-$c^\brak{K}_0$, $c^\brak{K}_1$~and $c^\brak{K}_2$ such that
+$c\brak{K}_0$, $c\brak{K}_1$~and $c\brak{K}_2$ such that
 \begin{equation}\label{eq: v K 1 x y}
-v(x,y)=c^\brak{K}_0+c^\brak{K}_1x+c^\brak{K}_2y
+v(x,y)=c\brak{K}_0+c\brak{K}_1x+c\brak{K}_2y
 	\quad\text{for $(x,y)\in K$.}
 \end{equation}
-Let $\mathsf{n}^\brak{K}_1$, $\mathsf{n}^\brak{K}_2$, $\mathsf{n}^\brak{K}_3$ 
-denote the vertices of the triangle~$K$, and let $\psi^\brak{K}_1$, 
-$\psi^\brak{K}_2$, $\psi^\brak{K}_3$ denote the unique linear functions 
+Let $\mathsf{n}\brak{K}_1$, $\mathsf{n}\brak{K}_2$, $\mathsf{n}\brak{K}_3$ 
+denote the vertices of the triangle~$K$, and let $\psi\brak{K}_1$, 
+$\psi\brak{K}_2$, $\psi\brak{K}_3$ denote the unique linear functions 
 satisfying
 \begin{equation}\label{eq: psi node triangle}
-\psi^\brak{K}_p(\mathsf{n}^\brak{K}_p)=\delta_{p,q}
+\psi\brak{K}_p(\mathsf{n}\brak{K}_p)=\delta_{p,q}
 	\quad\text{for $p$, $q\in\{1,2,3\}$.}
 \end{equation}
 In Section~\ref{sec: barycentric}, we will derive explicit representations of 
 these functions.  The property~\eqref{eq: psi node triangle} implies that if 
 $v\in V_h$ then
 \[
-v(x,y)=\sum_{q=1}^3v(\mathsf{n}^\brak{K}_q)\psi^\brak{K}_q(x,y)
+v(x,y)=\sum_{q=1}^3v(\mathsf{n}\brak{K}_q)\psi\brak{K}_q(x,y)
 	\quad\text{for $(x,y)\in K$,}
 \]
 showing that $v$ is uniquely determined by its values at the nodes 
@@ -383,10 +383,10 @@ Thus, $\boldsymbol{a}_1$, $\boldsymbol{a}_2$, $\boldsymbol{a}_3$ have
 barycentric coordinates $(1,0,0)$, $(0,1,0)$, $(0,0,1)$, respectively. We will 
 see below that each~$\xi_p$ is a linear function of~$\boldsymbol{x}$, so 
 \begin{equation}\label{eq: xi psi}
-\xi_p=\psi_p^\brak{K}(\boldsymbol{x})
+\xi_p=\psi_p\brak{K}(\boldsymbol{x})
     \quad\text{for $1\le p\le 3$,}
 \end{equation}
-where the $\psi_p^\brak{K}$ are the linear linear shape functions introduced in 
+where the $\psi_p\brak{K}$ are the linear linear shape functions introduced in 
 Section~\ref{sec: triangulation}.  Thus, a level set of any
 barycentric coordinate is a straight line, as illustrated 
 in~\ref{fig: barycentric}.
@@ -592,27 +592,27 @@ $M\times(M+R)$ global stiffness
 matrix~$\boldsymbol{A}=[\,\boldsymbol{A}'\quad\boldsymbol{A}'']$ from 
 the $3\times3$ element stiffness matrices
 \[
-\boldsymbol{A}^\brak{K}=\bigl[a^\brak{K}_{pq}\bigr]_{p,q=1}^3
+\boldsymbol{A}\brak{K}=\bigl[a\brak{K}_{pq}\bigr]_{p,q=1}^3
 \quad\text{where}\quad
-a^\brak{K}_{pq}=\int_Ka\nabla\psi_q^\brak{K}\cdot\nabla\psi^\brak{K}_p.
+a\brak{K}_{pq}=\int_Ka\nabla\psi_q\brak{K}\cdot\nabla\psi\brak{K}_p.
 \]
 Likewise, the $M\times(M+R)$ global mass 
 matrix~$\boldsymbol{C}=[\,\boldsymbol{C}'\quad\boldsymbol{C}'']$ will be 
 assembled from the $3\times3$ element mass matrices,
 \[
-\boldsymbol{C}^\brak{K}=\bigl[c^\brak{K}_{pq}\bigr]_{p,q=1}^3
+\boldsymbol{C}\brak{K}=\bigl[c\brak{K}_{pq}\bigr]_{p,q=1}^3
 \quad\text{where}\quad
-c^\brak{K}_{pq}=\int_Kc\psi_q^\brak{K}\psi^\brak{K}_p.
+c\brak{K}_{pq}=\int_Kc\psi_q\brak{K}\psi\brak{K}_p.
 \]
 Explicitly, the entries of the element stiffness matrix are
 \[
-a^\brak{K}_{pq}=\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_K a
+a\brak{K}_{pq}=\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_K a
     =\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_0^1\int_0^{1-\xi_1}
         a\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\,d\xi_2\,d\xi_1,
 \]
 and those of the element mass matrix are
 \[
-c^\brak{K}_{pq}=\int_Kc\xi_q\xi_p=\int_0^1\int_0^{1-\xi_1}
+c\brak{K}_{pq}=\int_Kc\xi_q\xi_p=\int_0^1\int_0^{1-\xi_1}
         c\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_q\xi_p\,d\xi_2\,d\xi_1,
 \]
 remembering that $\xi_3=1-\xi_1-\xi_2$.
@@ -620,21 +620,21 @@ In particular, if $a(\boldsymbol{x})=1$~and $c(\boldsymbol{x})=1$, then
 Theorem~\ref{thm: int xi} shows that 
 \[
 \newcommand{\bb}{\boldsymbol{b}}
-\boldsymbol{A}^\brak{K}=\mathrm{area}(K)\begin{bmatrix}
+\boldsymbol{A}\brak{K}=\mathrm{area}(K)\begin{bmatrix}
 \bb_1\cdot\bb_1&\bb_2\cdot\bb_1&\bb_3\cdot\bb_1\\
 \bb_1\cdot\bb_2&\bb_2\cdot\bb_2&\bb_3\cdot\bb_2\\
 \bb_1\cdot\bb_3&\bb_2\cdot\bb_3&\bb_3\cdot\bb_3
 \end{bmatrix}
 \quad\text{and}\quad
-\boldsymbol{C}^\brak{K}=\frac{\mathrm{area}(K)}{12}\begin{bmatrix}
+\boldsymbol{C}\brak{K}=\frac{\mathrm{area}(K)}{12}\begin{bmatrix}
 2&1&1\\ 1&2&1\\ 1&1&2 \end{bmatrix}.
 \]
 
 The 3-dimensional element load vector is defined by
 \[
-\boldsymbol{f}^\brak{K}=[f^\brak{K}_p]_{p=1}^3
+\boldsymbol{f}\brak{K}=[f\brak{K}_p]_{p=1}^3
 \quad\text{where}\quad
-f^\brak{K}_p=\int_K f\psi^\brak{K}_p
+f\brak{K}_p=\int_K f\psi\brak{K}_p
 	=\int_0^1\int_0^{1-\xi_1}f\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_p
 	\,d\xi_2 \,d\xi_1
 \]
@@ -660,16 +660,16 @@ Show that $(\boldsymbol{A}^{-1})^T=(\boldsymbol{A}^T)^{-1}$; we denote this
 Consider a three-point quadrature rule of the form
 \begin{equation}\label{eq: 3 quad}
 \int_Kf\approx\frac{\mathrm{area}(K)}{3}\sum_{p=1}^3 
-    f(\boldsymbol{x}^\brak{K}_p)
+    f(\boldsymbol{x}\brak{K}_p)
 \end{equation}
 where, for some choice of the parameter~$\lambda\in(0,1)$, 
 \begin{equation}\label{eq: 3 quad points}
 \begin{aligned}
-\boldsymbol{x}^\brak{K}_1=(1-2\lambda)\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
+\boldsymbol{x}\brak{K}_1=(1-2\lambda)\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
     +\lambda\boldsymbol{a}_3,\\
-\boldsymbol{x}^\brak{K}_2=\lambda\boldsymbol{a}_1+(1-2\lambda)\boldsymbol{a}_2
+\boldsymbol{x}\brak{K}_2=\lambda\boldsymbol{a}_1+(1-2\lambda)\boldsymbol{a}_2
     +\lambda\boldsymbol{a}_3,\\
-\boldsymbol{x}^\brak{K}_3=\lambda\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
+\boldsymbol{x}\brak{K}_3=\lambda\boldsymbol{a}_1+\lambda\boldsymbol{a}_2
     +(1-2\lambda)\boldsymbol{a}_3.
 \end{aligned}
 \end{equation}
@@ -688,11 +688,11 @@ rule~\eqref{eq: 3 quad} with $\lambda=1/6$ (left) and $\lambda=1/2$ (right).}
 To achieve higher accuracy, we can consider a six-point quadrature rule
 \[
 \int_K f\approx\frac{\mathrm{area}(K)}{3}\biggl(
-	w\sum_{p=1}^3 f\bigl(\boldsymbol{x}^\brak{K}_p(\lambda_1)\bigr)
-	+(1-w)\sum_{p=1}^3 f\bigl(\boldsymbol{x}^\brak{K}_p(\lambda_2)\bigr)\biggr),
+	w\sum_{p=1}^3 f\bigl(\boldsymbol{x}\brak{K}_p(\lambda_1)\bigr)
+	+(1-w)\sum_{p=1}^3 f\bigl(\boldsymbol{x}\brak{K}_p(\lambda_2)\bigr)\biggr),
 \]
 depending on the parameters $w$, $\lambda_1$~and $\lambda_2$, with 
-$\boldsymbol{x}^\brak{K}_p=\boldsymbol{x}^\brak{K}_p(\lambda)$ defined as 
+$\boldsymbol{x}\brak{K}_p=\boldsymbol{x}\brak{K}_p(\lambda)$ defined as 
 in~\eqref{eq: 3 quad points}.
 
 \end{exercise}
