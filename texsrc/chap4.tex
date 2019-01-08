@@ -6,7 +6,7 @@ We now consider a more general parabolic PDE with mixed boundary conditions,
 \begin{aligned}
 u_t+\mathcal{L}u&=f(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
 u&=\gamma_0(t)&&\text{at $x=0$, for $0<t<T$,}\\
-au&=\gamma_L(t)&&\text{at $x=L$, for $0<t<T$,}\\
+au'&=\gamma_L(t)&&\text{at $x=L$, for $0<t<T$,}\\
 u&=u_0(x)&&\text{for $0<x<L$ when $t=0$,}
 \end{aligned}
 \end{equation}
@@ -48,11 +48,11 @@ values of the solution are now time-dependent, with
 u_h(x,t)=\sum_{q=0}^P U_q(t)\chi_q(x)\quad\text{for $0\le x\le L$,}\quad
 \text{where $U_q(t)=u_h(x_q,t)$.}
 \]
-Likewise, the load vector is time-dependent in general, since
+Likewise, the load vector is time-dependent in general, since 
 \[
-f_p(t)=\int_0^Lf(x,t)\chi_p(x)\,dx,
+f_p(t)=\int_0^Lf(x,t)\chi_p(x)\,dx.
 \]
-and since
+Noting 
 \[
 \int_0^L(u_h)_t\chi_p\,dx=\int_0^L\sum_{q=0}^P
     \frac{dU_q}{dt}\,\chi_q(x)\chi_p(x)\,dx=\sum_{q=0}^P m_{pq}\,\frac{dU_q}{dt}
@@ -156,6 +156,25 @@ which requires that we solve the linear systems
 \end{example}
 
 \section{Discrete separation of variables}
+Consider the special case when $f(x,t)\equiv0$, $\gamma_0(t)\equiv0$~and 
+$\gamma_L(t)\equiv0$.  Let $(\phi_k,\lambda_k)$ be the $k$th eigenpair for the 
+operator $\mathcal{L}$, so that
+\[
+\mathcal{L}\phi_k=\lambda_k\phi_k\quad\text{for $0<x<L$,}\quad
+\text{with $\phi_k(0)=0=a\phi_k'(L)$.}
+\]
+For the special choice of initial condition
+\[
+u_0(x)=\phi_k(x),
+\]
+the solution of the continuous problem $u_t+\mathcal{L}u=0$ is simply
+\begin{equation}\label{eq: u0 eigenfunction}
+u(x,t)=e^{-\lambda_kt}\phi_k(x).
+\end{equation}
+We shall assume that $c(x)\ge0$ for $0<x<L$, which ensures that $\lambda_k>0$ 
+for all~$k$; see exercise~\ref{ex: lambda>0}.  Thus, the 
+factor~$e^{-\lambda_kt}$ decreases monotonically to zero as~$t\to\infty$.
+
 Each of the matrices $\boldsymbol{A}$, $\boldsymbol{C}$~and $\boldsymbol{M}$ is 
 real and symmetric, and in addition $\boldsymbol{M}$ is positive-definite, so 
 there exist generalised eigenpairs $(\boldsymbol{\Phi}_k,\Lambda_k)$ such that 
@@ -166,15 +185,24 @@ there exist generalised eigenpairs $(\boldsymbol{\Phi}_k,\Lambda_k)$ such that
     =\Lambda_k\delta_{jk},\qquad
 \boldsymbol{\Phi}_j^T\boldsymbol{M}\boldsymbol{\Phi}_k=\delta_{jk}
 \]
-for $j$, $k\in\{1,2,\ldots,P\}$.
+for $j$, $k\in\{1,2,\ldots,P\}$.  Our assumptions ensure that 
+$\boldsymbol{A}+\boldsymbol{C}$ is positive-definite, so $\Lambda_k>0$ 
+for~$1\le k\le2P$.
 
-We will consider the special case when $f(x,t)\equiv0$, 
-$\gamma_0(t)\equiv0$~and $\gamma_L(t)\equiv0$, for the special choice of 
-discrete initial data
+Suppose we choose discrete initial data
 \[
-\boldsymbol{U}_0=\Phi_k.
+\boldsymbol{U}_0=\boldsymbol{\Phi}_k.
 \]
-It follows that the semidiscrete initial-value 
+For moderate values of~$k$, we expect 
+$\boldsymbol{\Phi_k}\approx[\phi_k(x_p)]_{p=1}^P$, assuming we label the 
+$\lambda_k$~and $\Lambda_k$ so that
+\[
+0<\lambda_1\le\lambda_2\le\lambda_3\le\cdots
+\quad\text{and}\quad
+0<\Lambda_1\le\Lambda_2\le\cdots\le\Lambda_P,
+\]
+and make appropriate choices for the corresponding eigenfunctions and 
+eigenvectors. In our special case, the semidiscrete initial-value 
 problem~\eqref{eq: semidiscrete fem 1d ODE} simplifies to
 \[
 \boldsymbol{M}\,\frac{d\boldsymbol{U}}{dt}
@@ -184,17 +212,19 @@ problem~\eqref{eq: semidiscrete fem 1d ODE} simplifies to
 \]
 which has the solution
 \begin{equation}
-\boldsymbol{U}(t)=e^{-\Lambda_kt}\boldsymbol{\Phi}_k.
+\boldsymbol{U}(t)=e^{-\Lambda_kt}\boldsymbol{\Phi}_k,
 \end{equation}
-Let us compare this continuous-time solution with the discrete-time solutions 
-for the three time-stepping schemes described in 
-section~\ref{sec: time stepping}.
+which again decreases monotonically to zero as~$t\to\infty$.
+
+Let us compare theses continuous-time solutions with the discrete-time 
+solutions for the three time-stepping schemes described in 
+section~\ref{sec: time stepping}.  
 
 \begin{example}
 The forward Euler method in this special case is
 \[
 \boldsymbol{M}\boldsymbol{U}^{n+1}=\bigl(\boldsymbol{M}
--\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr)\boldsymbol{U}^n
+-\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr)\boldsymbol{U}^n,
 \]
 and since
 \[
@@ -207,6 +237,167 @@ we see by induction on $n$ that
 \[
 \boldsymbol{U}^n=(1-\Delta t\,\Lambda_k)^n\boldsymbol{\Phi}_k.
 \]
+If $\Delta t\,\Lambda_k<1$ then the factor~$(1-\Delta t\,\Lambda_k)^n$ 
+decreases monotonically to zero as~$t_n\to\infty$, so we have the correct 
+qualitative behaviour of the solution, and furthermore
+\[
+e^{-\Lambda_kt_n}=e^{-\Lambda_k n\,\Delta t}
+    =\bigl(e^{-\Delta t\Lambda_k}\bigr)^n\approx(1-\Delta t\,\Lambda_k)^n
+    \quad\text{if $\Delta t\,\Lambda_k$ is small, for $n$ fixed.}
+\]
+If $1<\Delta t\,\Lambda_k<2$ then $(1-\Delta t\,\Lambda_k)^n$ tends to zero, 
+but with an oscillating sign, as $t_n\to\infty$, which is the wrong qualitative 
+behaviour. If $\Delta t\,\Lambda_k>2$, then $(1-\Delta t\,\Lambda_k)^n$ not 
+only oscillates but is also unbounded.
+\end{example}
+
+\begin{example}
+The \emph{backward Euler method} in this special case is
+\[
+\bigl(\boldsymbol{M}+\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr) 
+    \boldsymbol{U}^n=\boldsymbol{M}\boldsymbol{U}^{n-1},
+\]
+and since
+\[
+\bigl(\boldsymbol{M} +\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr)^{-1}
+\boldsymbol{M}\boldsymbol{\Phi}_k
+    =(1+\Delta t\,\Lambda_k)^{-1}\boldsymbol{\Phi_k}
+\]
+we see by induction on $n$ that
+\[
+\boldsymbol{U}^n=(1+\Delta t\,\Lambda_k)^{-n}\boldsymbol{\Phi}_k.
+\]
+The factor~$(1+\Delta t\,\Lambda_k)^{-n}$ always decreases monotonically to 
+zero as~$t_n\to\infty$, so we have the correct qualitative behaviour no matter 
+how large $\Delta t$.  Furthermore,
+\[
+e^{-\Lambda_kt_n}=\bigl(e^{-\Delta t\Lambda_k}\bigr)^n
+    \approx(1+\Delta t\,\Lambda_k)^{-n}
+    \quad\text{if $\Delta t\,\Lambda_k$ is small, for $n$ fixed.}
+\]
+\end{example}
+
+\begin{example}
+The \emph{Crank--Nicolson method} in this special case is
+\[
+\bigl(\boldsymbol{M}+\tfrac12\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr) 
+    \boldsymbol{U}^n
+=\bigl(\boldsymbol{M}-\tfrac12\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr) 
+    \boldsymbol{U}^{n-1},
+\]
+and since
+\[
+\bigl(\boldsymbol{M}+\tfrac12\Delta t\,
+    (\boldsymbol{A}+\boldsymbol{C})\bigr)^{-1}
+\bigl(\boldsymbol{M}-\tfrac12\Delta t\,(\boldsymbol{A}+\boldsymbol{C})\bigr) 
+    \boldsymbol{\Phi_k}
+    =\frac{(1-\tfrac12\Delta t\,\Lambda_k)^{-1}}%
+{(1+\tfrac12\Delta t\,\Lambda_k)^{-1}}\,\boldsymbol{\Phi_k},
+\]
+we see by induction on $n$ that
+\[
+\boldsymbol{U}^n=\biggl(
+    \frac{1-\tfrac12\Delta t\,\Lambda_k}{1+\tfrac12\Delta t\,\Lambda_k}\biggr)^n
+    \boldsymbol{\Phi}_k.
+\]
+Thus, the correct qualitative behaviour occurs when $\Delta t\,\Lambda_k<2$.
+If $\Delta t\,\Lambda_k>2$, then $\boldsymbol{U}^n$ still tends to zero 
+as~$t_n\to\infty$, but with a sign oscillation.  Also, rate of decay becomes 
+slower and slower with increasing values of~$\Delta t\,\Lambda_k$.
+\end{example}
+
+For general initial data~$u_0$, we know from section~\ref{sec: separation} 
+that the continuous solution is
+\[
+u(x,t)=e^{-t\mathcal{L}}u_0(x)
+    =\sum_{k=1}^\infty\widehat{(u_0)}_k e^{-\lambda_kt}\phi_k(x)
+\quad\text{where}\quad
+\widehat{(u_0)}_k=\frac{\langle u_0,\phi_k\rangle}{\|\phi_k\|^2}.
+\]
+Similarly, we claim that for a general discrete
+data~$\boldsymbol{U}_0$, the semidiscrete finite element solution has the form
+\begin{equation}\label{eq: semidiscrete FEM Fourier}
+\boldsymbol{U}(t)=e^{-t\boldsymbol{M}^{-1}(\boldsymbol{A}+\boldsymbol{C})}
+    \boldsymbol{U}_0
+    =\sum_{k=1}^P\widehat{(\boldsymbol{U}_0)}_k e^{-\Lambda_kt}
+    \boldsymbol{\Phi}_k
+\quad\text{where}\quad
+\widehat{(\boldsymbol{U}_0)}_k
+=\frac{\langle\boldsymbol{U}_0,\boldsymbol{\Phi}_k\rangle_{\boldsymbol{M}}}%
+{\|\boldsymbol{\Phi_k}\|_{\boldsymbol{M}}^2}.
+\end{equation}
+Here, $\langle\boldsymbol{V},\boldsymbol{W}\rangle_{\boldsymbol{M}}
+=\boldsymbol{V}^T\boldsymbol{M}\boldsymbol{W}$ and 
+$\|\boldsymbol{V}\|_{\boldsymbol{M}}
+=\sqrt{\boldsymbol{V}^T\boldsymbol{M}\boldsymbol{V}}$ are the inner product and 
+norm induced by the positive-definite matrix~$\boldsymbol{M}$.  Indeed, 
+$\boldsymbol{U}(t)=e^{-t\boldsymbol{M}^{-1}(\boldsymbol{A}+\boldsymbol{C})}
+\boldsymbol{U}_0$ because
+\[
+\frac{d\boldsymbol{U}}{dt}+\boldsymbol{M}^{-1}(\boldsymbol{A}+\boldsymbol{C})
+\boldsymbol{U}=\boldmath{0},
+\]
+and we have
+\[
+\boldsymbol{U}_0=\sum_{k=1}^P\widehat{(\boldsymbol{U}_0)}_k\boldsymbol{\Phi}_k,
+\]
+because the eigenvectors~$\boldsymbol{\Phi}_k$ form an 
+$\boldsymbol{M}$-orthogonal basis for~$\mathbb{R}^P$.  The 
+representation~\eqref{eq: semidiscrete FEM Fourier} then follows because
+$\boldsymbol{M}^{-1}(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{\Phi}_k
+=\Lambda_k\boldsymbol{\Phi}_k$.
+
+\begin{example}
+For general discrete initial data~$\boldsymbol{U}_0$, the forward Euler method 
+gives
+\[
+\boldsymbol{U}^n=\sum_{k=1}^P\widehat{(\boldsymbol{U}_0)}_k 
+    (1-\Delta t\,\Lambda_k)^n\Phi_k,
+\]
+and therefore
+\[
+\|\boldsymbol{U}^n\|_{\boldsymbol{M}}^2
+    =\sum_{k=1}^P\bigl|\widehat{(\boldsymbol{U}_0)}_k\bigr|^2
+    |1-\Delta t\,\Lambda_k|^{2n}\|\Phi_k\|_{\boldsymbol{M}}^2.
+\]
+Since
+\[
+\|\boldsymbol{U}_0\|_{\boldsymbol{M}}^2
+    =\sum_{k=1}^P\bigl|\widehat{(\boldsymbol{U}_0)}_k\bigr|^2
+    \|\Phi_k\|_{\boldsymbol{M}}^2,
+\]
+it follows that
+\[
+\|\boldsymbol{U}^n\|_{\boldsymbol{M}}
+    \le\Bigl(\max_{1\le k\le P}|1-\Delta t\,\Lambda_k|^n\Bigr)
+    \|\boldsymbol{U}_0\|_{\boldsymbol{M}}.
+\]
+Hence, if $\Delta t\le 1/\Lambda_P$ then $\|\boldsymbol{U}^n\|_{\boldsymbol{M}}
+\le\|\boldsymbol{U}_0\|_{\boldsymbol{M}}$ and the forward Euler method is 
+stable in the $\boldsymbol{M}$-norm.
+\end{example}
+
+\begin{example}
+A similar argument shows that the backward Euler method gives
+\[
+\|\boldsymbol{U}^n\|_{\boldsymbol{M}}
+    \le\Bigl(\max_{1\le k\le P}(1+\Delta t\,\Lambda_k)^{-n}\Bigr)
+    \|\boldsymbol{U}_0\|_{\boldsymbol{M}},
+\]
+so $\|\boldsymbol{U}^n\|_{\boldsymbol{M}}\le(1+\Delta t\,\Lambda_1)^{-n}
+\|\boldsymbol{U}_0\|_{\boldsymbol{M}}\le\|\boldsymbol{U}_0\|_{\boldsymbol{M}}$
+and hence we have stability in the $\boldsymbol{M}$-norm for any~$\Delta t$.
+\end{example}
+
+\begin{example}
+For the Crank--Nicolson method,
+\[
+\|\boldsymbol{U}^n\|_{\boldsymbol{M}}
+    \le\biggl(\max_{1\le k\le P}\biggl|
+    \frac{1-\tfrac12\Delta t\,\Lambda_k}{1+\tfrac12\Delta t\,\Lambda_k}
+    \biggr|^n\biggr)\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
+\]
+and we again have stability in the $\boldsymbol{M}$-norm for any~$\Delta t$.
 \end{example}
 
 

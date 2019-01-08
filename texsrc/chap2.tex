@@ -11,7 +11,7 @@ obtain
 \[
 -\int_0^L u''(x)v(x)\,dx=\int_0^L f(x)v(x)\,dx.
 \]
-Provided $v'$ exists and is continuous on~$[0,L]$, we can integrate by parts to 
+Assuming $v'$ exists and is continuous on~$[0,L]$, we can integrate by parts to 
 obtain
 \begin{equation}\label{eq: int by parts}
 -\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx
@@ -21,7 +21,8 @@ and therefore
 \int_0^L u'(x)v'(x)\,dx=\int_0^L f(x)v(x)\,dx
 	\quad\text{provided $v(0)=0=v(L)$.}
 \end{equation}
-This observation is the basis of the finite element method.
+In the finite element method, this \emph{weak formulation} 
+is used as the basis for a discretisation of~\eqref{eq: model 1d chap 2}.
 
 \section{Piecewise-linear functions}
 Suppose that we partition the interval~$[0,L]$ into $P$~subintervals, not 
@@ -121,8 +122,8 @@ for the unknowns $U_1$, $U_2$, \dots, $U_{P-1}$, namely
 \sum_{q=1}^{P-1}a_{pq}U_q=f_p-a_{p0}\gamma_0-a_{pM}\gamma_L
     \quad\text{for $1\le p\le P-1$.}
 \end{equation}
-The coefficients on the left-hand side of~\eqref{eq: model FEM eqns} form the
-\emph{stiffness matrix}~$\boldsymbol{A}$, which has the following properties.
+The $U_q$ are called the \emph{nodal values} of~$u_h$, and the 
+coefficients~$a_{pq}$ form the \emph{stiffness matrix}.
 
 \begin{theorem}
 If $|p-q|\ge2$ then $a_{pq}=0$.  The diagonal values are
@@ -157,17 +158,18 @@ a_{00}=\int_0^L\chi_0'(x)^2\,dx
 \]
 and
 \[
-a_{PP}=\int_0^L\chi'_P(x)^2\,dx
-    =\int_{x_{P-1}}^{x_P}\biggl(\frac{-1}{h_P}\biggr)^2\,dx
-    =\frac{x_P-x_{P-1}}{h_P^2}=\frac{1}{h_P},
-\]
-with
-\[
 a_{pp}=\int_{x_{p-1}}^{x_p}\biggl(\frac{1}{h_p}\biggr)^2\,dx
       +\int_{x_p}^{x_{p+1}}\biggl(\frac{-1}{h_{p+1}}\biggr)^2\,dx
         =\frac{1}{h_p}+\frac{1}{h_{p+1}}
+\quad\text{for $1\le p\le P-1$,}
 \]
-for $1\le p\le P-1$.  The off-diagonal values are
+with
+\[
+a_{PP}=\int_0^L\chi'_P(x)^2\,dx
+    =\int_{x_{P-1}}^{x_P}\biggl(\frac{-1}{h_P}\biggr)^2\,dx
+    =\frac{x_P-x_{P-1}}{h_P^2}=\frac{1}{h_P}.
+\]
+The off-diagonal values are
 \[
 a_{p-1,p}=\int_0^L\chi'_p(x)\chi'_{p-1}(x)\,dx
     =\int_{x_{p-1}}^{x_p}\biggl(\frac{-1}{h_p}\biggr)
@@ -254,11 +256,11 @@ and require that the finite element solution~$u_h\in S_h$ satisfy
     =\gamma_Lv(L)+\int_0^Lf(x)v(x)\,dx
     \quad\text{for all $v\in T_h$.}
 \end{equation}
-Equivalently, since $\{\chi_j\}_{j=1}^M$ is a basis for~$T_h$, we require
+Equivalently, since $\{\chi_p\}_{p=1}^P$ is a basis for~$T_h$, we require
 \[
-\int_0^L\bigl(a(x)u_h'(x)\chi_j'(x)+c(x)u_h(x)\chi_j(x)\bigr)\,dx
-    =\gamma_L\chi_j(L)+\int_0^Lf(x)\chi_j(x)\,dx
-    \quad\text{for $1\le j\le M$.}
+\int_0^L\bigl(a(x)u_h'(x)\chi_p'(x)+c(x)u_h(x)\chi_p(x)\bigr)\,dx
+    =\gamma_L\chi_p(L)+\int_0^Lf(x)\chi_p(x)\,dx
+    \quad\text{for $1\le p\le P$.}
 \]
 Inserting the representation~\eqref{eq: uh U 1d} yields the system of linear 
 equations
@@ -303,6 +305,7 @@ the linear system~\eqref{eq: self-adjoint mixed equations}, but this approach
 becomes very complicated in 2D~or 3D, or even in 1D with higher-order elements.
 Instead, a simpler method is to assemble the matrices $\boldsymbol{A}$~and 
 $\boldsymbol{C}$, and the vector~$\boldsymbol{f}$, element-by-element.  
+
 For~$1\le p\le P$, we put $\mathsf{n}\brak{p}_1=x_{p-1}$~and
 $\mathsf{n}\brak{p}_2=x_p$ so that the $p$th 
 element is $[x_{p-1},x_p]=[\mathsf{n}\brak{p}_1,\mathsf{n}\brak{p}_2]$.  The
@@ -348,7 +351,53 @@ and the \emph{element load vector} by
 \quad\text{where}\quad
 f\brak{p}_j=\int_{x_{p-1}}^{x_p}f(x)\psi_j\brak{p}(x)\,dx.
 \]
-We also enumerate the nodes of the mesh so that the \emph{free nodes precede 
+
+\begin{example}
+We will show that for the constant coefficients $a(x)=1$ and $c(x)=1$, the
+element stiffness and mass matrices are simply
+\[
+\boldsymbol{A}\brak{p}=\frac{1}{h_p}\begin{bmatrix}1&-1\\ -1&1\end{bmatrix}
+\quad\text{and}\quad
+\boldsymbol{C}\brak{p}=\frac{h_p}{6}\begin{bmatrix}2&1\\ 1&2\end{bmatrix}.
+\]
+In fact, since $(\psi\brak{p}_1)'(x)=-1/h_p$ and 
+$(\psi\brak{p}_2)'(x)=1/h_p$, we see that
+\[
+a\brak{p}_{11}=a\brak{p}_{22}
+    =\int_{x_{p-1}}^{x_p}\frac{1}{h_p^2}\,dx
+    =\frac{x_p-x_{p-1}}{h_p^2}=\frac{1}{h_p}
+\]
+and
+\[
+a\brak{p}_{12}=a\brak{p}_{21}
+    =\int_{x_{p-1}}^{x_p}\frac{-1}{h_p^2}\,dx=\frac{-1}{h_p}.
+\]
+For the element mass matrix,
+\[
+c\brak{p}_{11}=\int_{x_{p-1}}^{x_p}\biggl(\frac{x_p-x}{h_p}\biggr)^2\,dx
+    =\biggl[-\frac{(x_p-x)^3}{3h_p^2}\biggr]_{x_{p-1}}^{x_p}
+    =\frac{(x_p-x_{p-1})^3}{3h_p^2}=\frac{h_p}{3}
+\]
+and similarly
+\[
+c\brak{p}_{22}=\int_{x_{p-1}}^{x_p}\biggl(\frac{x-x_{p-1}}{h_p}\biggr)^2\,dx
+    =\biggl[-\frac{(x-x_{p-1})^3}{3h_p^2}\biggr]_{x_{p-1}}^{x_p}
+    =\frac{(x_p-x_{p-1})^3}{3h_p^2}=\frac{h_p}{3},
+\]
+whereas, integrating by parts,
+\begin{align*}
+c\brak{p}_{12}&=c\brak{p}_{21}=\int_{x_{p-1}}^{x_p}
+    \biggl(\frac{x_p-x}{h_p}\biggr)\biggl(\frac{x-x_{p-1}}{h_p}\biggr)\,dx\\
+    &=\frac{1}{h_p^2}\biggl(
+    \biggl[(x_p-x)\frac{(x-x_{p-1})^2}{2}\biggr]_{x_{p-1}}^{x_p}
+    -\int_{x_{p-1}}^{x_p}(-1)\frac{(x-x_{p-1})^2}{2}\,dx\biggr)\\
+    &=\frac{1}{2h_p^2}\int_{x_{p-1}}^{x_p}(x-x_{p-1})^2\,dx
+    =\frac{1}{2h_p^2}\biggl[\frac{(x-x_{p-1})^3}{3}\biggr]_{x_{p-1}}^{x_p}
+    =\frac{h_p}{6}.
+\end{align*}
+\end{example}
+
+We enumerate the nodes of the mesh so that the \emph{free nodes precede 
 the fixed nodes}, where the latter are those at which the value of the 
 solution is fixed by a Dirichlet boundary condition.  For our 
 problem~\eqref{eq: self-adjoint mixed}, the only fixed node is~$x_0$, so we put
@@ -367,6 +416,7 @@ for example, if $P=6$ then
 7&1&2&3&4&5&6\\
 1&2&3&4&5&6&7\end{bmatrix}.
 \]
+
 Writing $U\brak{p}_k=u_h(\mathsf{n}\brak{p}_k)$~and
 $V\brak{p}_j=v(\mathsf{n}\brak{p}_j)$, we see that
 \[
@@ -400,57 +450,120 @@ v(L)=V\brak{P}_2.
 Therefore, \eqref{eq: self-adjoint mixed bc FEM} holds iff
 \[
 \sum_{p=1}^P\sum_{j=1}^2V\brak{p}_j
-\sum_{j=1}^2\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
+\sum_{k=1}^2\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
     =\gamma_LV\brak{P}_2+\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_jf\brak{p}_j
-    \quad\text{for all $v\in T_h$.}
+    \quad\text{for all $v\in T_h$,}
 \]
-
-Let $\mathfrak{I}_r=\{\,(p,j):\mathsf{n}\brak{p}_j=\mathsf{n}_r\,\}$, and
-define the $P\times(P+1)$ matrices $\boldsymbol{A}=[a_{pq}]$~and 
-$\boldsymbol{C}=[c_{pq}]$, and the $P$-dimensional vector~$\boldsymbol{f}$, by
+or equivalently, if we let
+$\mathfrak{I}_r=\{\,(p,j):\mathsf{n}\brak{p}_j=\mathsf{n}_r\,\}$, 
+\[
+\sum_{r=1}^{P+1}V_r\sum_{s=1}^{P+1}\biggl(\sum_{(p,j)\in\mathfrak{I}_r}
+    \sum_{(p,k)\in\mathfrak{I}_s}\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)
+    \biggr)U_s
+    =\gamma_LV_P+\sum_{r=1}^{P+1}V_r\biggl(\sum_{p=1}^P
+    \sum_{(p,j)\in\mathfrak{I}_r}^2f\brak{p}_j\biggr)
+\]
+for all $v\in T_h$. Define 
 \[
 a_{rs}=\sum_{(p,j)\in\mathfrak{I}_r}
     \sum_{(p,k)\in\mathfrak{I}_s}a\brak{p}_{jk},\qquad
 c_{rs}=\sum_{(p,j)\in\mathfrak{I}_r}
-\boldsymbol{A}\brak{p}=\frac{1}{h_p}\begin{bmatrix}1&-1\\ -1&1\end{bmatrix}
-\quad\text{and}\quad
-\boldsymbol{C}\brak{p}=\frac{h_p}{6}\begin{bmatrix}2&1\\ 1&2\end{bmatrix}.
+    \sum_{(p,k)\in\mathfrak{I}_s}c\brak{p}_{jk},\qquad
+f_r=\sum_{(p,j)\in\mathfrak{I}_r}f\brak{p}_j,
 \]
-In fact, since $(\psi\brak{p}_1)'(x)=-1/h_p$ and 
-$(\psi\brak{p}_2)'(x)=1/h_p$, we see that
+and form the $P\times(P+1)$ matrices $\boldsymbol{A}=[a_{pq}]$~and 
+$\boldsymbol{C}=[c_{pq}]$, and the $P$-dimensional vector~$\boldsymbol{f}$.
+Since $\mathsf{n}_{P+1}=\mathsf{n}\brak{1}_1=x_0=0$ we have 
+$V_{P+1}=V\brak{1}_1=0$, so
+\begin{equation}\label{eq: VT(A+C)U}
+\boldsymbol{V}^T\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
+    =\gamma_LV_P+\boldsymbol{V}^T\boldsymbol{f}
+    \quad\text{for all $\boldsymbol{V}\in\mathbb{R}^P$,}
+\end{equation}
+and therefore
+\begin{equation}\label{eq: A C f example}
+\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
+    =\gamma_L\boldsymbol{e}_P+\boldsymbol{f}.
+\end{equation}
+
+Partition the matrices as
+$\boldsymbol{A}=[\boldsymbol{A}\free\quad\boldsymbol{A}\fix]$~and
+$\boldsymbol{C}=[\boldsymbol{C}\free\quad\boldsymbol{C}\fix]$, where
+$\boldsymbol{A}\free$~and $\boldsymbol{C}\free$ are $P\times P$, and so
+$\boldsymbol{A}\fix$~and $\boldsymbol{C}\fix$ are $P\times1$.  Likewise
+partition the vector~$\boldsymbol{U}=[\boldsymbol{U}\free\quad U\fix]^T$ where
+$\boldsymbol{U}\free$ is $P\times1$ and so $U\fix$ is $1\times1$, that is, a
+scalar.  Since $U\fix=U_{P+1}=u_h(\mathsf{n}_{P+1})=u_h(0)=\gamma_0$,
 \[
-a\brak{p}_{11}=a\brak{p}_{22}
-	=\int_{x_{p-1}}^{x_p}\frac{1}{h_p^2}\,dx
-	=\frac{x_p-x_{p-1}}{h_p^2}=\frac{1}{h_p}
+\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
+    =\bigl[(\boldsymbol{A}\free+\boldsymbol{C}\free)\quad
+    (\boldsymbol{A}\fix+\boldsymbol{C}\fix)\bigr]
+    \begin{bmatrix}\boldsymbol{U}\free\\ U\fix\end{bmatrix}
+    =(\boldsymbol{A}\free+\boldsymbol{C}\free)\boldsymbol{U}\free
+    +\gamma_0(\boldsymbol{A}\fix+\boldsymbol{C}\fix),
 \]
-and
-\[
-a\brak{p}_{12}=a\brak{p}_{21}
-	=\int_{x_{p-1}}^{x_p}\frac{-1}{h_p^2}\,dx=\frac{-1}{h_p}.
-\]
-For the element mass matrix,
-\[
-c\brak{p}_{11}=\int_{x_{p-1}}^{x_p}\biggl(\frac{x_p-x}{h_p}\biggr)^2\,dx
-	=\biggl[-\frac{(x_p-x)^3}{3h_p^2}\biggr]_{x_{p-1}}^{x_p}
-	=\frac{(x_p-x_{p-1})^3}{3h_p^2}=\frac{h_p}{3}
-\]
-and similarly
-\[
-c\brak{p}_{22}=\int_{x_{p-1}}^{x_p}\biggl(\frac{x-x_{p-1}}{h_p}\biggr)^2\,dx
-	=\biggl[-\frac{(x-x_{p-1})^3}{3h_p^2}\biggr]_{x_{p-1}}^{x_p}
-	=\frac{(x_p-x_{p-1})^3}{3h_p^2}=\frac{h_p}{3},
-\]
-whereas, integrating by parts,
-\begin{align*}
-c\brak{p}_{12}&=c\brak{p}_{21}=\int_{x_{p-1}}^{x_p}
-	\biggl(\frac{x_p-x}{h_p}\biggr)\biggl(\frac{x-x_{p-1}}{h_p}\biggr)\,dx\\
-	&=\frac{1}{h_p^2}\biggl(
-	\biggl[(x_p-x)\frac{(x-x_{p-1})^2}{2}\biggr]_{x_{p-1}}^{x_p}
-	-\int_{x_{p-1}}^{x_p}(-1)\frac{(x-x_{p-1})^2}{2}\,dx\biggr)\\
-	&=\frac{1}{2h_p^2}\int_{x_{p-1}}^{x_p}(x-x_{p-1})^2\,dx
-	=\frac{1}{2h_p^2}\biggl[\frac{(x-x_{p-1})^3}{3}\biggr]_{x_{p-1}}^{x_p}
-	=\frac{h_p}{6}.
-\end{align*}
+yielding the $P\times P$ linear system
+\begin{equation}\label{eq: FEM 1d mixed linear system}
+\bigl(\boldsymbol{A}\free+\boldsymbol{C}\free\bigr)\boldsymbol{U}\free
+=\boldsymbol{f}-\gamma_0(\boldsymbol{A}\fix+\boldsymbol{C}\fix)
+    +\gamma_L\boldsymbol{e}_P.
+\end{equation}
+Algorithm~\ref{alg: assemble f piecewise linear} shows how, using the 
+connectivity matrix~$\boldsymbol{T}=[t_{pm}]$, the global load 
+vector~$\boldsymbol{f}$ can be assembled from the element load vectors.  
+Likewise, algorithm~\ref{alg: assemble A piecewise linear} shows how the global 
+stiffness matrix~$\boldsymbol{A}$ can be assembled from the element stiffness 
+matrices.  The global mass matrix~$\boldsymbol{C}$ is assembled in the same way.
+In practice, $\boldsymbol{A}$~and $\boldsymbol{C}$ are constructed as 
+\emph{sparse arrays} by using an appropriate data structure.
+
+\begin{algorithm}
+\caption{Assemble the load vector $\boldsymbol{f}$
+from~\eqref{eq: A C f example}.}
+\label{alg: assemble f piecewise linear}
+\begin{algorithmic}
+\State Allocate storage for $\boldsymbol{f}=[f_p]\in\mathbb{R}^P$.
+\For{$p=1:P$}
+    \State $f_p=0$
+\EndFor
+\For{$p=1:P$}
+    \State Compute $\boldsymbol{f}\brak{p}$
+    \For{$j=1:2$}
+        \State $r=t_{pj}$\Comment{$\mathsf{n}_r=\mathsf{n}\brak{p}_j$}
+        \If{$r\le M$}
+            \State $f_r\gets f_r+f\brak{p}_j$
+        \EndIf
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Assemble the stiffness matrix $\boldsymbol{A}$
+from~\eqref{eq: A C f example}.}
+\label{alg: assemble A piecewise linear}
+\begin{algorithmic}
+\State Allocate storage for
+$\boldsymbol{A}=[a_{pq}]\in\mathbb{R}^{P\times(P+1)}$
+\For{$p=1:P$}
+    \For{$q=1:P+1$}
+        \State $a_{pq}=0$
+    \EndFor
+\EndFor
+\For{$p=1:P$}
+    \State Compute $\boldsymbol{A}\brak{p}$
+    \For{$j=1:2$}
+        \State $r=e_{jp}$
+        \If{$r\le P$}
+            \For{$k=1:2$}
+                \State $s=t_{kp}$
+                \State $a_{rs}\gets a_{rs}+a\brak{p}_{jk}$
+            \EndFor
+        \EndIf
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
 
 \begin{example}\label{example: assemble A}
 Consider a uniform grid with $M=4$ subintervals, each of length~$h_m=1$,
@@ -495,7 +608,7 @@ space consisting of the continuous, piecewise-\emph{quadratic} functions with
 respect to the grid points~$x_p$.  Thus, a function~$v:[0,L]\to\mathbb{R}$ 
 belongs to~$V_h$ iff there are polynomials $v_1$, $v_2$, \dots, $v_M$ of degree 
 at most~$2$ such that \eqref{eq: v piecewise}~and \eqref{eq: v cts} hold.
-We define the nodes
+For the $p$th element~$[x_{p-1},x_p]$, we define the nodes
 \[
 \mathsf{n}\brak{p}_1=x_{p-1},\qquad
 \mathsf{n}\brak{p}_2=\tfrac12(x_{p-1}+x_p),\qquad
@@ -541,7 +654,8 @@ and corresponding quadratic (reference) shape functions
 \Psi_2(\xi)=4\xi(1-\xi),\qquad
 \Psi_3(\xi)=2\xi(\xi-\tfrac12),
 \end{equation}
-satisfying $\Psi_j(\mathsf{n}_k)=\delta_{jk}$.  It is easy to verify that
+satisfying $\Psi_j(\mathsf{n}_k)=\delta_{jk}$ for $j$, $k\in\{1,2,3\}$.  It is 
+easy to verify that
 \[
 \Psi_j(\xi)=\psi\brak{p}_j(x)\quad
 	\text{if $x=x_{p-1}+\xi h_p$,}\quad\text{for $0\le\xi\le1$,}
@@ -550,12 +664,14 @@ and since $dx/d\xi=h_p$, the chain rule implies that
 \[
 \Psi'_j(\xi)=h_p(\psi\brak{p}_j)'(x).
 \]
-Thus, the entries of the $3\times3$ element stiffness matrix are given by
+Thus, the entries of the $3\times3$ element stiffness 
+matrix~$\boldsymbol{A}\brak{p}=[a_{jk}]$ are given by
 \begin{equation}\label{eq: a reference 1d}
 a\brak{p}_{jk}=\frac{1}{h_p}\int_0^1a(x_{p-1}+\xi h_p)
 	\Psi'_k(\xi)\Psi'_j(\xi)\,d\xi,
 \end{equation}
-and those of the $3\times3$ element mass matrix by
+and those of the $3\times3$ element mass 
+matrix~$\boldsymbol{C}=[c\brak{p}_{jk}]$ by
 \begin{equation}\label{eq: c reference 1d}
 c\brak{p}_{jk}=h_p\int_0^1c(x_{p-1}+\xi h_p)
 	\Psi_k(\xi)\Psi_j(\xi)\,d\xi.
@@ -602,40 +718,32 @@ and for the element mass matrix,
 \tilde c\brak{p}_{jk}=h_p\sum_{j=1}^Jw_lc(x_{p-1}+\xi_lh_p)
 	\Psi_k(\xi_l)\Psi_j(\xi_l).
 \]
-With the help of connectivity matrix, the $3\times3$ element matrices 
-$\boldsymbol{A}\brak{p}$~and $\boldsymbol{C}\brak{p}$ can be assembled into 
-the $(2P)\times(2P+1)$ global matrices $\boldsymbol{A}$~and $\boldsymbol{C}$; 
-see exercise~\ref{ex: assemble quadratic 1d}.
+With the help of the connectivity matrix~$\boldsymbol{T}$, the $3\times3$ 
+element matrices $\boldsymbol{A}\brak{p}$~and $\boldsymbol{C}\brak{p}$ can be 
+assembled into the $(2P)\times(2P+1)$ global matrices $\boldsymbol{A}$~and 
+$\boldsymbol{C}$; see exercise~\ref{ex: assemble quadratic 1d}.
 
 By adapting the arguments that led to~\eqref{eq: VT(A+C)U} we find that the 
-vector~$\boldsymbol{U}=[U_j]_{j=1}^{2M+1}$ of nodal values 
+vector~$\boldsymbol{U}=[U_j]_{j=1}^{2P+1}$ of nodal values 
 $U_j=u_h(\mathsf{n}_j)$ satisfies
 \[
 \boldsymbol{V}^T(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
-	=\gamma_LV_{2M}+\boldsymbol{V}^T\boldsymbol{f}.
+	=\gamma_LV_{2M}+\boldsymbol{V}^T\boldsymbol{f}
+	\quad\text{for all $\boldsymbol{V}\in\mathbb{R}^{2P}$.}
 \]
-Therefore, we use the partitionings
+We again use the partitionings
 \[
 \boldsymbol{A}=[\boldsymbol{A}\free\quad\boldsymbol{A}\fix],\qquad
 \boldsymbol{C}=[\boldsymbol{C}\free\quad\boldsymbol{C}\fix],\qquad
-\boldsymbol{U}=[\boldsymbol{U}\free\quad U\fix]^T,\qquad
+\boldsymbol{U}=[\boldsymbol{U}\free\quad U\fix]^T,
 \]
-so that
-\[
-(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
-	=\begin{bmatrix}(\boldsymbol{A}\free+\boldsymbol{C}\free)\quad
-(\boldsymbol{A}\fix+\boldsymbol{C}\fix)\end{bmatrix}
-\begin{bmatrix}\boldsymbol{U}\free\\ U\fix]^T\end{bmatrix}
-	=(\boldsymbol{A}\free+\boldsymbol{C}\free)\boldsymbol{U}\free
-	+(\boldsymbol{A}\fix+\boldsymbol{C}\fix)U\fix
-\]
-and hence
-\[
-(\boldsymbol{A}\free+\boldsymbol{C}\free)\boldsymbol{U}\free
-=\gamma_L\boldsymbol{e}_{ 2M }
-	-(\boldsymbol{A}\fix+\boldsymbol{C}\fix)\gamma_0+\boldsymbol{f}
-\quad\text{with}\quad U\fix=\gamma_0.
-\]
+but now $\boldsymbol{A}\free$~and $\boldsymbol{C}$ are $(2P)\times(2P)$, and
+$\boldsymbol{A}\fix$, $\boldsymbol{C}\fix$ and $\boldsymbol{U}\free$ are 
+$(2P)\times1$, with $U\fix=\gamma_0$.  It follows that $\boldsymbol{U}\free$ 
+again satisfies a linear system of the 
+form~\eqref{eq: FEM 1d mixed linear system}, but this system is now 
+$(2P)\times(2P)$.
+
 \section{Polynomial interpolation}
 
 Let $\mathbb{P}_r$ denote the vector space of real polynomials of degree at 
@@ -848,64 +956,64 @@ respectively, so that
 (\mathcal{Q}_r\brak{p}f)(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
 \quad\text{for $1\le j\le r+1$,}
 \]
-and
+whereas
 \[
 \widehat{\mathcal{Q}}_r\hat f\in\mathbb{P}_{r+1}\quad\text{and}\quad
 \bigl(\widehat{\mathcal{Q}}_r\hat f\bigr)(\mathsf{n}_j)=\hat f(\mathsf{n}_j)
 \quad\text{for $1\le j\le r+1$.}
 \]
-Notice that if we let $g(x)=(\mathcal{Q}_r\brak{m}f)(x)$, then 
-$\hat g(\xi)=\widehat{\mathcal{Q}}_r\hat f(\xi)$ because $\hat 
-g\in\mathbb{P}_r$~and 
+Notice that if we let $g(x)=(\mathcal{Q}_r\brak{p}f)(x)$, then 
+$\hat g(\xi)=\widehat{\mathcal{Q}}_r\hat f(\xi)$ because 
+$\hat g\in\mathbb{P}_r$~and 
 \[
-\hat g(\mathsf{n}_j)=g(\mathsf{n}_j\brak{m})=f(\mathsf{n}_j\brak{m})
+\hat g(\mathsf{n}_j)=g(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
     =\hat f(\mathsf{n}_j)\quad\text{for $1\le j\le r+1$.}
 \]
 In other words, 
-$\widehat{\mathcal{Q}_r\brak{m}f}=\widehat{\mathcal{Q}}_r\hat f$.
+$\widehat{\mathcal{Q}_r\brak{p}f}=\widehat{\mathcal{Q}}_r\hat f$.
 
 \begin{theorem}
 Assume that $f$ is $C^{r+1}$ on~$[x_{p-1},x_p]$, and let $K_r$ denote the Peano 
 kernel for polynomial interpolation at the $r+1$~nodes of the reference 
 element~$[0,1]$.  Then,
 \[
-\int_{x_{p-1}}^{x_p}|(f-\mathcal{Q}_r\brak{p}f)^{(n)}(x)|^2\,dx
-    \le C_{r,n}h_p^{2(r+1-n)}\int_{x_{p-1}}^{x_p}|\hat f^{(r+1)}(x)|^2\,dx
-    \quad\text{for $0\le n\le r$,}
+\int_{x_{p-1}}^{x_p}|(f-\mathcal{Q}_r\brak{p}f)^{(k)}(x)|^2\,dx
+    \le C_{r,k}h_p^{2(r+1-k)}\int_{x_{p-1}}^{x_p}|\hat f^{(r+1)}(x)|^2\,dx
+    \quad\text{for $0\le k\le r$,}
 \]
 where the constant
 \[
-C_{r,n}=\int_0^1\int_0^1|\partial_\xi^nK_r(\xi,\eta)|^2\,d\eta\,d\xi
+C_{r,k}=\int_0^1\int_0^1|\partial_\xi^kK_r(\xi,\eta)|^2\,d\eta\,d\xi
 \]
-depends only on $n$~and the choice of the $r+1$ nodes~\eqref{eq: ref nodes 1d}.
+depends only on $k$~and the choice of the $r+1$ nodes~\eqref{eq: ref nodes 1d}.
 \end{theorem}
 \begin{proof}
 Since $dx/d\xi=h_p$ we see that
 \[
-\hat f^{(n)}(\xi)=h_p^n f^{(n)}(x),
+\hat f^{(k)}(\xi)=h_p^k f^{(k)}(x),
 \]
 so using \eqref{eq: Qr f error deriv} and the Cauchy--Schwarz inequality,
 \begin{align*}
-\bigl|(f-\mathcal{Q}_r\brak{p}f)^{(n)}(x)\bigr|^2
-    &=h_p^{-2n}\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2
-    =h_p^{-2n}\biggl|\int_0^1\partial_\xi^n K_r(\xi,\eta)
+\bigl|(f-\mathcal{Q}_r\brak{p}f)^{(k)}(x)\bigr|^2
+    &=h_p^{-2k}\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2
+    =h_p^{-2k}\biggl|\int_0^1\partial_\xi^k K_r(\xi,\eta)
         \hat f^{(r+1)}(\eta)\, d\eta\biggr|^2\\
-    &\le h_p^{-2n}\biggl(\int_0^1|\partial_\xi^nK_r(\xi,\eta)|^2\,d\eta\biggr)
+    &\le h_p^{-2k}\biggl(\int_0^1|\partial_\xi^kK_r(\xi,\eta)|^2\,d\eta\biggr)
     \biggl(\int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta\biggr)
 \end{align*}
 for $0\le\xi\le1$.  Integrating with respect to~$x$, and noting that 
 $dx=h_p\,d\xi$, we have
 \begin{align*}
-\int_{x_{p-1}}^{x_p}\bigl|(f-\mathcal{Q}_rf)^{(n)}(x)\bigr|^2\,dx
-&=h_p^{1-2n}\int_0^1\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2\,d\xi\\
-&\le h_p^{1-2n}\biggl(
-    \int_0^1\int_0^1|\partial_\xi^nK_r(\xi,\eta)|^2\,d\eta\,d\xi\biggr)
+\int_{x_{p-1}}^{x_p}\bigl|(f-\mathcal{Q}_rf)^{(k)}(x)\bigr|^2\,dx
+&=h_p^{1-2k}\int_0^1\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2\,d\xi\\
+&\le h_p^{1-2k}\biggl(
+    \int_0^1\int_0^1|\partial_\xi^kK_r(\xi,\eta)|^2\,d\eta\,d\xi\biggr)
     \biggl(\int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta\biggr),
 \end{align*}
 and 
 \[
 \int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta=\int_{x_{p-1}}^{x_p}
-    |h_n^{r+1}f^{(r+1)}(y)|^2h_p^{-1}\,dy,
+    |h_p^{r+1}f^{(r+1)}(y)|^2h_p^{-1}\,dy,
 \]
 which implies the desired estimate.
 \end{proof}
@@ -958,7 +1066,7 @@ We will now consider a Sturm--Liouville equation,
 -\bigl(a(x)\phi'\bigr)'+\bigl(c(x)-\lambda b(x)\bigr)\phi=0\quad
 	\text{for $0<x<L$,}
 \end{equation}
-subject to mixed boundary conditions
+subject to (homogeneous) mixed boundary conditions
 \begin{equation}\label{eq: Sturm Liouville bc}
 \phi(0)=0\quad\text{and}\quad a(L)\phi'(L)=0.
 \end{equation}
@@ -1008,7 +1116,7 @@ and thus, since $\phi_h(\mathsf{n}_{2P+1})=\phi_h(x_0)=\phi_h(0)=0$,
 	\quad\text{for $0\le x\le L$},
 	\quad\text{where $\Phi_s=\phi_h(\mathsf{n}_s)$.}
 \]
-Choosing $v=\Phi_r$ we see that
+Choosing $v=\chi_r$ we see that
 \[
 \sum_{k=1}^{2P}\bigl(a_{rs}+c_{rs}\bigr)\Phi_s
 	=\lambda_h\sum_{s=1}^{2P}b_{rs}\Phi_s\quad\text{for $1\le r\le 2P$,}
@@ -1022,14 +1130,16 @@ and
 \[
 b_{rs}=\int_0^Lb(x)\chi_s(x)\chi_r(x)\,dx.
 \]
-In this way, we obtain a $(2P)\times(2P)$ \emph{generalized algebraic 
+In this way, we obtain a $(2P)\times(2P)$ \emph{generalised algebraic 
 eigenproblem},
 \[
-\bigl(\boldsymbol{A}\free+\boldsymbol{C}\free\bigr)\boldsymbol{\Phi}\free
-	=\Lambda\boldsymbol{B}\free\boldsymbol{\Phi}\free,
+\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{\Phi}
+	=\Lambda\boldsymbol{B}\boldsymbol{\Phi},
 \]
-where $\boldsymbol{A}=[a_{rs}]$, $\boldsymbol{C}=[c_{rs}]$, 
-$\boldsymbol{B}=[b_{rs}]$, $\boldsymbol{\Phi}=[\Phi_s]$~and 
+where $\boldsymbol{A}=[a_{rs}]_{r,s=1}^{2P}$, 
+$\boldsymbol{C}=[c_{rs}]_{r,s=1}^{2P}$, 
+$\boldsymbol{B}=[b_{rs}]_{r,s=1}^{2P}$, 
+$\boldsymbol{\Phi}=[\Phi_s]_{s=1}^{2P}$~and 
 $\Lambda=\lambda_h$.  Each of the three matrices is real and symmetric, and our 
 assumptions \eqref{eq: ellipticity 1d}~and \eqref{eq: b>0} on the coefficients 
 $a(x)$~and $b(x)$ ensure that $\boldsymbol{A}$~and $\boldsymbol{B}$ are 
@@ -1037,8 +1147,8 @@ strictly positive-definite.  It follows that there exist eigenpairs
 $(\Phi_s,\Lambda_s)$ for~$1\le s\le 2P$, with
 \[
 \Lambda_1\le\Lambda_2\le\cdots\le\Lambda_{2P},\qquad
-\boldsymbol{\Phi}_r^T\boldsymbol{A}\boldsymbol{\Phi}_s=\Lambda_s\delta_{rs},
-\qquad
+\boldsymbol{\Phi}_r^T(\boldsymbol{A}+\boldsymbol{C})
+    \boldsymbol{\Phi}_s=\Lambda_s\delta_{rs},\qquad
 \boldsymbol{\Phi}_r^T\boldsymbol{B}\boldsymbol{\Phi}_s=\delta_{rs}.
 \]
 For a practical implementation, it is simpler to assemble $\boldsymbol{A}$, 
@@ -1116,7 +1226,7 @@ and hence conclude that the finite difference and finite element solutions
 agree to~$O(h^2)$.
 \end{description}
 
-\exercise\label{ex: assemble quadratic 1d}
+\exercise
 Recall the formulae \eqref{eq: a reference 1d}~and
 \eqref{eq: c reference 1d} for the element stiffness and mass matrices using 
 the quadratic shape functions~\eqref{eq: quadratic shape funcs 1d} on the 
@@ -1125,13 +1235,13 @@ reference element~$[0,1]$.
 \item{(i)} Verify that $\Psi_3(1-\xi)=\Psi_1(\xi)$ and 
 $\Psi_2(1-\xi)=\Psi_2(\xi)$.
 \item{(ii)} Deduce that
-$a\brak{m}_{11}=a\brak{m}_{33}$, $a\brak{m}_{12}=a\brak{m}_{32}$,
-$c\brak{m}_{11}=c\brak{m}_{33}$, $c\brak{m}_{12}=c\brak{m}_{32}$.
+$a\brak{p}_{11}=a\brak{p}_{33}$, $a\brak{p}_{12}=a\brak{p}_{32}$,
+$c\brak{p}_{11}=c\brak{p}_{33}$, $c\brak{p}_{12}=c\brak{p}_{32}$.
 \item{(iii)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
 for the element stiffness and mass matrices when $a(x)=1$~and $c(x)=1$.
 \end{description}
 
-\exercise
+\exercise\label{ex: assemble quadratic 1d}
 Consider the two-point boundary-value problem~\eqref{eq: self-adjoint mixed} 
 where $\mathcal{L}$ is of the form~\eqref{eq: L self-adjoint}, and let
 \[
@@ -1140,13 +1250,13 @@ L=2,\qquad a(x)=1,\qquad c(x)=0,\qquad f(x)=18.
 \begin{description}
 \item{(i)} Suppose we take a uniform mesh with~$M=6$ subintervals and apply the 
 finite element method using quadratic elements.  Write down the connectivity 
-matrix~$[e_{pm}]$, the stiffness matrix~$\boldsymbol{A}$ and the load 
-vector~$\boldsymbol{f}$. Hint: adapt the approach used in 
+matrix~$\boldsymbol{T}=[t_{jp}]$, the stiffness matrix~$\boldsymbol{A}$ and 
+the load vector~$\boldsymbol{f}$. Hint: adapt the approach used in 
 Example~\ref{example: assemble A} for piecewise-linear elements.
 \item{(ii)} How do the boundary data $\gamma_0$~and $\gamma_L$ enter into the 
 linear system for the nodal vector?
 \item{(iii)} Formulate an algorithm to assemble the stiffness matrix for a 
-general~$M$.  Hint: adapt Algorithm~\ref{alg: assemble A piecewise linear}.
+general~$P$.  Hint: adapt Algorithm~\ref{alg: assemble A piecewise linear}.
 \end{description}
 \begin{ans}
 (i) 
@@ -1180,19 +1290,19 @@ general~$M$.  Hint: adapt Algorithm~\ref{alg: assemble A piecewise linear}.
 \begin{algorithmic}
 \State Allocate storage for 
 $\boldsymbol{A}=[a_{jk}]\in\mathbb{R}^{(2M)\times(2M+1)}$ 
-\For{$j=1:2M$}
-    \For{$k=1:2M+1$}
-        \State $a_{jk}=0$ 
+\For{$r=1:2P$}
+    \For{$s=1:2P+1$}
+        \State $a_{rs}=0$ 
     \EndFor
 \EndFor
-\For{$m=1:M$}
-    \State Compute $\boldsymbol{A}\brak{m}$ 
-    \For{$p=1:3$}
-        \State $j=e_{pm}$
-        \If{$j\le2M$}
-            \For{$q=1:3$}
-                \State $k=t_{qm}$
-                \State $a_{jk}\gets a_{jk}+a\brak{m}_{pq}$
+\For{$p=1:P$}
+    \State Compute $\boldsymbol{A}\brak{p}$ 
+    \For{$j=1:3$}
+        \State $r=e_{jp}$
+        \If{$r\le2P$}
+            \For{$k=1:3$}
+                \State $s=t_{kp}$
+                \State $a_{rs}\gets a_{rs}+a\brak{p}_{jk}$
             \EndFor
         \EndIf
     \EndFor

@@ -11,7 +11,7 @@ u&=u_0(x)&&\text{for $0<x<L$ when $t=0$,}
 \end{equation}
 where $u_t=\partial u/\partial t$ and $u_{xx}=\partial^2u/\partial x^2$.  For 
 simplicity, we assume that the coefficient~$a$ is a positive constant.  The 
-problem~\eqref{eq: heat ivp 1d} provides a model of conduction heat in 1D, 
+problem~\eqref{eq: heat ivp 1d} provides a model of heat conduction in 1D, 
 where $u(x,t)$ is the temperature at position~$x$ and time~$t$.  The 
 coefficient~$a>0$ is the \emph{thermal conductivity}: the value of~$a$ will be 
 large for a material that conducts heat well, but small for a 
@@ -22,7 +22,7 @@ $\gamma_L$ at the two edges of the spatial domain~$[0,L]$, and the
 \emph{initial condition} gives the temperature field~$u_0(x)$ when~$t=0$.  In 
 this 1D model, the temperature does not vary in the $y$~and $z$ directions.
 
-\section{Separation of variables}
+\section{Separation of variables}\label{sec: separation}
 
 Let
 \[
@@ -51,8 +51,8 @@ g(x,t)=f(x,t)-\gamma_t(x,t)
 \quad\text{and}\quad
 v_0(x)=u_0(x)-\gamma(x,0).
 \]
-In this way, it suffices to solve a problem with \emph{homogeneous boundary 
-conditions}.
+In this way, it suffices to solve a problem with \emph{homogeneous} boundary 
+conditions.
 
 
 Associated with the time-dependent problem~\eqref{eq: heat ivp homog 1d} is the 
@@ -132,7 +132,8 @@ Multiplying both sides of this linear, first-order ODE by the
 e^{\lambda_nt}\,\frac{d\hat v_n}{dt}+\lambda_ne^{\lambda_nt}\hat v_n
 	=e^{\lambda_nt}\hat g_n(t),
 \]
-and since the left-hand side equals $(d/dt)(e^{\lambda_nt}\hat v_n)$ we see that
+and since the left-hand side equals $(d/dt)(e^{\lambda_nt}\hat v_n)$ it 
+follows that
 \[
 e^{\lambda_nt}\hat v_n(t)-\hat v_n(0)=\int_0^te^{\lambda_ns}\hat g_n(s)\,ds.
 \]
@@ -162,8 +163,7 @@ e^{-t\mathcal{A}}\phi_n=e^{-\lambda_nt}\phi_n
 \]
 and
 \[
-\sum_{n=1}^\infty e^{-\lambda_nt}\hat v_n(0)\phi_n(x)
-	=e^{-t\mathcal{A}}v(x,0)=e^{-t\mathcal{A}}v_0(x)
+\sum_{n=1}^\infty e^{-\lambda_nt}\hat v_n(0)\phi_n(x)=e^{-t\mathcal{A}}v_0(x)
 \]
 with
 \[
@@ -496,8 +496,8 @@ satisfies
 \]
 where
 \begin{equation}\label{eq: error const explicit Euler}
-C=\max\biggl\{\frac{1}{2}\max_{[0,L]\times[0,T]}|u_{tt}|,
-	\frac{1}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|\biggr\}.
+C=\max\biggl(\frac{1}{2}\max_{[0,L]\times[0,T]}|u_{tt}|,
+	\frac{1}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|\biggr).
 \end{equation}
 \end{theorem}
 \begin{proof}
@@ -836,10 +836,37 @@ Thus,
 so the result follows from Theorem~\ref{thm: Taylor remainder}.
 \end{proof}
 
+\begin{figure}
+\caption{Computational stencil for the Crank--Nicolson 
+method~\eqref{eq: Crank-Nicolson 1d}.}\label{fig: Crank-Nicolson}
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+\draw[->] (-1,0) -- (17,0);
+\node[right] at (17,0) {$x$};
+\node[below] at (8,0) {$x_p$};
+\draw[->] (0,-1) -- (0,6);
+\node[above left] at (0,6) {$t$};
+\node[left] at (0,3) {$t_n$};
+\foreach \x in {2, 4, ..., 16}
+    \draw[thin] (\x,0) -- (\x,6);
+\foreach \y in {1, ..., 5}
+    \draw[thin] (0,\y) -- (16,\y);
+\draw[ultra thick] (6,2) -- (8,2) -- (10,2);
+\draw[fill] (6,2)  circle (0.15cm);
+\draw[fill] (8,2)  circle (0.15cm);
+\draw[fill] (10,2) circle (0.15cm);
+\draw[ultra thick] (8,2) -- (8,3);
+\draw[ultra thick] (6,3) -- (8,3) -- (10,3);
+\draw[fill=red] (6,3)  circle (0.15cm);
+\draw[fill=red] (8,3)  circle (0.15cm);
+\draw[fill=red] (10,3) circle (0.15cm);
+\end{tikzpicture}
+\end{center}
+\end{figure}
 
 This observation leads us to consider the \emph{Crank--Nicolson method} 
 for~\eqref{eq: heat ivp 1d}:
-\begin{equation}\label{eq: implicit Euler 1d}
+\begin{equation}\label{eq: Crank-Nicolson 1d}
 \frac{U^n_p-U^{n-1}_p}{\Delta t}
     -a\,\frac{U^{n-1/2}_{p+1}-2U^{n-1/2}_p+U^{n-1/2}_{p-1}}{\Delta x^2}
     =f^{n-1/2}_p
@@ -863,13 +890,13 @@ along with the usual discrete initial condition
 \[
 U^0_p=u_{0p}\quad\text{for $1\le p\le P-1$.}
 \]
+Figure~\ref{fig: Crank-Nicolson 1d} shows the stencil for the scheme.
 In matrix notation, the Crank--Nicolson method takes the form
 \begin{equation}\label{eq: Crank-Nicolson matrix}
 \frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
     +\boldsymbol{A}\boldsymbol{U}^{n-1/2}=\boldsymbol{f}^{n-1/2}
     +\boldsymbol{g}^{n-1/2},
 \end{equation}
-
 where the $(P-1)\times(P-1)$ matrix~$\boldsymbol{A}$ and 
 is same as in~\eqref{eq: implicit Euler 1d vector}, with 
 \[
@@ -922,7 +949,9 @@ x$, we conclude that
     +a\,\frac{(\tfrac12\Delta t)^2}{2}\max_{[0,L]\times[0,T]}|u_{xxxx}|
     +a\,\frac{\Delta x^2}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|
 \]
-and hence $\tau^{n-1/2}_p=O(\Delta t^2+\Delta x^2)$.
+and hence $\tau^{n-1/2}_p=O(\Delta t^2+\Delta x^2)$.  It turns out that the 
+Crank--Nicolson method is unconditionally stable, and so 
+$U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.
 
 \begin{Exercises}
 \exercise\label{ex: forward diff}
