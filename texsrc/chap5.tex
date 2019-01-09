@@ -443,7 +443,7 @@ r_{jj}=\sqrt{a_{jj}-\sum_{k=\max(1,j-\beta)}^{j-1}r_{kj}^2}
 which yield Algorithm~\ref{alg: band Chol}.
 
 \begin{algorithm}
-\caption{Compute the band Cholesky factorization \eqref{eq: Chol fact}.}
+G\caption{Compute the band Cholesky factorization \eqref{eq: Chol fact}.}
 \label{alg: band Chol}
 \begin{algorithmic}
 \Require{$\boldsymbol{A}=[a_{ij}]$ is a real, $n\times n$, symmetric 
@@ -541,41 +541,6 @@ $\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$.
 
 \begin{algorithm}
 \newcommand{\rb}[1]{r^{\mathrm{band}}_{#1}}
-\caption{Compute the band Cholesky factorization \eqref{eq: Chol fact} in 
-place using symmetric band storage.}
-\label{alg: Chol band storage}
-\begin{algorithmic}
-\Require{The $(\beta+1)\times n$ 
-array~$\boldsymbol{R}_{\mathrm{band}}=[\rb{ij}]$
-stores a real, $n\times n$, symmetric positive-definite matrix with 
-bandwidth~$\beta$, using the symmetric band storage so
-$a_{ij}=\rb{\beta+1+i-j,j}$.}
-\State
-\Function{Factorize}{$\boldsymbol{R}_{\mathrm{band}}$}
-\For{$j=1:n$}
-    \For{$i=\max(1,j-\beta):j$}
-        \State $s=0$
-        \For{$k=\max(1,j-\beta):i-1$}
-            \State $s=s+\rb{\beta+1+k-i,i}\rb{\beta+1+k-j,j}$
-        \EndFor
-        \State $\rb{\beta+1+i-j,j}=(\rb{\beta+1+i-j,j}-s)/\rb{\beta+1,i}$
-    \EndFor
-    \State $s=0$
-    \For{$k=\max(1,j-\beta):j-1$}
-        \State $s=s+(\rb{\beta+1+k-j,j})^2$
-    \EndFor
-    \If{$\rb{s+1,j}\le s$} 
-        \State Error: $\boldsymbol{A}$ is not positive-definite.
-    \EndIf
-    \State $\rb{\beta+1,j}=\sqrt{\rb{\beta+1,j}-s}$
-\EndFor
-\State\Return{$\boldsymbol{R}_{\mathrm{band}}$}
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}
-\newcommand{\rb}[1]{r^{\mathrm{band}}_{#1}}
 \caption{Solve in place the linear system 
 $\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ 
 given the band Cholesky factorization~\eqref{eq: Chol fact}.}
@@ -662,8 +627,78 @@ by~\eqref{eq: symm band storage} if
  5& 2& 8& 5& 7& 9                                
 \end{bmatrix}
 \]
+\end{ans}
 
+\exercise
+Write an in-place version of Algorithm~\ref{alg: band Chol}.
+\begin{ans}
+In-place algorithm:
+\begin{center}
+\newcommand{\rb}[1]{r^{\mathrm{band}}_{#1}}
+\begin{algorithmic}
+\Require{The $(\beta+1)\times n$ 
+array~$\boldsymbol{R}_{\mathrm{band}}=[\rb{ij}]$
+stores a real, $n\times n$, symmetric positive-definite matrix with 
+bandwidth~$\beta$, using the symmetric band storage so
+$a_{ij}=\rb{\beta+1+i-j,j}$.}
+\State
+\Function{Factorize}{$\boldsymbol{R}_{\mathrm{band}}$}
+\For{$j=1:n$}
+    \For{$i=\max(1,j-\beta):j$}
+        \State $s=0$
+        \For{$k=\max(1,j-\beta):i-1$}
+            \State $s=s+\rb{\beta+1+k-i,i}\rb{\beta+1+k-j,j}$
+        \EndFor
+        \State $\rb{\beta+1+i-j,j}=(\rb{\beta+1+i-j,j}-s)/\rb{\beta+1,i}$
+    \EndFor
+    \State $s=0$
+    \For{$k=\max(1,j-\beta):j-1$}
+        \State $s=s+(\rb{\beta+1+k-j,j})^2$
+    \EndFor
+    \If{$\rb{s+1,j}\le s$} 
+        \State Error: $\boldsymbol{A}$ is not positive-definite.
+    \EndIf
+    \State $\rb{\beta+1,j}=\sqrt{\rb{\beta+1,j}-s}$
+\EndFor
+\State\Return{$\boldsymbol{R}_{\mathrm{band}}$}
+\EndFunction
+\end{algorithmic}
+\end{center}
 \end{ans}
 
 
+\exercise
+Write an in-place version of Algorithm~\ref{alg: band Chol solve}.
+\begin{ans}
+In-place algorithm:
+\begin{center}
+\newcommand{\rb}[1]{r^{\mathrm{band}}_{#1}}
+\begin{algorithmic}
+\Require{$\boldsymbol{x}=[b_i]_{i=1}^n$ stores the right-hand side vector.}
+\Require{The $(\beta+1)\times n$ array 
+$\boldsymbol{R}_{\mathrm{band}}=[\rb{ij}]$ stores 
+the band Cholesky factor~$\boldsymbol{R}=[r_{ij}]$ of~$\boldsymbol{A}$, as 
+computed via Algorithm~\ref{alg: band Chol} so that 
+$r_{ij}=\rb{\beta+1+i-j,j}$.}
+\State
+\Function{Solve}{$\boldsymbol{x},\boldsymbol{R}_{\mathrm{band}}$}
+\For{$i=1:n$}
+    \State $s=x_i$
+    \For{$j=\max(1,i-\beta):i-1$}
+        \State $s=s-\rb{\beta+1+j-i,i}x_j$
+    \EndFor
+    \State $x_i=s/\rb{\beta+1,i}$
+\EndFor
+\For{$i=n:-1:1$}
+    \State $s=x_i$
+    \For{$j=i+1:\min(n,i+\beta)$}
+        \State $s=s-\rb{\beta+1+i-j,j}x_j$
+    \EndFor
+    \State $x_i=s/\rb{\beta+1,i}$
+\EndFor
+\State\Return{$\boldsymbol{x}$}
+\EndFunction
+\end{algorithmic}
+\end{center}
+\end{ans}
 \end{Exercises}
