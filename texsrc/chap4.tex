@@ -22,7 +22,7 @@ We will use this relation to formulate a semidiscrete finite element
 solution~$u_h(x,t)\approx u(x,t)$ and then apply finite difference 
 approximations in time to derive some fully-discrete schemes.
 
-\section{Semidiscrete method}
+\section{Semidiscrete method}\label{sec: semidiscrete parabolic FEM}
 Let $V_h$ denote the space of continuous, piecewise-linear functions for a 
 given mesh~\eqref{eq: 1d nodes} on the spatial interval~$[0,L]$.  We define the 
 solution set (now dependent on~$t$) and test space by
@@ -155,7 +155,7 @@ which requires that we solve the linear systems
 \]
 \end{example}
 
-\section{Discrete separation of variables}
+\section{Discrete separation of variables}\label{sec: discrete separation}
 Consider the special case when $f(x,t)\equiv0$, $\gamma_0(t)\equiv0$~and 
 $\gamma_L(t)\equiv0$.  Let $(\phi_k,\lambda_k)$ be the $k$th eigenpair for the 
 operator $\mathcal{L}$, so that
@@ -347,7 +347,7 @@ representation~\eqref{eq: semidiscrete FEM Fourier} then follows because
 $\boldsymbol{M}^{-1}(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{\Phi}_k
 =\Lambda_k\boldsymbol{\Phi}_k$.
 
-\begin{example}
+\begin{example}\label{example: forward Euler FEM}
 For general discrete initial data~$\boldsymbol{U}_0$, the forward Euler method 
 gives
 \[
@@ -399,6 +399,140 @@ For the Crank--Nicolson method,
 \]
 and we again have stability in the $\boldsymbol{M}$-norm for any~$\Delta t$.
 \end{example}
+
+\begin{Exercises}
+
+\exercise\label{ex: quadratic form}
+Suppose that $\boldsymbol{A}\in\mathbb{R}^{N\times N}$ is symmetric and 
+positive-semidefinite, and let 
+$\|\boldsymbol{v}\|=\sqrt{\boldsymbol{v}^T\boldsymbol{v}}$ denote the 
+Euclidean norm in~$\boldsymbol{R}^N$.  
+\begin{description}
+\item{(i)}
+Show that the minimum eigenvalue of~$\boldsymbol{A}$ equals the minimum value 
+of the \emph{Rayleigh quotient}:
+\[
+\lambda_{\min}(\boldsymbol{A})
+    =\min_{\boldsymbol{0}\ne\boldsymbol{v}\in\mathbb{R}^N}
+    \frac{\boldsymbol{v}^T\boldsymbol{A}\boldsymbol{v}}{\|\boldsymbol{v}\|^2}.
+\]
+Hint: choose an orthonormal basis for~$\mathbb{R}^N$ consisting of eigenvectors 
+of~$\boldsymbol{A}$.
+\item{(ii)} Show likewise for the maximum eigenvalue that
+\[
+\lambda_{\max}(\boldsymbol{A})
+    =\max_{\boldsymbol{0}\ne\boldsymbol{v}\in\mathbb{R}^N}
+    \frac{\boldsymbol{v}^T\boldsymbol{A}\boldsymbol{v}}{\|\boldsymbol{v}\|^2}.
+\]
+\item{(iii)} How does this result generalise if we replace the Euclidean norm 
+with the norm~$\|\boldsymbol{v}\|_{\boldsymbol{M}}=\sqrt{\boldsymbol{v}^T
+\boldsymbol{M}\boldsymbol{v}}$ induced by a symmetric and strictly 
+positive-definite matrix~$\boldsymbol{M}\in\mathbb{R}^{N\times N}$?
+\end{description}
+
+\exercise\label{ex: polynomial derivative}
+Let $f(\xi)=a_1+a_2\xi+a_3\xi^2+\cdots+a_{r+1}\xi^r$ be any real polynomial of 
+degree at most~$r$, and form the associated (column) vector of coefficients
+$\boldsymbol{a}=[a_i]_{i=1}^{r+1}$.
+\begin{description}
+\item{(i)} Find the matrix~$\boldsymbol{B}$ such that 
+$\int_0^1|f(\xi)|^2\,d\xi=\boldsymbol{a}^T\boldsymbol{B}\boldsymbol{a}$. 
+\item{(ii)} Prove that $\boldsymbol{B}$ is symmetric and (strictly) 
+positive-definite.
+\item{(iii)} Find the matrix~$\boldsymbol{D}$ such that
+$\int_0^1|f'(\xi)|^2\,d\xi=\boldsymbol{a}^T\boldsymbol{D}\boldsymbol{a}$. 
+\item{(iv)} Prove that $\boldsymbol{D}$ is symmetric and positive-semidefinite.
+\item{(v)} With the help of exercise~\ref{ex: quadratic form}, find a 
+constant~$C_r$ (depending only on~$r$) such that
+\[
+\int_0^1|f'(\xi)|^2\,d\xi\le C_r\int_0^1|f(\xi)|^2\,d\xi.
+\]
+\item{(vi)} Compute the numerical value of $C_r$ for $r\in\{0,1,2,3\}$.
+\end{description}
+\begin{ans}
+(i) $\boldsymbol{B}=[b_{ij}]_{i,j=1}^{r+1}$ where $b_{ij}=1/(i+j-1)$\quad
+(iii) $\boldsymbol{D}=[d_{ij}]_{i,j=1}^{r+1}$ where 
+\[
+d_{ij}=\begin{cases}
+    0&\text{if $i=1$ or $j=1$,}\\
+    (i-1)(j-1)/(i+j-3)&\text{otherwise.}
+\end{cases}
+\]
+(iv) $C_r=\lambda_{\max}(\boldsymbol{D})=\max_{\boldsymbol{a}\ne\boldsymbol{0}}
+\boldsymbol{a}^T\boldsymbol{D}\boldsymbol{a}/
+\boldsymbol{a}^T\boldsymbol{B}\boldsymbol{a}$ 
+(vi)
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{r|r}
+$r$&$C_r$\\
+\hline
+   0&     0.00\\
+   1&    12.00\\
+   2&    60.00\\
+   3&   170.12
+\end{tabular}
+\end{center}
+\end{ans}
+
+\exercise
+Let $C_r$ be the constant from part (v) of 
+exercise~\ref{ex: polynomial derivative}, and recall the notation used in 
+section~\ref{sec: accuracy of interpolation}.
+\begin{description}
+\item{(i)} Show that 
+\[
+\int_{x_{p-1}}^{x_p}|f(x)|^2\,dx=h_p\int_0^1|\hat f(\xi)|^2\,d\xi
+\quad\text{and}\quad
+\int_{x_{p-1}}^{x_p}|f'(x)|^2\,dx=h_p^{-1}\int_0^1|\hat f(\xi)|^2\,d\xi.
+\]
+\item{(ii)} Deduce that if $f\in\mathbb{P}_r$ then
+\[
+\int_{x_{p-1}}^{x_p}|f'(x)|^2\,dx
+    \le C_rh_p^{-2}\int_{x_{p-1}}^{x_p}|f(x)|^2\,dx.
+\]
+\item{(iii)} Hence prove the \emph{inverse inequality}: if $v$ is a continuous 
+piecewise polynomial of degree at most~$r$, then
+\[
+\int_0^L|v'(x)|^2\,dx\le C_rh_{\min}^{-2}\int_0^L|v(x)|^2\,dx
+\quad\text{where $h_{\min}=\min_{1\le p\le P}h_p$.}
+\]
+\end{description}
+
+\exercise
+Recall the notation from sections 
+\ref{sec: semidiscrete parabolic FEM}--\ref{sec: discrete separation}.
+\begin{description}
+\item{(i)}
+Show that for any $v$, $w\in T_h$,
+\[
+\int_0^L\bigl(a(x)v'w'+c(x)vw\bigr)\,dx
+    =\boldsymbol{V}^T(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{W}
+\quad\text{and}\quad
+\int_0^Lv(x)^2=\boldsymbol{V}^T\boldsymbol{M}\boldsymbol{W},
+\]
+where $V_p=v(x_p)$~and $W_p=w(x_p)$.  
+\item{(ii)}
+Hence prove that
+\[
+\Lambda_P\le C_1h_{\min}^{-2}a_{\max}+c_{\max}\quad\text{where}\quad
+a_{\max}=\max_{0\le x\le L}a(x)\quad\text{and}\quad
+c_{\max}=\max_{0\le x\le L}c(x).
+\]
+\item{(iii)}
+What does the upper bound in part~(ii) imply about the stability of the forward 
+Euler method?
+\end{description}
+\begin{ans}
+(iii) We saw in example~\ref{example: forward Euler FEM} that if $\Delta 
+t>1/\Lambda_P$ then the forward Euler method has at least one unstable mode.  
+Since $\Lambda_P=O(h_{\min}^{-2})$, to ensure stability we must expect to need 
+$\Delta t$ of order~$h_{\min}^2$.  This conclusion is consistent with the 
+stability condition of Theorem~\ref{thm: explicit Euler stability} for the 
+finite difference case.
+\end{ans}
+
+\end{Exercises}
 
 
 
