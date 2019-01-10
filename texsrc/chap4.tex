@@ -36,7 +36,7 @@ choice would be the interpolant $u_{0h}=\mathcal{Q}_1u_0$. The semidiscrete
 finite element solution~$u_h(x,t)$ is then defined for~$0\le t\le T$ by 
 requiring that $u_h(\cdot,t)\in S_h(t)$ and
 \begin{equation}\label{eq: semidiscrete fem 1d}
-\int_0^L(u_h)_tv\,dx+\int_0^L\bigl(a(x)u_xv_x+c(x)uv\bigr)\,dx
+\int_0^L(u_h)_tv\,dx+\int_0^L\bigl(a(x)(u_h)_xv_x+c(x)u_hv\bigr)\,dx
     =\gamma_L(t)v(L)+\int_0^Lf(x,t)v\,dx
 \quad\text{for all $v\in T_h$,}
 \end{equation}
