@@ -21,7 +21,7 @@ Partial Differential Equations}
 \newtheorem{definition}[theorem]{Definition}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcounter{exno}[chapter]
-\renewcommand{\Currentlabel}{\theexno.}
+\renewcommand{\theexno}{\thechapter.\arabic{exno}}
 \newcommand{\exercise}{\refstepcounter{exno}\paragraph{\theexno.}}
 \Newassociation{ans}{answer}{ansfile}
 \newenvironment{Exercises}{\section{Exercises}%
