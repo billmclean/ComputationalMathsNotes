@@ -14,15 +14,13 @@ model problem on the interval~$[0,L]$,
 in which the \emph{source term}~$f(x)$ and \emph{boundary data} $\gamma_0$, 
 $\gamma_L$ are given, and we seek the \emph{unknown solution}~$u(x)$.
 
-One can easily verify that for a constant source term~$f(x)=c$, the solution is 
-given by
+For a constant source term~$f(x)=c$, the solution is given by
 \begin{equation}\label{eq: u const f}
 u(x)=\frac{1}{L}\bigl((L-x)\gamma_0+x\gamma_L\bigr)+\frac{c}{2}\,x(L-x)
 	\quad\text{for $0\le x\le L$;}
 \end{equation}
-see Figure~\ref{fig: bvp 1d f const}. For a general~$f$, the 
-variation-of-parameters technique can be used to show 
-that
+see Exercise~\ref{ex: u const f} and Figure~\ref{fig: bvp 1d f const}. For a 
+general~$f$, Exercise~\ref{ex: variation of params} shows that
 \begin{equation}\label{eq: model 1d exact soln}
 u(x)=\frac{L-x}{L}\biggl(\gamma_0+\int_0^x yf(y)\,dy\biggr)
 	+\frac{x}{L}\biggl(\gamma_L+\int_x^L(L-y)f(y)\,dy\biggr)
@@ -1100,10 +1098,10 @@ showing that the finite difference method is \emph{second-order accurate}.
 
 \begin{Exercises}
 
-\exercise
+\exercise\label{ex: u const f}
 Verify that \eqref{eq: u const f} satisfies \eqref{eq: model 1d} if $f(x)=c$.
 
-\exercise
+\exercise\label{ex: variation of params}
 By following the steps below, use variation of parameters to  verify that 
 \eqref{eq: model 1d exact soln} solves \eqref{eq: model 1d} for a 
 general~$f(x)$.  Let

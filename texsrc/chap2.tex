@@ -11,12 +11,11 @@ obtain
 \[
 -\int_0^L u''(x)v(x)\,dx=\int_0^L f(x)v(x)\,dx.
 \]
-Assuming $v'$ exists and is continuous on~$[0,L]$, we can integrate by parts to 
-obtain
+Assuming $v'$ exists and is continuous on~$[0,L]$, we can integrate by parts,
 \begin{equation}\label{eq: int by parts}
--\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx
+-\int_0^L u''(x)v(x)\,dx=-\bigl[u'(x)v(x)\bigr]_0^L+\int_0^Lu'(x)v'(x)\,dx,
 \end{equation}
-and therefore
+and conclude that
 \begin{equation}\label{eq: model 1d weak}
 \int_0^L u'(x)v'(x)\,dx=\int_0^L f(x)v(x)\,dx
 	\quad\text{provided $v(0)=0=v(L)$.}
@@ -44,13 +43,14 @@ satisfy
 \begin{equation}\label{eq: v cts}
 v_p(x_p)=v_{p+1}(x_p)\quad\text{for $1\le p\le P-1$.}
 \end{equation}
-The set of all continuous, piecewise-linear functions forms a vector 
-space~$V_h$.  Each $v\in V_h$ is determined by its values at the grid points, 
+Exercise~\ref{ex: V_h vector space} shows that the set of all continuous, 
+piecewise-linear functions forms a vector space~$V_h$.  Each $v\in V_h$ is 
+determined by its values at the grid points, 
 since
-\[
+\begin{equation}\label{eq: piecewise linear v}
 v(x)=v_p(x)=\frac{1}{h_p}\bigl((x_p-x)v(x_{p-1})+(x-x_{p-1})v(x_p)\bigr)
     \quad\text{for $x_{p-1}\le x\le x_p$.}
-\]
+\end{equation}
 In particular, the $q$th \emph{nodal basis function} $\chi_q\in V_h$ is the 
 unique continuous, piecewise-linear function satisfying
 \begin{equation}\label{eq: chi q x p}
@@ -62,6 +62,29 @@ where $\delta_{pq}$ is the Kronecker delta, that is,
 1,&\text{if $p=q$,}\\ 0,&\text{if $p\ne q$.} 
 \end{cases}
 \]
+It follows from \eqref{eq: piecewise linear v} that, when $1\le q\le P-1$,
+\begin{equation}\label{eq: chi_q formula}
+\chi_q(x)=\begin{cases}
+	(x-x_{q-1})/h_q,&\text{for $x_{q-1}\le x\le x_q$,}\\
+	(x_q-x)/h_{q+1},&\text{for $x_q\le x\le x_{q+1}$,}\\
+	0,&\text{otherwise,}
+\end{cases}
+\end{equation}
+whereas
+\[
+\chi_0(x)=\begin{cases}
+	(x_1-x)/h_1,&\text{for $0=x_0\le x\le x_1$,}\\
+	0,&\text{otherwise,}
+\end{cases}
+\]
+and 
+\[
+\chi_P(x)=\begin{cases}
+	(x-x_{P-1})/h_P,&\text{for $x_{P-1}\le x\le x_P=L$,}\\
+	0,&\text{otherwise.}
+\end{cases}
+\]
+
 The property~\eqref{eq: chi q x p} implies that each~$v\in V_h$ has the 
 representation
 \[
@@ -74,14 +97,16 @@ $\{\chi_q\}_{q=0}^P$ is a basis for~$V_h$, and therefore that $\dim V_h=P+1$.
 In the finite element method for our model 2-point boundary-value 
 problem~\eqref{eq: model 1d chap 2}, we define the \emph{solution set} (or
 \emph{trial set})
-\[
+\begin{equation}\label{eq: Sh 1D}
 S_h=\{\,v\in V_h:\text{$v(0)=\gamma_0$ and $v(L)=\gamma_L$}\,\}
-\]
+\end{equation}
 and the \emph{test space}
 \[
 T_h=\{\,v\in V_h:\text{$v(0)=0$ and $v(L)=0$}\,\}.
 \]
-Notice that $T_h$ is subspace of~$V_h$ with $\dim T_h=P-1$.  Based 
+Notice that $T_h$ is subspace of~$V_h$ with $\dim T_h=P-1$ because 
+$\{\chi_p\}_{p=1}^{P-1}$ is a basis for~$T_h$, whereas $S_h$ is 
+not a subspace unless $\gamma_0=0=\gamma_L$.  Based 
 on~\eqref{eq: model 1d weak}, the \emph{finite element solution}~$u_h$
 of~\eqref{eq: model 1d chap 2} is determined by requiring that
 \[
@@ -140,15 +165,15 @@ Furthermore, the $(P-1)\times(P-1)$ symmetric, tridiagonal
 matrix~$\boldsymbol{A}=[a_{pq}]_{p,q=1}^{P-1}$ is strictly positive-definite.
 \end{theorem}
 \begin{proof}
-It is easy to see that for~$1\le p\le P-1$,
+We see from~\eqref{eq: chi_q formula} that if $1\le p\le P-1$ then
 \[
 \chi_p'(x)=\begin{cases}
-1/h_p,&x_{p-1}<x<x_p,\\
--1/h_{p+1},&x_p<x<x_{p+1},\\
+1/h_p,&\text{for $x_{p-1}<x<x_p$,}\\
+-1/h_{p+1},&\text{for $x_p<x<x_{p+1}$,}\\
 0,&\text{otherwise,}
 \end{cases}
 \]
-with the first case missing when~$p=0$, and the second when~$p=P$.  Thus,
+with the first case missing if~$p=0$, and the second if~$p=P$.  Thus,
 the supports of $\chi_p'$ and $\chi_q'$ overlap iff $|p-q|\le1$; otherwise,
 if $|p-q|\ge2$, then $a_{pq}=0$. The diagonal values are
 \[
@@ -287,13 +312,13 @@ or, in matrix notation,
     =\boldsymbol{f}+\boldsymbol{g},
 \end{equation}
 where $\boldsymbol{A}=[a_{pq}]_{p,q=1}^P$, $\boldsymbol{C}=[c_{pq}]_{p,q=1}^P$,
-$\boldsymbol{f}=[f_p]_{p=1}^P$ and $\boldsymbol{g}=[g_p]_{p=1}^P$, where
+$\boldsymbol{f}=[f_p]_{p=1}^P$ and $\boldsymbol{g}=[g_p]_{p=1}^P$, with
 \[
 g_1=-(a_{10}+c_{10})\gamma_0,\qquad
 \text{$g_p=0$ for $2\le p\le M-1$,}\qquad
 g_P=\gamma_L.
 \]
-We again refer to~$\boldsymbol{A}$ as the stiffness matrix, whereas 
+We again refer to~$\boldsymbol{A}$ as the stiffness matrix;
 $\boldsymbol{C}$ is called the \emph{mass matrix}.  On the right-hand side, 
 $\boldsymbol{f}$ is called the \emph{load vector}.  This terminology reflects 
 the historical origins of finite element methods in structural engineering.
@@ -510,12 +535,13 @@ yielding the $P\times P$ linear system
 \end{equation}
 Algorithm~\ref{alg: assemble f piecewise linear} shows how, using the 
 connectivity matrix~$\boldsymbol{T}=[t_{pm}]$, the global load 
-vector~$\boldsymbol{f}$ can be assembled from the element load vectors.  
-Likewise, algorithm~\ref{alg: assemble A piecewise linear} shows how the global 
+vector~$\boldsymbol{f}$ can be assembled from the element load 
+vectors~$\boldsymbol{f}\brak{p}$.  Likewise, 
+algorithm~\ref{alg: assemble A piecewise linear} shows how the global 
 stiffness matrix~$\boldsymbol{A}$ can be assembled from the element stiffness 
-matrices.  The global mass matrix~$\boldsymbol{C}$ is assembled in the same way.
-In practice, $\boldsymbol{A}$~and $\boldsymbol{C}$ are constructed as 
-\emph{sparse arrays} by using an appropriate data structure.
+matrices~$\boldsymbol{A}\brak{p}$.  The global mass matrix~$\boldsymbol{C}$ is 
+assembled in the same way. In practice, $\boldsymbol{A}$~and $\boldsymbol{C}$ 
+are constructed an appropriate \emph{sparse matrix} data structure.
 
 \begin{algorithm}
 \caption{Assemble the load vector $\boldsymbol{f}$
@@ -608,25 +634,28 @@ space consisting of the continuous, piecewise-\emph{quadratic} functions with
 respect to the grid points~$x_p$.  Thus, a function~$v:[0,L]\to\mathbb{R}$ 
 belongs to~$V_h$ iff there are polynomials $v_1$, $v_2$, \dots, $v_M$ of degree 
 at most~$2$ such that \eqref{eq: v piecewise}~and \eqref{eq: v cts} hold.
-For the $p$th element~$[x_{p-1},x_p]$, we define the nodes
+For the $p$th element~$[x_{p-1},x_p]$, we now define three nodes
 \[
 \mathsf{n}\brak{p}_1=x_{p-1},\qquad
 \mathsf{n}\brak{p}_2=\tfrac12(x_{p-1}+x_p),\qquad
-\mathsf{n}\brak{p}_3=x_p,
+\mathsf{n}\brak{p}_3=x_p.
 \]
-and corresponding quadratic shape functions
-\begin{align*}
+Notice that $\mathsf{n}\brak{p}_2$ is the midpoint of the element.
+Corresponding to these nodes are the quadratic shape functions
+\begin{equation}\label{eq: quadratic psi 1d}
+\begin{aligned}
 \psi\brak{p}_1(x)
 	&=2h_p^{-2}(x-\mathsf{n}\brak{p}_2)(x-\mathsf{n}\brak{p}_3),\\
 \psi\brak{p}_2(x)
 	&=4h_p^{-2}(x-\mathsf{n}\brak{p}_1)(\mathsf{n}\brak{p}_3-x),\\
 \psi\brak{p}_3(x)
 	&=2h_p^{-2}(x-\mathsf{n}\brak{p}_1)(x-\mathsf{n}\brak{p}_2),
-\end{align*}
-satisfying
-\[
+\end{aligned}
+\end{equation}
+and Exercise~\ref{ex: quadratic DoF 1d} shows that
+\begin{equation}\label{eq: quadratic DoF 1d}
 \psi\brak{p}_j(\mathsf{n}\brak{p}_k)=\delta_{jk}.
-\]
+\end{equation}
 The global enumeration of the free nodes is
 \[
 \mathsf{n}_{2p-1}=\tfrac12(x_{p-1}+x_p)
@@ -654,8 +683,8 @@ and corresponding quadratic (reference) shape functions
 \Psi_2(\xi)=4\xi(1-\xi),\qquad
 \Psi_3(\xi)=2\xi(\xi-\tfrac12),
 \end{equation}
-satisfying $\Psi_j(\mathsf{n}_k)=\delta_{jk}$ for $j$, $k\in\{1,2,3\}$.  It is 
-easy to verify that
+satisfying $\Psi_j(\mathsf{n}_k)=\delta_{jk}$ for $j$, $k\in\{1,2,3\}$.  
+In this way,
 \[
 \Psi_j(\xi)=\psi\brak{p}_j(x)\quad
 	\text{if $x=x_{p-1}+\xi h_p$,}\quad\text{for $0\le\xi\le1$,}
@@ -756,20 +785,27 @@ g(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
 \end{equation}
 To see that such a $g$ exists, we define the \emph{Lagrange 
 interpolation polynomials} $\ell_1$, $\ell_2$, \dots, $\ell_{r+1}$ by
-\[
+\begin{equation}\label{eq: ell_j def}
 \ell_j(x)=\prod_{1\le k\le r+1, k\ne j}
 	\frac{x-x_k}{x_j-x_k}\quad\text{for $1\le j\le r+1$,}
-\]
+\end{equation}
 and then define the \emph{linear interpolation operator}~$\mathcal{Q}_r$ by
 \[
 (\mathcal{Q}_rf)(x)=\sum_{j=1}^{r+1}f(x_j)\ell_j(x).
 \]
-Since $\ell_j\in\mathbb{P}_r$ and $\ell_j(x_k)=\delta_{jk}$, we see that
-$\mathcal{Q}_rf\in\mathbb{P}_r$ interpolates~$f$, that is,
+Observe that $\ell_j\in\mathbb{P}_r$ because it is the product of~$r$ linear 
+factors.  Moreover, if $x=x_j$ then each factor in the 
+product~\eqref{eq: ell_j def} equals~$1$ and so $\ell_j(x_j)=1$, whereas if 
+$x=x_k$ for some~$k\ne j$, then one factor equals~$0$ and so $\ell_j(x_k)=0$.
+In other words,
+\[
+\ell_j(x_k)=\delta_{jk}\quad\text{for $j$, $k\in\{1,2,\ldots,r+1\}$.}
+\]
+It follows that $\mathcal{Q}_rf\in\mathbb{P}_r$ interpolates~$f$, that is,
 \[
 (\mathcal{Q}_rf)(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
 \]
-Moreover, $\mathcal{Q}_rf$ is the only such interpolant, because if 
+Furthermore, $\mathcal{Q}_rf$ is the only such interpolant, because if 
 $g\in\mathbb{P}_r$ satisfies \eqref{eq: g interpolates f} then the difference
 $g-\mathcal{Q}_rf$ is a polynomial satisfying
 \[
@@ -1155,9 +1191,22 @@ $(\Phi_s,\Lambda_s)$ for~$1\le s\le 2P$, with
 For a practical implementation, it is simpler to assemble $\boldsymbol{A}$, 
 $\boldsymbol{B}$~and $\boldsymbol{C}$ from the corresponding element matrices
 $\boldsymbol{A}\brak{p}$, $\boldsymbol{B}\brak{p}$~and 
-$\boldsymbol{C}\brak{p}$; see exercise \ref{ex: assemble quadratic 1d}~(iii).
+$\boldsymbol{C}\brak{p}$; see Exercise \ref{ex: assemble quadratic 1d}~(iii).
 
 \begin{Exercises}
+
+\exercise\label{ex: V_h vector space}
+Prove that the set~$V_h$ of continuous, piecewise-linear functions is a vector 
+space.
+
+\exercise
+Show that the trial set~\eqref{eq: Sh 1D} is a \emph{convex subset} of~$V_h$,
+that is, if $v$, $w\in S_h$ then $\lambda v+\mu w\in S_h$ for all $\lambda\ge0$
+and $\mu\ge$ such that $\lambda+\mu=1$.
+
+\exercise
+Prove that $\{\chi_p\}_{p=0}^P$ is a basis for~$V_h$, and that 
+$\{\chi_p\}_{p=1}^{P-1}$ is a basis for~$T_h$.
 
 \exercise
 Consider the model problem~\eqref{eq: model 1d chap 2}.  Define a uniform 
@@ -1226,6 +1275,10 @@ f^{\,\mathrm{d}}_q-f^{\,\mathrm{e}}_q=\frac{h^2}{4!}\,f''(\xi)
 and hence conclude that the finite difference and finite element solutions 
 agree to~$O(h^2)$.
 \end{description}
+
+\exercise\label{ex: quadratic DoF 1d}
+Verify that the quadratic shape functions~\eqref{eq: quadratic psi 1d} on the 
+$p$th element~$[x_{p-1},x_p]$ satisfy \eqref{eq: quadratic DoF 1d}.
 
 \exercise
 Recall the formulae \eqref{eq: a reference 1d}~and
@@ -1341,6 +1394,7 @@ with~\eqref{eq: K2 symmetry}.
 
 \exercise
 Sketch the graphs of the piecewise-quadratic nodal basis functions $\chi_1$, 
-$\chi_2$, \dots, $\chi_{2P+1}$ used in section~\ref{sec: Sturm-Liouville}.
+$\chi_2$, \dots, $\chi_{2P+1}$ used in section~\ref{sec: Sturm-Liouville}
+for the case~$P=4$.
 
 \end{Exercises}

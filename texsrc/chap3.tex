@@ -207,7 +207,7 @@ U_P&=\gamma_P(t)&&\text{for $0<t<T$,}\\
 U_p&=u_{0p}&&\text{for $1\le p\le P-1$ when $t=0$.}
 \end{aligned}
 \end{equation}
-We can write this system in matrix notation as
+This system can be written in matrix-vector notation as
 \begin{equation}\label{eq: ODE system}
 \frac{d\boldsymbol{U}}{dt}+\boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}(t)
 	+\boldsymbol{g}(t),
@@ -325,7 +325,7 @@ level.  We say the these four points constitute the \emph{stencil} for the
 method; see Figure~\ref{fig: explicit Euler stencil}.
 Algorithm~\ref{alg: explicit Euler} shows how the 
 formula~\eqref{eq: explicit Euler stencil} is used to compute the finite 
-difference solutions~$U^n_p$ by advancing from one time level to the next, 
+difference solution~$U^n_p$ by advancing from one time level to the next, 
 starting at~$t_0=0$.  
 
 \begin{figure}
@@ -481,9 +481,10 @@ Theorem~\ref{thm: 2nd central diff},
 which implies the stated estimate for~$\tau^n_p$. 
 \end{proof}
 
-It follows that, provided the restriction~\eqref{eq: explicit Euler timestep}
-on the step sizes is satisfied, the explicit Euler method is first-order 
-accurate in time and second-order accurate in space.
+The next theorem shows that, provided the 
+restriction~\eqref{eq: explicit Euler timestep} on the step sizes is satisfied, 
+the explicit Euler method is first-order accurate in time and second-order 
+accurate in space.
 
 \begin{theorem}\label{thm: explicit Euler error}
 Assume that $\Delta x$~and $\Delta t$ satisfy 
@@ -509,7 +510,7 @@ By the definition~\eqref{eq: tau explicit Euler} of the local truncation error,
 \]
 Subtracting this equation from the finite difference equation 
 in~\eqref{eq: explicit Euler 1d}, we obtain a finite difference equation for
-the error in the finite difference solution by~$E^n_p=U^n_p-u(x_p,t_n)$, namely
+the error ~$E^n_p=U^n_p-u(x_p,t_n)$ in the finite difference solution, namely
 \[
 \frac{E^{n+1}_p-E^n_p}{\Delta t}
 	-a\,\frac{E^n_{p+1}-2E^n_p+E^n_{p-1}}{\Delta x^2}=\tau^n_p
@@ -838,7 +839,7 @@ so the result follows from Theorem~\ref{thm: Taylor remainder}.
 
 \begin{figure}
 \caption{Computational stencil for the Crank--Nicolson 
-method~\eqref{eq: Crank-Nicolson 1d}.}\label{fig: Crank-Nicolson}
+method~\eqref{eq: Crank-Nicolson 1d}.}\label{fig: Crank-Nicolson 1d}
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \draw[->] (-1,0) -- (17,0);
