@@ -12,7 +12,10 @@ model problem on the interval~$[0,L]$,
 	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$,}
 \end{equation}
 in which the \emph{source term}~$f(x)$ and \emph{boundary data} $\gamma_0$, 
-$\gamma_L$ are given, and we seek the \emph{unknown solution}~$u(x)$.
+$\gamma_L$ are given, and we seek the \emph{unknown solution}~$u(x)$.  The 
+simplest physical interpretation of~\eqref{eq: model 1d} is as a steady-state 
+heat equation, so that $u(x)$ is the temperature at~$x$ and $f(x)$ gives the 
+density of heat sources.
 
 For a constant source term~$f(x)=c$, the solution is given by
 \begin{equation}\label{eq: u const f}
@@ -26,6 +29,9 @@ u(x)=\frac{L-x}{L}\biggl(\gamma_0+\int_0^x yf(y)\,dy\biggr)
 	+\frac{x}{L}\biggl(\gamma_L+\int_x^L(L-y)f(y)\,dy\biggr)
 	\quad\text{for $0\le x\le L$.}
 \end{equation}
+Our aim in this chapter is to study finite difference methods for computing 
+a numerical approximation to the values of~$u$ at a set of grid points in the 
+interval~$[0,L]$.
 
 \begin{figure}
 \caption{Solutions of the simple two-point boundary-value 
@@ -43,17 +49,17 @@ we will use Taylor's theorem in the following form.
 
 \begin{theorem}\label{thm: Taylor remainder}
 Let $h>0$. If $f$ is $C^{k+1}$ on the closed interval~$[x,x+h]$ then
-\[
-f(x+h)=\sum_{j=0}^k\frac{1}{j!}\,f^{(j)}(x)\,h^j+(R_kf)(x,h)
-\]
+\begin{equation}\label{eq: Taylor 1}
+f(x+h)=\sum_{j=0}^k\frac{1}{j!}\,f^{(j)}(x)\,h^j+(R_kf)(x,h),
+\end{equation}
 where the remainder term is given by
-\[
+\begin{equation}\label{eq: Taylor 2}
 (R_kf)(x,h)=\frac{1}{k!}\int_x^{x+h}(x+h-y)^kf^{(k+1)}(y)\,dy
-\]
+\end{equation}
 and satisfies
-\[
+\begin{equation}\label{eq: Taylor 3}
 |(R_kf)(x,h)|\le\frac{h^{k+1}}{(k+1)!}\,\max_{x\le y\le x+h}|f^{(k+1)}(y)|.
-\]
+\end{equation}
 Similarly, if $f$ is $C^{k+1}$ on~$[x-h,x]$, then
 \[
 f(x-h)=\sum_{j=0}^k\frac{(-1)^j}{j!}\,f^{(j)}(x)\,h^j+(R_kf)(x,-h)
@@ -67,6 +73,37 @@ and
 |(R_kf)(x,-h)|\le\frac{h^{k+1}}{(k+1)!}\,\max_{x-h\le y\le x}|f^{(k+1)}(y)|.
 \]
 \end{theorem}
+\begin{proof}
+We use induction on~$k$.  If $k=0$, then the formulae 
+\eqref{eq: Taylor 1}~and \eqref{eq: Taylor 2} reduce to
+\[
+f(x+h)=f(x)+(R_0f)(x,h)\quad\text{where}\quad
+(R_0f)(x,h)=\int_x^{x+h}f'(y)\,dy,
+\]
+which follows from the fundamental theorem of calculus.  Let $k\ge0$ and make 
+the induction hypothesis that \eqref{eq: Taylor 1} holds with $R_kf$ given 
+by~\eqref{eq: Taylor 2}.  Integrating by parts, we have
+\begin{align*}
+(R_kf)(x,h)&=\biggl[
+	-\frac{(x+h-y)^{k+1}}{(k+1)!}\,f^{(k+1)}(y)\biggr]_{y=x}^{x+h}
+	+\int_x^{x+h}\frac{(x+h-y)^{k+1}}{(k+1)!}\,f^{(k+2)}(y)\,dy\\
+	&=\frac{h^{k+1}}{(k+1)!}\,f^{(k+1)}(x)+(R_{k+1}f)(x,y),
+\end{align*}
+implying that \eqref{eq: Taylor 1}~and \eqref{eq: Taylor 2} hold with~$k$
+replaced by~$k+1$, as required.  The estimate~\eqref{eq: Taylor 3} is an 
+immediate consequence of the inequality
+\begin{align*}
+|(R_kf)(x,y)|&\le\int_x^{x+h}\frac{(x+h-y)^k}{k!}\,|f^{(k+1)}(y)|\,dy\\
+	&\le\biggl(\max_{x\le y\le x+h}|f^{(k+1)}(y)|\biggr)
+	\int_x^{x+h}\frac{(x+h-y)^k}{k!}\,dy.
+\end{align*}
+
+The expansion for~$f(x-y)$ and the bound for~$(R_kf)(x,-h)|$ follow in a 
+similar fashion.
+
+
+\end{proof}
+
 
 A straight forward manipulation of such Taylor expansions shows that
 \[
@@ -108,15 +145,16 @@ and since
 the result follows.
 \end{proof}
 
-To set up our finite difference scheme for~\eqref{eq: model 1d}, we choose a 
+To set up a finite difference scheme for~\eqref{eq: model 1d}, we choose a 
 positive integer~$P$ and define a uniform grid on~$[0,L]$,
 \[
 x_p=p\,\Delta x\quad\text{for $0\le p\le P$,}
 	\quad\text{where $\Delta x=\frac{L}{P}$.}
 \]
 In this way, we divide $[0,L]$ into $P$~subintervals, namely $[x_{p-1},x_p]$
-for~$1\le p\le P$, each of length~$\Delta x$.  Our aim is to compute 
-approximate values of the solution at each of the grid points,
+for~$1\le p\le P$, each of length~$\Delta x$.  The finite difference solution 
+consists of $P+1$ numbers $U_0$, $U_1$, \dots, $U_P$ that approximate $u(x)$ at 
+the $P+1$ grid points, that is,
 \[
 U_p\approx u(x_p)\quad\text{for $0\le p\le P$.}
 \]
@@ -144,7 +182,8 @@ and similarly when $p=P-1$ we move $U_P=\gamma_L$ to the right-hand side,
 \[
 \frac{-U_{P-2}+2U_{P-1}}{\Delta x^2}=f(x_{P-1})+\frac{\gamma_L}{\Delta x^2}.
 \]
-For example, if $P=6$ then
+For example, if $P=6$ then the finite difference scheme results in a $5\times5$ 
+linear system
 \begin{equation}\label{eq: model 1d linear system}
 \frac{1}{\Delta x^2}\begin{bmatrix}
  2&-1&  & &\\
@@ -160,6 +199,17 @@ For example, if $P=6$ then
 \end{equation}
 where, for brevity, we have written $f_p=f(x_p)$.  Also, the zero entries in 
 the coefficient matrix are left blank.
+
+Several questions arise naturally with regard to the above numerical method.
+\begin{enumerate}
+\item Does the linear system~\eqref{eq: model 1d linear system} always have a 
+unique solution?
+\item If so, what is an efficient way to compute the $U_p$?
+\item How accurate is the approximation~$U_p\approx u(x_p)$?
+\item Does the error $U_p-u(x_p)$ tend to zero if~$\Delta x\to0$, and if so how 
+rapidly?
+\end{enumerate}
+The following sections will address these concerns.
 
 \section{Symmetric tridiagonal linear systems}
 \label{sec: sym tridiagonal}
@@ -214,10 +264,10 @@ because it will then follow that
     =\boldsymbol{L}\boldsymbol{D}\boldsymbol{y}
     =\boldsymbol{L}\boldsymbol{z}=\boldsymbol{b}.
 \]
-Since $\boldsymbol{L}$ is lower triangular and $\boldsymbol{D}$ is diagonal,
-we can easily compute first $\boldsymbol{z}$, then $\boldsymbol{y}$ and finally 
-$\boldsymbol{x}$.  To see how, we write out the equations in the $5\times5$ 
-case:
+Since $\boldsymbol{L}$ is \emph{lower triangular} and $\boldsymbol{D}$ is 
+\emph{diagonal}, we can easily compute first $\boldsymbol{z}$, then 
+$\boldsymbol{y}$ and finally $\boldsymbol{x}$.  To see how, we write out the 
+equations in the $5\times5$~case:
 \begin{align*}
       z_1    &=b_1,& d_1y_1&=z_1,& x_1+\ell_1 x_2&=y_1,\\
 \ell_1z_1+z_2&=b_2,& d_2y_2&=z_2,& x_2+\ell_2 x_3&=y_2,\\
@@ -225,7 +275,7 @@ case:
 \ell_3z_3+z_4&=b_4,& d_4y_4&=z_4,& x_4+\ell_4 x_5&=y_4,\\
 \ell_4z_4+z_5&=b_5,& d_5y_5&=z_5,& x_5           &=y_5.
 \end{align*}
-Thus, the steps of the computation are as follows:
+Hence, the steps of the computation are as follows:
 \begin{align*}
 z_1&=b_1,           & y_1&=z_1/d_1,& x_5&=y_5,\\
 z_2&=b_2-\ell_1 z_1,& y_2&=z_2/d_2,& x_4&=y_4-\ell_4x_5,\\
@@ -354,13 +404,14 @@ Once $d_j$ has been computed, the value of $\alpha_j$ is never used in
 subsequent steps of Algorithm~\ref{alg: LDLT}. Similarly, once $\ell_j$ has been 
 computed, the value of~$\beta_j$ is never used subsequently.  It is therefore 
 possible to economize on storage by computing the factorization 
-\emph{in place}, by overwriting $\alpha_j$ with~$d_j$,
+\emph{in place}, that is, overwriting $\alpha_j$ with~$d_j$,
 and likewise overwriting $\beta_j$ with~$\ell_j$, as shown in 
 Algorithm~\ref{alg: LDLT in place}.  The solution of the triangular and 
 diagonal linear systems can also be performed in place, as shown in 
 Algorithm~\ref{alg: solve symmetric tridiagonal in place}.  Here, we have 
 followed the convention from Julia that an exclamation mark~! is appended to 
-the name of any function that modifies at least one of its arguments.
+the name of any function that modifies at least one of its arguments.  Also, 
+the symbol~$\gets$ in this context means ``is overwritten with''.
 
 \begin{algorithm}
 \caption{Compute the factorization \eqref{eq: L D LT} in place.}
@@ -373,7 +424,7 @@ off-diagonal of $\boldsymbol{A}$.}
 \Statex
 \Function{Factorize!}{$\boldsymbol{d}$, $\boldsymbol{\ell}$}
 \For{$j=1:n-1$}
-\State $\ell_j\gets\ell/d_j$
+\State $\ell_j\gets\ell_j/d_j$
 \State $d_{j+1}\gets d_{j+1}-\ell_j^2d_j$
 \EndFor
 \EndFunction
@@ -431,7 +482,12 @@ satisfying
 where, for the boundary conditions to make sense, we assume that at least one 
 of $\alpha_0$~and $\beta_0$ is not zero, and likewise at least one of  
 $\alpha_L$~and $\beta_L$ is not zero.  For simplicity, we will also assume that 
-the function~$f$ is continuous on~$[0,L]$.
+the function~$f$ is continuous on~$[0,L]$.  The simple 
+problem~\eqref{eq: model 1d} is just the special case
+\[
+a(x)=1,\quad b(x)=0,\quad 
+c(x)=0,\quad\alpha_0=0,\quad\beta_0=1,\quad\alpha_L=0,\quad\beta_L=1.
+\]
 
 To construct a finite difference scheme for~\eqref{eq: two-point bvp}, we need 
 to approximate the first derivative~$u'$.  Once again, we apply Taylor 
@@ -666,8 +722,8 @@ It will be convenient to use the standard notation
 \]
 for the \emph{maximum norm} of any (continuous) function~$f$ over 
 the interval~$[0,L]$.  We begin by proving a \emph{maximum principle} that 
-follows from our ellipticity assumption~\eqref{eq: ellipticity 1d} and simple 
-calculus.
+follows from our \emph{ellipticity} assumption~\eqref{eq: ellipticity 1d} and 
+simple calculus.
 
 \begin{lemma}\label{lem: Lu<0}
 Assume that $u$ is $C^2$ on the open interval~$(0,L)$.
@@ -777,8 +833,8 @@ the case when $\alpha_0=0=\alpha_L$ and $\beta_0=1=\beta_L$:
 	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$.}
 \end{equation}
 As an immediate consequence of Theorem~\ref{thm: max min 1d} we have the 
-following inequality, known as an \emph{a priori} estimate, which serves to 
-bound the solution~$u$ in terms of the data $f$, $\gamma_0$~and $\gamma_L$.
+following \emph{a priori} estimate, which serves to bound the solution~$u$ in 
+terms of the data $f$, $\gamma_0$~and $\gamma_L$.
 
 \begin{theorem}\label{thm: Lu=f apriori infty}
 If $c\ge0$ on~$(0,L)$, then any solution~$u$ of~\eqref{eq: Lu=f Dirichlet} 
@@ -852,12 +908,13 @@ for~$\|\delta u\|_\infty$.
 
 \section{Discrete maximum principle}
 
-We will now establish a maximum principle for a finite difference approximation 
-to the two-point boundary-value problem~\eqref{eq: two-point bvp} in the case
+We will now establish a maximum principle for our finite difference 
+approximation to the two-point boundary-value problem~\eqref{eq: two-point bvp} 
+in the case
 \begin{equation}\label{eq: discrete max assumptions}
 b(x)=0,\qquad\alpha_0=0,\quad\beta_0=1,\quad\alpha_L=0,\quad\beta_L=1.
 \end{equation}
-Thus, $(\mathcal{L}u)(x)=-a(x)u''(x)+c(x)u(x)$ and
+Thus, 
 \begin{equation}\label{eq: simple Lu=f}
 (\mathcal{L}u)(x)=-a(x)u''(x)+c(x)u(x)=f(x)\quad\text{for~$0<x<L$,}\quad
 \text{with $u(0)=\gamma_0$~and $u(L)=\gamma_L$.}
@@ -1095,6 +1152,34 @@ In other words,
 U_p=u(x_p)+O(\Delta x^2)\quad\text{as $\Delta x\to0$, for $0\le p\le P$,}
 \]
 showing that the finite difference method is \emph{second-order accurate}.
+
+It turns out that for many numerical methods, there is an exponent~$r>0$ and a 
+continuous function~$v(x)$ such that
+\[
+E_p=U_p-u(x_p)=v(x_p)\,\Delta x^r+O(\Delta x^{r+\epsilon)
+\]
+for some~$\epsilon>0$.  Therefore, if we let
+\[
+\mathcal{E}(\Delta x)=\max_{0\le p\le P}|E_p|
+\]
+then
+\[
+\mathcal{E}(\Delta x)\approx\Bigl(\max_{0\le x\le L}|v(x)|\Bigr)\,\Delta x^2.
+\]
+It follows that we can estimate the value of~$r$ by computing the ratio
+\[
+\frac{\mathcal{E}(2\,\Delta x)}{\mathcal{E}(\Delta x)}\approx 2^r
+\]
+and taking logarithms (to base~2):
+\[
+r\approx\log_2\frac{\mathcal{E}(2\,\Delta x)}{\mathcal{E}(\Delta x)}.
+\]
+More precisely, the logarithm on the right will converge to~$r$ 
+as~$\Delta x\to0$.
+
+\begin{example}
+ 
+\end{example}
 
 \begin{Exercises}
 
