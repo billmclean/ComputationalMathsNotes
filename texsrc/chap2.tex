@@ -268,8 +268,8 @@ so any solution~$u$ of~\eqref{eq: self-adjoint mixed} must satisfy
     =\gamma_Lv(L)+\int_0^Lf(x)v(x)\,dx
     \quad\text{provided $v(0)=0$.}
 \end{equation}
-Given nodes~\eqref{eq: 1d nodes}, we therefore define the solution set~$S_h$ and 
-test space~$T_h$ by
+Given nodes~\eqref{eq: 1d nodes}, we therefore define the solution set~$S_h$ 
+and test space~$T_h$ by
 \[
 S_h=\{\,v\in V_h:v(0)=\gamma_0\,\}
 \quad\text{and}\quad
@@ -322,6 +322,146 @@ We again refer to~$\boldsymbol{A}$ as the stiffness matrix;
 $\boldsymbol{C}$ is called the \emph{mass matrix}.  On the right-hand side, 
 $\boldsymbol{f}$ is called the \emph{load vector}.  This terminology reflects 
 the historical origins of finite element methods in structural engineering.
+
+Assume now that $c(x)\ge0$.  We define two real inner products,
+\[
+\iprod{v,w}=\int_0^Lv(x)w(x)\,dx\quad\text{and}\quad
+\iprod{v,w}_{\mathcal{L}}=\int_0^L\bigl(a(x)v'(x)w'(x)+c(x)v(x)w(x)\bigr)\,dx
+\]
+together with the corresponding norms
+$\|v\|_{\mathcal{L}}=\sqrt{\iprod{v,v}_{\mathcal{L}}}$~and
+$\|v\|=\sqrt{\iprod{v,v}}$; thus,
+\[
+\|v\|^2=\int_0^L|v(x)|^2\,dx
+\quad\text{and}\quad
+\|v\|_{\mathcal{L}}^2=\int_0^L\bigl(a(x)|v'(x)|^2+c(x)|v(x)|^2\bigr)\,dx.
+\]
+With this notation, we can re-write \eqref{eq: Lu=f weak 1d} as
+\begin{equation}\label{eq: <u,v>L}
+\iprod{u,v}_{\mathcal{L}}=\gamma_Lv(L)+\iprod{f,v}\quad\text{provided $v(0)=0$.}
+\end{equation}
+and can see from~\eqref{eq: self-adjoint mixed bc FEM} that $u_h\in S_h$
+satisfies
+\begin{equation}\label{eq: <uh,v>L}
+\iprod{u_h,v}_{\mathcal{L}}=\gamma_Lv(L)+\iprod{f,v}
+	\quad\text{for all $v\in T_h$.}
+\end{equation}
+
+\begin{lemma}\label{lem: v v'}
+If $v\in H^1(0,L)$, then
+\[
+\|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr)
+\quad\text{and}\quad
+|v(L)|^2\le 2\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr),
+\]
+where the positive constant~$\beta$ is given by
+\[
+\beta=\int_0^L\frac{dy}{a(y)}\le\frac{L}{a_{\min}}.
+\]
+\end{lemma}
+\begin{proof}
+Since $v(x)=v(0)+\int_0^xv'(y)\,dy$, the Cauchy--Schwarz inequality implies that
+\begin{align*}
+|v(x)|^2&\le2|v(0)|^2+2\biggl(\int_0^x v'(y)\,dy\biggr)^2
+\le2|v(0)|^2+2\biggl(\int_0^x\frac{dy}{a(y)}\biggr)
+\biggl(\int_0^xa(y)|v'(y)|^2\,dy\biggr)\\
+	&\le2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2
+\end{align*}
+so
+\begin{align*}
+\|v\|^2&=\int_0^L|v(x)|^2\,dx\le 2L|v(0)|^2+2\beta L\|v\|_{\mathcal{L}}^2.
+\end{align*}
+Similarly, since $v(L)=v(0)+\int_0^Lv'(y)\,dy$ we have
+\begin{align*}
+|v(L)|^2&\le2|v(0)|^2+2\biggl(\int_0^Lv'(y)\,\biggr)^2
+	\le2|v(0)|^2+2\biggl(\int_0^L\frac{dy}{a(y)}\biggr)
+	\biggl(\int_0^La(y)|v'(y)|^2\,dy\biggr)\\
+	&=2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2,
+\end{align*}
+as claimed.
+\end{proof}
+
+\begin{theorem}\label{thm: ||u||L}
+Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-
+point boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique
+solution~$u\in H^1(0,L)$, and there is a constant~$C>0$ (depending only on $L$,
+$a$~and $c$) such that
+\[
+\|u\|_{\mathcal{L}}^2\le C\bigl(|\gamma_0|^2+|\gamma_L|^2+\|f\|^2\bigr).
+\]
+\end{theorem}
+\begin{proof}
+Let $u_0(x)=L^{-1}(L-x)u(0)$ and $v(x)=u(x)-u_0(x)$, so that
+\[
+u_0(0)=u(0),\quad u_0(L)=0,\quad v(0)=0,\quad v(L)=u(L).
+\]
+By~\eqref{eq: <u,v>L},
+\[
+\iprod{u,u-u_0}_{\mathcal{L}}=\gamma_Lu(L)+\iprod{f,u-u_0}
+\]
+and so
+\[
+\|u\|_{\mathcal{L}}^2=\gamma_L u(L)+\iprod{f,u}-\iprod{f,u_0}
+	+\iprod{u,u_0}_{\mathcal{L}}.
+\]
+For any $\epsilon>0$, \cref{lem: v v'} gives
+\[
+|\gamma_L u(L)|=2\bigl(\epsilon^{-1/2}\,|\gamma_L|\bigr)
+	\bigl(\tfrac12\epsilon^{1/2}\,|u(L)|\bigr)
+\le\epsilon^{-1}\,\gamma_L^2
+	+\tfrac14\epsilon\,|u(L)|^2
+	\le\epsilon^{-1}\gamma_L^2+\tfrac12\epsilon\bigl(|u(0)|^2
+	+\beta\|u\|_{\mathcal{L}}^2\bigr),
+\]
+and by the Cauchy--Schwarz inequality,
+\begin{align*}
+|\iprod{f,u}|&\le\|f\|\|u\|=2\bigl(\epsilon^{-1/2}\|f\|\bigr)
+	\bigl(\tfrac12\epsilon^{1/2}\|u\|\bigr)
+	\le\epsilon^{-1}\|f\|^2+\tfrac14\epsilon\|u\|^2\\
+	&\le\epsilon^{-1}\|f\|^2
+	+\tfrac12 L\epsilon\bigl(|u(0)|^2+\beta\|u\|_{\mathcal{L}}^2\bigr).
+\end{align*}
+Likewise,
+\[
+|\iprod{f,u_0}|\le\epsilon^{-1}\|f\|^2+\tfrac12\epsilon\|u_0\|^2
+\quad\text{and}\quad
+|\iprod{u,u_0}_{\mathcal{L}}|\le\epsilon^{-1}\|u_0\|_{\mathcal{L}}^2
+	+\tfrac14\epsilon\|u_0\|_{\mathcal{L}}^2,
+\]
+and, since $u(0)=\gamma_0$,
+\[
+\|u\|_{\mathcal{L}}^2\le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
++\tfrac12\epsilon\bigl((1+L)|\gamma_0|^2+\|u_0\|^2
+	+\tfrac12\|u_0\|_{\mathcal{L}}^2+(1+L)\beta\|u\|_{\mathcal{L}}^2\bigr).
+\]
+Now choose $\epsilon=(1+L)^{-1}\beta^{-1}$ so that $\epsilon(1+L)\beta=1$ and 
+thus
+\[
+\|u\|_{\mathcal{L}}^2\le(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+	+\tfrac12\beta^{-1}|\gamma_0|^2+\tfrac12(1+L)^{-1}\beta^{-1}
+	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr)
+	+\tfrac12\|u\|_{\mathcal{L}}^2.
+\]
+After cancelling the term~$\tfrac12\|u\|_{\mathcal{L}}^2$ and multiplying both
+sides by~$2$, we obtain
+\[
+\|u\|_{\mathcal{L}}^2\le2(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+	+\beta^{-1}|\gamma_0|^2+(1+L)^{-1}\beta^{-1}
+	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr),
+\]
+with
+\[
+\|u_0\|^2=\frac{|u(0)|^2}{L^2}\int_0^L(L-x)^2\,dx
+	=\frac{|\gamma_0|^2}{L^2}\,\frac{L^3}{3}=\tfrac13L|\gamma_0|^2
+\]
+and
+\[
+\|u_0\|_{\mathcal{L}}^2=\frac{|\gamma_0|^2}{L^2}\int_0^L\bigl(
+	a(x)+c(x)(L-x)^2\bigr)\,dx
+	\le\bigl(L^{-1}a_{\max}+\tfrac13L^2c_{\max}\bigr)|\gamma_0|^2,
+\]
+implying the desired estimate for~$\|u\|_{\mathcal{L}}^2$.
+\end{proof}
 
 \section{Matrix assembly element-by-element}\label{sec: matrix assembly 1d}
 
@@ -1069,7 +1209,7 @@ that
 \]
 and hence the function~$\mathcal{Q}_{r,h}v$ is continuous on~$[0,L]$.
 
-\begin{theorem}
+\begin{theorem}\label{thm: Q r h}
 If $v$ is $C^{r+1}$ on~$[0,L]$, then
 \[
 \|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}
@@ -1094,6 +1234,144 @@ We have
     =C_{r,0}h^{2(r+1)}\|v^{(r+1)}\|_{L_2(0,L)}^2,
 \end{align*}
 which proves the first estimate.  The second follows in the same way.
+\end{proof}
+
+\section{Optimality property}
+Subtracting \eqref{eq: <u,v>L} from~\eqref{eq: <uh,v>L}, we see that the
+error~$e_h=u_h-u$ in the finite element solution is energy-orthogonal to the 
+test space~$T_h$, that is, 
+\begin{equation}\label{eq: energy orthog}
+\iprod{e_h,v}_{\mathcal{L}}=0\quad\text{for all $v\in T_h$.}
+\end{equation}
+Using this property, we show in the next theorem that $u_h$ is the best 
+approximation to~$u$ by a function in the trial space~$S_h$, as measured by 
+the energy norm.
+
+\begin{theorem}\label{thm: optimality}
+The finite element solution~$u_h\in S_h$ satisfies
+\[
+\|u_h-u\|_{\mathcal{L}}\le\|w-u\|_{\mathcal{L}}
+	\quad\text{for all $w\in S_h$.}
+\]
+\end{theorem}
+\begin{proof}
+Let $w\in S_h$ and observe that the error~$e_h=u_h-u$ satisfies
+\begin{align*}
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,e_h}_{\mathcal{L}}
+	&=\iprod{e_h,u_h-u}_{\mathcal{L}}
+	=\iprod{e_h,u_h-w+w-u}_{\mathcal{L}}\\
+	&=\iprod{e_h,u_h-w}_{\mathcal{L}}+\iprod{e_h,w-u}_{\mathcal{L}}.
+\end{align*}
+Since $(u_h-w)(0)=u_h(0)-w(0)=\gamma_0-\gamma_0=0$ we see that $u_h-w\in T_h$
+and so the energy-orthogonality property~\eqref{eq: energy orthog} implies
+that $\iprod{e_h,u_h-w}_{\mathcal{L}}=0$.  Hence, by the Cauch--Schwarz
+inequality,
+\[
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,w-u}_{\mathcal{L}}
+	\le\|e_h\|_{\mathcal{L}}\|w-u\|_{\mathcal{L}},
+\]
+which implies the desired inequality.
+\end{proof}
+
+By combining \cref{thm: optimality} with the approximation property of the 
+interpolant~$\mathcal{Q}_{r,h}u$ proved in \cref{thm: Q r h}, we can show
+that the finite element error, measured in the energy norm, is $O(h^r)$.
+
+\begin{theorem}\label{thm: uh-u L}
+Assume that the solution~$u:[0,L]\to\mathbb{R}$ of the boundary-value 
+problem~\eqref{eq: self-adjoint mixed} is~$C^{r+1}$.  Then,
+there is a constant~$C>0$, independent of~$h$, such that
+\[
+\|u_h-u\|_{\mathcal{L}}\le Ch^r\|u^{(r+1)}\|.
+\]
+\end{theorem}
+\begin{proof}
+Let $w=\mathcal{Q}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
+so we may apply \cref{thm: optimality} and deduce that
+\begin{align*}
+\|u_h-u\|_{\mathcal{L}}^2\le\|w-u\|_{\mathcal{L}}^2
+	&\le a_{\max}\|w'-u'\|^2+c_{\max}\|w-u\|^2\\
+	&\le\bigl(a_{\max}C_{r,1}h^{2r}+c_{\max}C_{r,0}h^{2r+2}\bigr)
+	\|u^{(r+1)}\|^2\\
+	&=\bigl(a_{\max}C_{r,1}+c_{\max}C_{r,0}h^2\bigr)
+	\bigl(h^r\|v^{(r+1)}\|\bigr)^2,
+\end{align*}
+which implies the result since $h$ is bounded.
+\end{proof}
+\begin{corollary}
+$\|u_h'-u'\|\le Ch^r\|u^{(r+1)}\|$.
+\end{corollary}
+\begin{proof}
+Observe that since $a(x)/a_{\min}\ge1$,
+\[
+\|v'\|^2=\int_0^L|v'(x)|^2\,dx\le\int_0^L\frac{a(x)}{a_{min}}\,|v'(x)|^2\,dx
+	=\frac{1}{a_{\min}}\int_0^La(x)|v'(x)|^2\,dx
+	\le\frac{\|v\|_{\mathcal{L}}^2}{a_{\min}},
+\]
+and in particular $\|u_h'-u'\|^2\le\|u_h-u\|^2_{\mathcal{L}}/a_{min}$.
+\end{proof}
+
+In some applications, an integral of the form
+\[
+\iprod{\phi,u}=\int_0^L\phi(x)u(x)\,dx
+\]
+is of interest.  The next theorem shows that $\iprod{\phi,u_h}$ approximates
+$\iprod{\phi,u}$ to~$O(h^{r+1})$.
+
+\begin{theorem}
+For any square-integrable function~$\phi:(0,L)\to\mathbb{R}$,
+\[
+|\iprod{u_h-u,\phi}|\le Ch\|\phi\|\|u_h-u\|_{\mathcal{L}}.
+\]
+\end{theorem}
+\begin{proof}
+Given $\phi$, let $\theta$ be the solution of the boundary-value problem
+\[
+\mathcal{L}\theta=\phi(x)\quad\text{for $0<x<L$,}
+	\quad\text{with $\theta(0)=0$ and $a(L)\theta'(L)=0$,}
+\]
+so that
+\[
+\iprod{\theta,v}_{\mathcal{L}}=\iprod{\phi,v}\quad\text{whenever $v(0)=0$.}
+\]
+Since $(u_h-u)(0)=u_h(0)-u(0)=\gamma_0-\gamma_0=0$, it follows that
+\[
+\iprod{\phi,u_h-u}=\iprod{\theta,u_h-u}_{\mathcal{L}}
+	=\iprod{\theta-Q_{1,h}\theta,u_h-u}_{\mathcal{L}},
+\]
+where, in the second step, we used the fact that $u_h-u$ is energy-orthogonal
+to $Q_{1,h}\theta$.  Hence, by the Cauchy--Schwarz inequality,
+\[
+|\iprod{\phi,u_h-u}|\le\|\theta-Q_{1,h}\theta\|_{\mathcal{L}}
+	\|u_h-u\|_{\mathcal{L}}.
+\]
+Since
+\[
+\|\theta-\mathcal{Q}_{1,h}\theta\|_{\mathcal{L}}^2
+	\le a_{\max}\|\theta'-(\mathcal{Q}_{1,h}\theta)'\|
+	+c_{\max}\|\theta-\mathcal{Q}_{1,h}\theta\|
+	\le Ch\|\theta''\|,
+\]
+it suffices to show that $\|\theta''\|\le C\|\phi\|$.  In fact,
+$\mathcal{L}\theta=a\theta''+c\theta=\phi$ so
+\[
+\|\theta''\|=\|(\phi-c\theta)/a\|
+	\le\frac{\|\phi\|+c_{\max}\|\theta\|}{a_{\min}},
+\]
+and $\|\theta\|\le2L\beta\|\theta\|_{\mathcal{L}}$ by \cref{lem: v v'}.  
+Finally, $|\theta\|_{\mathcal{L}}\le C\|\phi\|$ by~\cref{thm: ||u||L}.
+\end{proof}
+
+\begin{corollary}
+$\|u_h-u\|\le Ch^{r+1}\|u^{(r+1)}\|$.
+\end{corollary}
+\begin{proof}
+Taking $\phi=u_h-u$, and apply \cref{thm: uh-u L}, we have
+\[
+\|u_h-u\|^2=\iprod{u_h-u,u_h-u}\le Ch\|u_h-u\|\|u_h-u\|_{\mathcal{L}}
+	\le Ch\|u_h-u\|h^r\|u^{(r+1)}\|,
+\]
+which implies the result.
 \end{proof}
 
 \section{Sturm--Liouville problems}\label{sec: Sturm-Liouville}

@@ -38,7 +38,7 @@ interval~$[0,L]$.
 problem~\eqref{eq: model 1d} with $L=1$ and right-hand side~$f(x)=c$, for 
 various choices of the constant~$c$.}\label{fig: bvp 1d f const}
 \begin{center}
-\includegraphics[scale=0.75]{../src/chap1/bvp_1d_example.pdf}
+\includegraphics[scale=0.75]{../src/chap1/bvp1d_const_rhs.pdf}
 \end{center}
 \end{figure}
 
@@ -182,7 +182,17 @@ and similarly when $p=P-1$ we move $U_P=\gamma_L$ to the right-hand side,
 \[
 \frac{-U_{P-2}+2U_{P-1}}{\Delta x^2}=f(x_{P-1})+\frac{\gamma_L}{\Delta x^2}.
 \]
-For example, if $P=6$ then the finite difference scheme results in a $5\times5$ 
+
+\begin{figure}
+\caption{Comparison of exact solution and its finite difference approximation
+from Example~\ref{example: bvp1d example}.}\label{fig: bvp1d example}
+\begin{center}
+\includegraphics[scale=0.75]{../src/chap1/bvp1d_example.pdf}
+\end{center}
+\end{figure}
+
+\begin{example}\label{example: bvp1d example}
+If $P=6$ then the finite difference scheme results in a $5\times5$ 
 linear system
 \begin{equation}\label{eq: model 1d linear system}
 \frac{1}{\Delta x^2}\begin{bmatrix}
@@ -198,12 +208,24 @@ linear system
 \begin{bmatrix}\gamma_0\\ 0\\ 0 \\ 0\\ \gamma_L \end{bmatrix},
 \end{equation}
 where, for brevity, we have written $f_p=f(x_p)$.  Also, the zero entries in 
-the coefficient matrix are left blank.
+the coefficient matrix are left blank.  The problem
+\[
+-u''=5e^{-x}\quad\text{for $0\le x\le2$,}
+    \quad\text{with $u(0)=-1$ and $u(2)=5/2$,}
+\]
+then 
+\[
+u(x)=A+Bx+5e^{-x}\quad
+\text{where $A=\gamma_0+5$ and $B=(\gamma_L-A-5e^{-L})$.}
+\]
+Figure~\ref{fig: bvp1d example} shows that $U_p$ does in fact provide a 
+reasonable approximation to~$u(x_p)$ in this case.
+\end{example}
 
 Several questions arise naturally with regard to the above numerical method.
 \begin{enumerate}
-\item Does the linear system~\eqref{eq: model 1d linear system} always have a 
-unique solution?
+\item Does the linear system arising for the finite difference approximation 
+always have a unique solution?
 \item If so, what is an efficient way to compute the $U_p$?
 \item How accurate is the approximation~$U_p\approx u(x_p)$?
 \item Does the error $U_p-u(x_p)$ tend to zero if~$\Delta x\to0$, and if so how 
@@ -1156,7 +1178,7 @@ showing that the finite difference method is \emph{second-order accurate}.
 It turns out that for many numerical methods, there is an exponent~$r>0$ and a 
 continuous function~$v(x)$ such that
 \[
-E_p=U_p-u(x_p)=v(x_p)\,\Delta x^r+O(\Delta x^{r+\epsilon)
+E_p=U_p-u(x_p)=v(x_p)\,\Delta x^r+O(\Delta x^{r+\epsilon}
 \]
 for some~$\epsilon>0$.  Therefore, if we let
 \[
