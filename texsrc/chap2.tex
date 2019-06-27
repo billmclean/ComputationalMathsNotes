@@ -242,10 +242,10 @@ system has a unique solution, which can be computed using the algorithms
 described in section~\ref{sec: sym tridiagonal}.
 
 \section{General self-adjoint problems}\label{sec: self-adjoint 1d}
-A second-order linear differential operator~$\mathcal{L}$ is 
+A second-order linear differential operator~$\mathcal{A}$ is 
 \emph{formally self-adjoint} if it can be written in the form
 \begin{equation}\label{eq: L self-adjoint}
-(\mathcal{L}u)(x)=-\bigl(a(x)u'\bigr)'+c(x)u(x).
+(\mathcal{A}u)(x)=-\bigl(a(x)u'\bigr)'+c(x)u(x).
 \end{equation}
 Here, the coefficients $a(x)$ and $c(x)$ are assumed to have the same 
 properties as in Chapter~\ref{chap: finite diff 1d}; in particular, $a(x)$ must 
@@ -253,12 +253,12 @@ satisfy the lower bound~\eqref{eq: ellipticity 1d}. For such an $\mathcal{L}$,
 consider the following two-point boundary-value problem with \emph{mixed 
 boundary conditions},
 \begin{equation}\label{eq: self-adjoint mixed}
-\mathcal{L}u=f(x)\quad\text{for $0<x<L$,}\quad
+\mathcal{A}u=f(x)\quad\text{for $0<x<L$,}\quad
 \text{with $u(0)=\gamma_0$ and $a(L)u'(L)=\gamma_L$.}
 \end{equation}
 Integration by parts implies that
 \begin{equation}\label{eq: Lu v by parts}
-\int_0^L(\mathcal{L}u)(x)v(x)\,dx
+\int_0^L(\mathcal{A}u)(x)v(x)\,dx
     =-\bigl[a(x)u'(x)v(x)\bigr]_0^L+\int_0^L\bigl(a(x)u'(x)v'(x)+c(x)u(x)v(x)
         \bigr)\,dx,
 \end{equation}
@@ -326,33 +326,33 @@ the historical origins of finite element methods in structural engineering.
 Assume now that $c(x)\ge0$.  We define two real inner products,
 \[
 \iprod{v,w}=\int_0^Lv(x)w(x)\,dx\quad\text{and}\quad
-\iprod{v,w}_{\mathcal{L}}=\int_0^L\bigl(a(x)v'(x)w'(x)+c(x)v(x)w(x)\bigr)\,dx
+\iprod{v,w}_{\mathcal{A}}=\int_0^L\bigl(a(x)v'(x)w'(x)+c(x)v(x)w(x)\bigr)\,dx
 \]
 together with the corresponding norms
-$\|v\|_{\mathcal{L}}=\sqrt{\iprod{v,v}_{\mathcal{L}}}$~and
+$\|v\|_{\mathcal{A}}=\sqrt{\iprod{v,v}_{\mathcal{A}}}$~and
 $\|v\|=\sqrt{\iprod{v,v}}$; thus,
 \[
 \|v\|^2=\int_0^L|v(x)|^2\,dx
 \quad\text{and}\quad
-\|v\|_{\mathcal{L}}^2=\int_0^L\bigl(a(x)|v'(x)|^2+c(x)|v(x)|^2\bigr)\,dx.
+\|v\|_{\mathcal{A}}^2=\int_0^L\bigl(a(x)|v'(x)|^2+c(x)|v(x)|^2\bigr)\,dx.
 \]
 With this notation, we can re-write \eqref{eq: Lu=f weak 1d} as
-\begin{equation}\label{eq: <u,v>L}
-\iprod{u,v}_{\mathcal{L}}=\gamma_Lv(L)+\iprod{f,v}\quad\text{provided $v(0)=0$.}
+\begin{equation}\label{eq: <u,v>A}
+\iprod{u,v}_{\mathcal{A}}=\gamma_Lv(L)+\iprod{f,v}\quad\text{provided $v(0)=0$.}
 \end{equation}
 and can see from~\eqref{eq: self-adjoint mixed bc FEM} that $u_h\in S_h$
 satisfies
-\begin{equation}\label{eq: <uh,v>L}
-\iprod{u_h,v}_{\mathcal{L}}=\gamma_Lv(L)+\iprod{f,v}
+\begin{equation}\label{eq: <uh,v>A}
+\iprod{u_h,v}_{\mathcal{A}}=\gamma_Lv(L)+\iprod{f,v}
 	\quad\text{for all $v\in T_h$.}
 \end{equation}
 
 \begin{lemma}\label{lem: v v'}
 If $v\in H^1(0,L)$, then
 \[
-\|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr)
+\|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{A}}^2\bigr)
 \quad\text{and}\quad
-|v(L)|^2\le 2\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr),
+|v(L)|^2\le 2\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{A}}^2\bigr),
 \]
 where the positive constant~$\beta$ is given by
 \[
@@ -365,29 +365,29 @@ Since $v(x)=v(0)+\int_0^xv'(y)\,dy$, the Cauchy--Schwarz inequality implies that
 |v(x)|^2&\le2|v(0)|^2+2\biggl(\int_0^x v'(y)\,dy\biggr)^2
 \le2|v(0)|^2+2\biggl(\int_0^x\frac{dy}{a(y)}\biggr)
 \biggl(\int_0^xa(y)|v'(y)|^2\,dy\biggr)\\
-	&\le2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2
+	&\le2|v(0)|^2+2\beta\|v\|_{\mathcal{A}}^2
 \end{align*}
 so
 \begin{align*}
-\|v\|^2&=\int_0^L|v(x)|^2\,dx\le 2L|v(0)|^2+2\beta L\|v\|_{\mathcal{L}}^2.
+\|v\|^2&=\int_0^L|v(x)|^2\,dx\le 2L|v(0)|^2+2\beta L\|v\|_{\mathcal{A}}^2.
 \end{align*}
 Similarly, since $v(L)=v(0)+\int_0^Lv'(y)\,dy$ we have
 \begin{align*}
 |v(L)|^2&\le2|v(0)|^2+2\biggl(\int_0^Lv'(y)\,\biggr)^2
 	\le2|v(0)|^2+2\biggl(\int_0^L\frac{dy}{a(y)}\biggr)
 	\biggl(\int_0^La(y)|v'(y)|^2\,dy\biggr)\\
-	&=2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2,
+	&=2|v(0)|^2+2\beta\|v\|_{\mathcal{A}}^2,
 \end{align*}
 as claimed.
 \end{proof}
 
-\begin{theorem}\label{thm: ||u||L}
+\begin{theorem}\label{thm: ||u||A}
 Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-
 point boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique
 solution~$u\in H^1(0,L)$, and there is a constant~$C>0$ (depending only on $L$,
 $a$~and $c$) such that
 \[
-\|u\|_{\mathcal{L}}^2\le C\bigl(|\gamma_0|^2+|\gamma_L|^2+\|f\|^2\bigr).
+\|u\|_{\mathcal{A}}^2\le C\bigl(|\gamma_0|^2+|\gamma_L|^2+\|f\|^2\bigr).
 \]
 \end{theorem}
 \begin{proof}
@@ -395,14 +395,14 @@ Let $u_0(x)=L^{-1}(L-x)u(0)$ and $v(x)=u(x)-u_0(x)$, so that
 \[
 u_0(0)=u(0),\quad u_0(L)=0,\quad v(0)=0,\quad v(L)=u(L).
 \]
-By~\eqref{eq: <u,v>L},
+By~\eqref{eq: <u,v>A},
 \[
-\iprod{u,u-u_0}_{\mathcal{L}}=\gamma_Lu(L)+\iprod{f,u-u_0}
+\iprod{u,u-u_0}_{\mathcal{A}}=\gamma_Lu(L)+\iprod{f,u-u_0}
 \]
 and so
 \[
-\|u\|_{\mathcal{L}}^2=\gamma_L u(L)+\iprod{f,u}-\iprod{f,u_0}
-	+\iprod{u,u_0}_{\mathcal{L}}.
+\|u\|_{\mathcal{A}}^2=\gamma_L u(L)+\iprod{f,u}-\iprod{f,u_0}
+	+\iprod{u,u_0}_{\mathcal{A}}.
 \]
 For any $\epsilon>0$, \cref{lem: v v'} gives
 \[
@@ -411,7 +411,7 @@ For any $\epsilon>0$, \cref{lem: v v'} gives
 \le\epsilon^{-1}\,\gamma_L^2
 	+\tfrac14\epsilon\,|u(L)|^2
 	\le\epsilon^{-1}\gamma_L^2+\tfrac12\epsilon\bigl(|u(0)|^2
-	+\beta\|u\|_{\mathcal{L}}^2\bigr),
+	+\beta\|u\|_{\mathcal{A}}^2\bigr),
 \]
 and by the Cauchy--Schwarz inequality,
 \begin{align*}
@@ -419,35 +419,35 @@ and by the Cauchy--Schwarz inequality,
 	\bigl(\tfrac12\epsilon^{1/2}\|u\|\bigr)
 	\le\epsilon^{-1}\|f\|^2+\tfrac14\epsilon\|u\|^2\\
 	&\le\epsilon^{-1}\|f\|^2
-	+\tfrac12 L\epsilon\bigl(|u(0)|^2+\beta\|u\|_{\mathcal{L}}^2\bigr).
+	+\tfrac12 L\epsilon\bigl(|u(0)|^2+\beta\|u\|_{\mathcal{A}}^2\bigr).
 \end{align*}
 Likewise,
 \[
 |\iprod{f,u_0}|\le\epsilon^{-1}\|f\|^2+\tfrac12\epsilon\|u_0\|^2
 \quad\text{and}\quad
-|\iprod{u,u_0}_{\mathcal{L}}|\le\epsilon^{-1}\|u_0\|_{\mathcal{L}}^2
-	+\tfrac14\epsilon\|u_0\|_{\mathcal{L}}^2,
+|\iprod{u,u_0}_{\mathcal{A}}|\le\epsilon^{-1}\|u_0\|_{\mathcal{A}}^2
+	+\tfrac14\epsilon\|u_0\|_{\mathcal{A}}^2,
 \]
 and, since $u(0)=\gamma_0$,
 \[
-\|u\|_{\mathcal{L}}^2\le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+\|u\|_{\mathcal{A}}^2\le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
 +\tfrac12\epsilon\bigl((1+L)|\gamma_0|^2+\|u_0\|^2
-	+\tfrac12\|u_0\|_{\mathcal{L}}^2+(1+L)\beta\|u\|_{\mathcal{L}}^2\bigr).
+	+\tfrac12\|u_0\|_{\mathcal{A}}^2+(1+L)\beta\|u\|_{\mathcal{A}}^2\bigr).
 \]
 Now choose $\epsilon=(1+L)^{-1}\beta^{-1}$ so that $\epsilon(1+L)\beta=1$ and 
 thus
 \[
-\|u\|_{\mathcal{L}}^2\le(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+\|u\|_{\mathcal{A}}^2\le(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
 	+\tfrac12\beta^{-1}|\gamma_0|^2+\tfrac12(1+L)^{-1}\beta^{-1}
-	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr)
-	+\tfrac12\|u\|_{\mathcal{L}}^2.
+	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{A}}^2\bigr)
+	+\tfrac12\|u\|_{\mathcal{A}}^2.
 \]
-After cancelling the term~$\tfrac12\|u\|_{\mathcal{L}}^2$ and multiplying both
+After cancelling the term~$\tfrac12\|u\|_{\mathcal{A}}^2$ and multiplying both
 sides by~$2$, we obtain
 \[
-\|u\|_{\mathcal{L}}^2\le2(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+\|u\|_{\mathcal{A}}^2\le2(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
 	+\beta^{-1}|\gamma_0|^2+(1+L)^{-1}\beta^{-1}
-	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr),
+	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{A}}^2\bigr),
 \]
 with
 \[
@@ -460,7 +460,7 @@ and
 	a(x)+c(x)(L-x)^2\bigr)\,dx
 	\le\bigl(L^{-1}a_{\max}+\tfrac13L^2c_{\max}\bigr)|\gamma_0|^2,
 \]
-implying the desired estimate for~$\|u\|_{\mathcal{L}}^2$.
+implying the desired estimate for~$\|u\|_{\mathcal{A}}^2$.
 \end{proof}
 
 \section{Matrix assembly element-by-element}\label{sec: matrix assembly 1d}
@@ -967,12 +967,12 @@ and thus $\mathcal{Q}_r^2=\mathcal{Q}_r$.  Hence, $\mathcal{Q}_r$ is a
 \emph{projection} onto~$\mathbb{P}_r$.
 
 Let 
-\[
+\begin{equation}\label{eq: pi r y}
 \pi_{r,y}(x)=\frac{(x-y)_+^r}{r!}=\begin{cases}
 	(x-y)^r/r!&\text{if $a\le y\le x\le b$,}\\
 	0&\text{if $a\le x<y\le b$.}
 \end{cases}
-\]
+\end{equation}
 If $f$ is $C^{r+1}$ on~$[a,b]$ then, by Theorem~\ref{thm: Taylor remainder}, 
 \[
 f(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
@@ -1237,11 +1237,11 @@ which proves the first estimate.  The second follows in the same way.
 \end{proof}
 
 \section{Optimality property}
-Subtracting \eqref{eq: <u,v>L} from~\eqref{eq: <uh,v>L}, we see that the
+Subtracting \eqref{eq: <u,v>A} from~\eqref{eq: <uh,v>A}, we see that the
 error~$e_h=u_h-u$ in the finite element solution is energy-orthogonal to the 
 test space~$T_h$, that is, 
 \begin{equation}\label{eq: energy orthog}
-\iprod{e_h,v}_{\mathcal{L}}=0\quad\text{for all $v\in T_h$.}
+\iprod{e_h,v}_{\mathcal{A}}=0\quad\text{for all $v\in T_h$.}
 \end{equation}
 Using this property, we show in the next theorem that $u_h$ is the best 
 approximation to~$u$ by a function in the trial space~$S_h$, as measured by 
@@ -1250,25 +1250,25 @@ the energy norm.
 \begin{theorem}\label{thm: optimality}
 The finite element solution~$u_h\in S_h$ satisfies
 \[
-\|u_h-u\|_{\mathcal{L}}\le\|w-u\|_{\mathcal{L}}
+\|u_h-u\|_{\mathcal{A}}\le\|w-u\|_{\mathcal{A}}
 	\quad\text{for all $w\in S_h$.}
 \]
 \end{theorem}
 \begin{proof}
 Let $w\in S_h$ and observe that the error~$e_h=u_h-u$ satisfies
 \begin{align*}
-\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,e_h}_{\mathcal{L}}
-	&=\iprod{e_h,u_h-u}_{\mathcal{L}}
-	=\iprod{e_h,u_h-w+w-u}_{\mathcal{L}}\\
-	&=\iprod{e_h,u_h-w}_{\mathcal{L}}+\iprod{e_h,w-u}_{\mathcal{L}}.
+\|e_h\|_{\mathcal{A}}^2=\iprod{e_h,e_h}_{\mathcal{A}}
+	&=\iprod{e_h,u_h-u}_{\mathcal{A}}
+	=\iprod{e_h,u_h-w+w-u}_{\mathcal{A}}\\
+	&=\iprod{e_h,u_h-w}_{\mathcal{A}}+\iprod{e_h,w-u}_{\mathcal{A}}.
 \end{align*}
 Since $(u_h-w)(0)=u_h(0)-w(0)=\gamma_0-\gamma_0=0$ we see that $u_h-w\in T_h$
 and so the energy-orthogonality property~\eqref{eq: energy orthog} implies
-that $\iprod{e_h,u_h-w}_{\mathcal{L}}=0$.  Hence, by the Cauch--Schwarz
+that $\iprod{e_h,u_h-w}_{\mathcal{A}}=0$.  Hence, by the Cauchy--Schwarz
 inequality,
 \[
-\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,w-u}_{\mathcal{L}}
-	\le\|e_h\|_{\mathcal{L}}\|w-u\|_{\mathcal{L}},
+\|e_h\|_{\mathcal{A}}^2=\iprod{e_h,w-u}_{\mathcal{A}}
+	\le\|e_h\|_{\mathcal{A}}\|w-u\|_{\mathcal{A}},
 \]
 which implies the desired inequality.
 \end{proof}
@@ -1282,14 +1282,14 @@ Assume that the solution~$u:[0,L]\to\mathbb{R}$ of the boundary-value
 problem~\eqref{eq: self-adjoint mixed} is~$C^{r+1}$.  Then,
 there is a constant~$C>0$, independent of~$h$, such that
 \[
-\|u_h-u\|_{\mathcal{L}}\le Ch^r\|u^{(r+1)}\|.
+\|u_h-u\|_{\mathcal{A}}\le Ch^r\|u^{(r+1)}\|.
 \]
 \end{theorem}
 \begin{proof}
 Let $w=\mathcal{Q}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
 so we may apply \cref{thm: optimality} and deduce that
 \begin{align*}
-\|u_h-u\|_{\mathcal{L}}^2\le\|w-u\|_{\mathcal{L}}^2
+\|u_h-u\|_{\mathcal{A}}^2\le\|w-u\|_{\mathcal{A}}^2
 	&\le a_{\max}\|w'-u'\|^2+c_{\max}\|w-u\|^2\\
 	&\le\bigl(a_{\max}C_{r,1}h^{2r}+c_{\max}C_{r,0}h^{2r+2}\bigr)
 	\|u^{(r+1)}\|^2\\
@@ -1306,67 +1306,97 @@ Observe that since $a(x)/a_{\min}\ge1$,
 \[
 \|v'\|^2=\int_0^L|v'(x)|^2\,dx\le\int_0^L\frac{a(x)}{a_{min}}\,|v'(x)|^2\,dx
 	=\frac{1}{a_{\min}}\int_0^La(x)|v'(x)|^2\,dx
-	\le\frac{\|v\|_{\mathcal{L}}^2}{a_{\min}},
+	\le\frac{\|v\|_{\mathcal{A}}^2}{a_{\min}},
 \]
-and in particular $\|u_h'-u'\|^2\le\|u_h-u\|^2_{\mathcal{L}}/a_{min}$.
+and in particular $\|u_h'-u'\|^2\le\|u_h-u\|^2_{\mathcal{A}}/a_{min}$.
 \end{proof}
 
 In some applications, an integral of the form
 \[
 \iprod{\phi,u}=\int_0^L\phi(x)u(x)\,dx
 \]
-is of interest.  The next theorem shows that $\iprod{\phi,u_h}$ approximates
-$\iprod{\phi,u}$ to~$O(h^{r+1})$.
+is of interest.  The next theorem shows that if $\phi\in H^r(0,L)$~and 
+$u\in H^{r+1}(0,L)$, then
+\[
+\iprod{\phi,u_h}=\iprod{\phi,u}+O(h^{2r+1}).
+\]
 
 \begin{theorem}
-For any square-integrable function~$\phi:(0,L)\to\mathbb{R}$,
+If $0\le k\le r$, then
 \[
-|\iprod{u_h-u,\phi}|\le Ch\|\phi\|\|u_h-u\|_{\mathcal{L}}.
+|\iprod{u_h-u,\phi}|\le Ch^{k+1}\|\phi\|_{H^k(0,L)}\|u_h-u\|_{\mathcal{A}}.
 \]
 \end{theorem}
 \begin{proof}
 Given $\phi$, let $\theta$ be the solution of the boundary-value problem
 \[
-\mathcal{L}\theta=\phi(x)\quad\text{for $0<x<L$,}
+\mathcal{A}\theta=\phi(x)\quad\text{for $0<x<L$,}
 	\quad\text{with $\theta(0)=0$ and $a(L)\theta'(L)=0$,}
 \]
 so that
 \[
-\iprod{\theta,v}_{\mathcal{L}}=\iprod{\phi,v}\quad\text{whenever $v(0)=0$.}
+\iprod{\theta,v}_{\mathcal{A}}=\iprod{\phi,v}\quad\text{whenever $v(0)=0$.}
 \]
 Since $(u_h-u)(0)=u_h(0)-u(0)=\gamma_0-\gamma_0=0$, it follows that
 \[
-\iprod{\phi,u_h-u}=\iprod{\theta,u_h-u}_{\mathcal{L}}
-	=\iprod{\theta-Q_{1,h}\theta,u_h-u}_{\mathcal{L}},
+\iprod{\phi,u_h-u}=\iprod{\theta,u_h-u}_{\mathcal{A}}
+	=\iprod{\theta-Q_{k+1,h}\theta,u_h-u}_{\mathcal{A}},
 \]
 where, in the second step, we used the fact that $u_h-u$ is energy-orthogonal
-to $Q_{1,h}\theta$.  Hence, by the Cauchy--Schwarz inequality,
+to $Q_{k+1,h}\theta\in T_h$ because $k\le r$.  Hence, by the Cauchy--Schwarz 
+inequality,
 \[
-|\iprod{\phi,u_h-u}|\le\|\theta-Q_{1,h}\theta\|_{\mathcal{L}}
-	\|u_h-u\|_{\mathcal{L}}.
+|\iprod{\phi,u_h-u}|\le\|\theta-Q_{k+1,h}\theta\|_{\mathcal{A}}
+	\|u_h-u\|_{\mathcal{A}}.
 \]
 Since
 \[
-\|\theta-\mathcal{Q}_{1,h}\theta\|_{\mathcal{L}}^2
-	\le a_{\max}\|\theta'-(\mathcal{Q}_{1,h}\theta)'\|
-	+c_{\max}\|\theta-\mathcal{Q}_{1,h}\theta\|
-	\le Ch\|\theta''\|,
+\|\theta-\mathcal{Q}_{k+1,h}\theta\|_{\mathcal{A}}^2
+	\le a_{\max}\|\theta'-(\mathcal{Q}_{k+1,h}\theta)'\|
+	+c_{\max}\|\theta-\mathcal{Q}_{k+1,h}\theta\|
+	\le C\bigl(h^{k+1}+h^{k+2})\|\theta^{(k+2)}\|
 \]
-it suffices to show that $\|\theta''\|\le C\|\phi\|$.  In fact,
-$\mathcal{L}\theta=a\theta''+c\theta=\phi$ so
+it suffices to show, using induction on~$k$, that 
+$\|\theta^{(k+2)}\|\le C\|\phi\|_{H^k(0,L)}$.  
+Rearranging the ODE $a\theta''+c\theta=\phi$,  and using \cref{lem: v v'} 
+followed by~\cref{thm: ||u||A},
 \[
 \|\theta''\|=\|(\phi-c\theta)/a\|
-	\le\frac{\|\phi\|+c_{\max}\|\theta\|}{a_{\min}},
+	\le\frac{\|\phi\|+c_{\max}\|\theta\|}{a_{\min}}\le C\|\phi\|
+	\le C(\|\phi\|+\|\theta\|_{\mathcal{A}})\le C\|\phi\|,
 \]
-and $\|\theta\|\le2L\beta\|\theta\|_{\mathcal{L}}$ by \cref{lem: v v'}.  
-Finally, $|\theta\|_{\mathcal{L}}\le C\|\phi\|$ by~\cref{thm: ||u||L}.
+which proves the claim for~$k=0$.  For the inductive step, we let~$k\ge1$ and
+assume that 
+\[
+\|\theta^{(j+2)}\|\le C\sum_{l=0}^j\|\phi^{(l)}\|
+	\quad\text{for~$0\le j\le k-1$.}
+\]
+By $k$-fold differentiation of $a\theta''+c\theta=\phi$, 
+\[
+a\theta^{(k+2)}+c\theta^{(k)}+\sum_{j=0}^{k-1}\binom{k}{j}\bigl(
+	a^{(k-j)}\theta^{(j+2)}+c^{(k-j)}\theta^{(j)}\bigr)=\phi^{(k)}
+\]
+so
+\[
+\theta^{(k)}=\frac{1}{a}\bigg(\phi^{(k)}-c\theta^{(k)}
+	-\sum_{j=0}^{k-1}\binom{k}{j}\bigl(
+	a^{(k-j)}\theta^{(j+2)}+c^{(k-j)}\theta^{(j)}\bigr)\biggr)
+\]
+and
+\[
+\|\theta^{(k)}\|\le C\biggl(\|\phi^{(k)}\|+\|\theta\|+\|\theta'\|
+	+\sum_{j=2}^{k+1}\|\theta^{(j)}\|\biggr)
+\le C\biggl(\|\phi^{(k)}\|+\|\theta\|_{\mathcal{A}}
+	+\sum_{j=0}^{k-1}\|\theta^{(j+2)}\|\biggr),
+\]
+implying that the induction goes through.
 \end{proof}
 
 \begin{corollary}
 $\|u_h-u\|\le Ch^{r+1}\|u^{(r+1)}\|$.
 \end{corollary}
 \begin{proof}
-Taking $\phi=u_h-u$, and apply \cref{thm: uh-u L}, we have
+Apply \cref{thm: uh-u L} with $\phi=u_h-u$~and $k=0$ to obtain
 \[
 \|u_h-u\|^2=\iprod{u_h-u,u_h-u}\le Ch\|u_h-u\|\|u_h-u\|_{\mathcal{L}}
 	\le Ch\|u_h-u\|h^r\|u^{(r+1)}\|,
@@ -1572,6 +1602,50 @@ $c\brak{p}_{11}=c\brak{p}_{33}$, $c\brak{p}_{12}=c\brak{p}_{32}$.
 \item{(iii)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
 for the element stiffness and mass matrices when $a(x)=1$~and $c(x)=1$.
 \end{description}
+
+\begin{figure}
+\caption{The Peano kernel $K(y)$ for the quadrature rule of 
+Exercise~\ref{ex: quadrature kernel}.}\label{fig: quadrature kernel}
+\begin{center}
+\includegraphics[scale=0.5]{../src/chap2/quadrature_kernel.pdf}
+\end{center}
+\end{figure}
+
+\exercise\label{ex: quadrature kernel}
+Consider a quadrature rule of the form
+\[
+\int_{-1}^1f(x)\,dx\approx w_1f(-1)+w_2f(-a)+w_2f(a)+w_1f(1)
+\quad\text{with $0<a<1$,}
+\]
+and denote the error by
+\[
+Ef=\int_{-1}^1f(x)\,dx-\bigl(w_1f(-1)+w_2f(-a)+w_2f(a)+w_1f(1)\bigr).
+\]
+\begin{description}
+\item{(i)} Why does $Ef=0$ if $f$ is an odd function, that is, if
+$f(-x)=-f(x)$?
+\item{(ii)} Simplify $Ef$ in the case when $f$ is an even function, that is, 
+when $f(-x)=f(x)$. \item{(iii)}
+Determine the values of $w_1$, $w_2$~and $a$ for which $Ef=0$ whenever
+$f\in\mathbb{P}_5$.
+\item{(iv)}
+Deduce that there is a Peano kernel~$K$ such that, if $f$ is $C^6$ 
+on~$[-1,1]$, then the rule given by part~(iii) has the error formula
+\[
+Ef=\int_{-1}^1K(y)f^{(6)}(y)\,dy.
+\]
+Express $K(y)$ in terms of the function $\pi_{5,y}(x)$ defined as 
+in~\eqref{eq: pi r y}.
+\item{(v)}
+Write a script to verify that the graph of~$K$ is as shown in 
+Figure~\ref{fig: quadrature kernel}.
+\end{description}
+\begin{ans}
+(i) both sides equal $0$\quad (ii) $\int_0^1f(x)\,dx=w_1f(1)+w_2f(a)$\quad
+(iii) $a=1/\sqrt{5}$, $w_1=1/6$, $w_2=5/6$.\quad
+(iv) $K(y)=\pi_{6,y}(1)-\bigl(w_2\pi_{5,y}(-a)+w_2\pi_{5,y}(a)+w_1\pi_{5,y}(1)
+\bigr)$
+\end{ans}
 
 \exercise\label{ex: assemble quadratic 1d}
 Consider the two-point boundary-value problem~\eqref{eq: self-adjoint mixed} 
