@@ -99,11 +99,16 @@ method~\eqref{eq: semidiscrete fem 1d} has a unique
 solution~$u_h(\cdot,t)\in S_h(t)$ for~$0\le t\le T$.  Furthermore, the
 method is stable in the sense that
 \[
-\|(u_h-\eta)(\cdot,t)\|\le\|u_{0h}-\eta(\cdot,0)\|
+\|(u_h-\eta)(\cdot,t)\|\le\|(u-\eta)(\cdot,0)\|
 	+2\int_0^t\|(f-\eta_s-\mathcal{L}\eta)(\cdot,s)\|\,ds
 	\quad\text{for $0\le t\le T$,}
 \]
-where
+where $\eta$ is any function satisfying
+\[
+\eta(\cdot,t)\in S_h(t),\qquad \eta(0,t)=\gamma_0(t),\qquad
+	a(L)\eta_x(L,t)=\gamma_L(t).
+\]  
+For example, we my choose
 \[
 \eta(x,t)=\gamma_0(t)+\frac{\gamma_L(t)}{a(L)}\,x.
 \]
@@ -117,11 +122,6 @@ use the energy inner product~\eqref{eq: energy iprod} to write
 \iprod{(u_h)_t,v}+\iprod{u_h,v}_{\mathcal{L}}=\gamma_L(t)v(L)
 	+\iprod{f(\cdot,t),v}\quad\text{for all $v\in T_h$.}
 \]
-Notice that 
-\[
-\eta(\cdot,t)\in S_h(t),\qquad \eta(0,t)=\gamma_0(t),\qquad
-\eta_x(L,t)=\gamma_L(t)/a(L).
-\]  
 Thus, the difference 
 \[
 w(x,t)=u_h(x,t)-\eta(x,t)
@@ -164,7 +164,7 @@ so after integrating in time to arrive at the estimate
 \]
 where 
 \[
-w_0(x)=w(x,0)=u_{0h}(x)-\eta(x,0).
+w_0(x)=w(x,0)=(u-\eta)(x,0).
 \]
 Since $\|w(\cdot,t)\|$ is a continuous function of~$t$, there is a 
 $t^*\in[0,t]$ such that 
@@ -176,14 +176,22 @@ Therefore, using the Cauchy--Schwarz inequality,
 \|w(\cdot,t)\|^2\le\|w(\cdot,t)\|^2+2\int_0^t\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds
 \le\|w(\cdot,t^*)\|^2+2\int_0^{t^*}\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds\\
 \le\|w_0\|^2+2\int_0^{t^*}\|g(\cdot,s)\|\|w(\cdot,s)\|\,ds
-\le\|w(\cdot,t^*)\|\biggl(\|w_0\|+2\int_0^{t^*}\|g(\cdot,s)\|\,ds\biggr),
+\le\|w(\cdot,t^*)\|\biggl(\|w_0\|+2\int_0^t\|g(\cdot,s)\|\,ds\biggr),
 \end{multline*}
 so
 \[
-\|w(\cdot,t)\|\le\|w_0\|+2\int_0^{t^*}\|g(\cdot,s)\|\,ds,
+\|w(\cdot,t)\|\le\|w_0\|+2\int_0^t\|g(\cdot,s)\|\,ds,
 \]
 which gives the desired estimate.
 \end{proof}
+\begin{corollary}
+\begin{multline*}
+\|u_h(\cdot,t)\|\le\|u_{0h}\|+2\int_0^t\|f(\cdot,s)\|\,ds\\
+	+C\biggl(|\gamma_0(t)|+|\gamma_L(t)|
+	+\int_0^t\bigl(|\gamma_0(s)|+|\gamma_0'(s)|
+	+|\gamma_L(s)|+|\gamma_L'(s)|\bigr)\,ds\biggr).
+\end{multline*}
+\end{corollary}
 
 \section{Time stepping}\label{sec: time stepping}
 We can use finite differences for the time integration, putting
@@ -265,7 +273,7 @@ the solution of the continuous problem $u_t+\mathcal{L}u=0$ is simply
 u(x,t)=e^{-\lambda_kt}\phi_k(x).
 \end{equation}
 We shall assume that $c(x)\ge0$ for $0<x<L$, which ensures that $\lambda_k>0$ 
-for all~$k$; see exercise~\ref{ex: lambda>0}.  Thus, the 
+for all~$k$; see exercise~\ref{ex: quadratic form}.  Thus, the 
 factor~$e^{-\lambda_kt}$ decreases monotonically to zero as~$t\to\infty$.
 
 Each of the matrices $\boldsymbol{A}$, $\boldsymbol{C}$~and $\boldsymbol{M}$ is 
