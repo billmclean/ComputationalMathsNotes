@@ -17,8 +17,6 @@ defined by
     +\frac{\partial^2u}{\partial y^2}.
 \]
 
-\section{Maximum principle}
-
 \section{Five-point difference scheme}
 For simplicity, we now restrict our attention to the case when the spatial 
 domain is a rectangle,
@@ -593,7 +591,482 @@ a_{11}&a_{22}&a_{33}&a_{44}&a_{55}&a_{66}&a_{77}&a_{88}&a_{99}
 \end{bmatrix}.
 \]
 
+\section{Maximum principle}
+\newcommand{\bx}{\boldsymbol{x}}
+\newcommand{\by}{\boldsymbol{y}}
+We wish to show that the boundary-value problem~\eqref{eq: Poisson bvp} is
+well-posed, generalising the 1D results of \cref{thm: Lu=f apriori infty}.
+Consider the general, second-order, linear partial differential operator,
+\begin{equation}\label{eq: general L Rn}
+(\mathcal{L}u)(\bx)
+	=-\sum_{j,k=1}^na_{jk}(\bx)(\partial_j\partial_ku)(\bx)
+	+\sum_{j=1}^nb_j(\bx)(\partial_ju)(x)+c(\bx)u(\bx)
+\quad\text{for $\bx\in\Omega$,}
+\end{equation}
+where $\partial_j=\partial/\partial x_j$ and where $\Omega$ is a bounded,
+open, connected subset of~$\mathbb{R}^n$.  Since 
+$\partial_k\partial_ju=\partial_k\partial_ju$ if $u$ is $C^2$, we assume
+without loss of generality that the coefficient matrix is symmetric, that is,
+\[
+a_{jk}(\bx)=a_{kj}(\bx)\quad\text{for $\bx\in\Omega$.}
+\]
+In addition, we assume that all coefficients of~$\mathcal{L}$ are bounded
+and continuous on~$\Omega$.  
+
+\begin{definition}
+The partial differential operator~\eqref{eq: general L Rn} is
+\emph{uniformly elliptic} in~$\Omega$ if there exist strictly positive 
+constants $\lambda_{\min}$~and $\lambda_{\max}$ such that
+\[
+\lambda_{\min}|\boldsymbol{\xi}|^2\le\sum_{j,k=1}^na_{jk}(\bx)\xi_j\xi_k
+	\le\lambda_{\max}|\boldsymbol{\xi}|^2
+\quad\text{for $\bx\in\Omega$ and $\boldsymbol{\xi}\in\mathbb{R}^n$.}
+\]
+\end{definition}
+
+Equivalently, $\mathcal{L}$ is uniformly elliptic if the spectrum of the 
+symmetric matrix~$[a_{ij}(\bx)]$ lies in the 
+interval~$[\lambda_{\min},\lambda_{\max}]$ 
+for all $\bx\in\Omega$. 
+
+The next two results generalise \cref{lem: Lu<0}~and 
+\cref{thm: max principle 1d}.  The proof of the lemma uses the notation
+\[
+B(\bx_0,\delta)=\{\,\bx\in\mathbb{R}^n:|\bx-\bx_0|<\delta\,\}
+\]
+for the open ball with centre~$\bx_0$ and radius~$\delta>0$.
+
+\begin{lemma}\label{lem: Lu<0 Omega}
+Assume that $\mathcal{L}$ is uniformly elliptic and that $u$ is $C^2$ 
+on~$\Omega$.  If $c\ge0$ and $\mathcal{L}u<0$ on~$\Omega$, then $u$ cannot 
+attain a non-negative local maximum in~$\Omega$.
+\end{lemma}
+\begin{proof}
+Suppose for a contradiction that there exist $\bx_0\in\Omega$ and $\delta>0$
+such that
+\[
+u(\bx_0)\ge0\quad\text{and}\quad 
+\text{$u(\bx)\le u(\bx_0)$ for $\bx\in B(\bx_0,\delta)\subseteq\Omega$.}
+\]
+Since $u$ has an interior local maximum at~$\bx_0$, it follows that 
+$\partial_ju(\bx_0)=0$ and so
+\begin{equation}\label{eq: Lu x0}
+(\mathcal{L}u)(\bx_0)
+	=-\sum_{j,k=1}^na_{jk}(\bx_0)(\partial_j\partial_ku)(\bx_0)
+	+c(\bx_0)u(\bx_0).
+\end{equation}
+Moreover, there is an orthogonal matrix~$\boldsymbol{Q}$ and a diagonal 
+matrix~$\boldsymbol{\Lambda}=[\lambda_j\delta_{jk}]$ such that 
+\[
+\text{$\lambda_{\min}\le\lambda_j\le\lambda_{\max}$ for $1\le j\le n$}
+\qquad\text{and}\qquad
+\boldsymbol{Q}^T[a_{jk}(\bx_0)]\boldsymbol{Q}=\boldsymbol{\Lambda}.
+\]
+Let
+\[
+\bar u(\by)=u(\bx)\quad
+\text{for $\by=\bx_0+Q^T(\bx-\bx_0)$ and $\bx\in B(\bx_0,\delta)$,}
+\]
+noting that $\by\in B(\bx_0,\delta)$ iff $\bx\in B(\bx_0,\delta)$ because
+$|\bx-\bx_0|=|\by-\bx_0|$.  Since $\partial y_l/\partial x_j=q_{jl}$, the 
+chain rule gives
+\[
+\partial_ju(\bx)=\sum_{l=1}^n q_{jl}\partial_l\bar u(\by),
+\]
+and therefore
+\begin{align*}
+\sum_{j,k=1}^n a_{jk}(\bx_0)(\partial_j\partial_k u)(\bx_0)
+	&=\sum_{j,k=1}^n\sum_{l=1}^nq_{jl}\sum_{m=1}^nq_{km}
+	\partial_l\partial_m\bar u(\bx_0)\\
+	&=\sum_{j,k=1}^n\biggl(\sum_{l,k=1}^n q_{jl}a_{jk}(\bx_0)q_{km}
+	\biggr)\partial_l\partial_m\bar u(\bx_0)\\
+	&=\sum_{j,k=1}^n\lambda_l\delta_{lm}
+	\partial_l\partial_m\bar u(\bx_0)\\
+	&=\sum_{j,k=1}^n\lambda_j\delta_{jk}
+	\partial_l\partial_m\bar u(\bx_0)
+	=\sum_{j=1}^n\lambda_j\partial_j^2\bar u(\bx_0).
+\end{align*}
+The function~$\bar u$ has a local maximum at~$\bar x_0$ so 
+$\partial_j^2\bar u(\bx_0)\le0$ for all~$j$.  But then we see 
+from~\eqref{eq: Lu x0} that $(\mathcal{L}u)(\bx_0)<0$, a contradiction.
+\end{proof}
+
+\begin{theorem}\label{thm: max principle}
+Assume that $\mathcal{L}$ is uniformly elliptic and that $u$ is $C^2$ 
+on~$\Omega$.  If $c\ge0$ and $\mathcal{L}u\le0$ on~$\Omega$, then 
+\[
+\max_{\bx\in\overline{\Omega}}u(\bx)\le\max_{\bx\in\partial\Omega}u^+(\bx).
+\]
+\end{theorem}
+\begin{proof}
+Let $\epsilon>0$ and $\mu>0$, and put $w(\bx)=u(\bx)+\epsilon e^{\mu x_1}$.
+Since
+\begin{align*}
+(\mathcal{L}w)(\bx)&=(\mathcal{L}u)(\bx)+\epsilon\bigl[-a_{11}(\bx)\mu^2
+	+b_1(\bx)\mu+c(\bx)\bigr]e^{\mu x_1}\\
+	&\le-\epsilon\bigl[\lambda_{\min}\mu^2
+	-\mu\|b\|_\infty-\|c\|_\infty\bigr]e^{\mu x_1}
+\end{align*}
+by choosing $\mu$ sufficiently large we can ensure that $\mathcal{L}w<0$
+on~$\Omega$.  By \cref{lem:}, the function~$w$ cannot attain a non-negative
+local maximum in~$\Omega$, implying that 
+\[
+u(\bx)\le w(\bx)\le w^+(\bx)\le\max_{by\in\partial\Omega}w^+(\by)
+	\le\max_{\by\in\partial\Omega}[u^+(y)+\epsilon e^{\mu L}]
+\]
+for $\bx\in\Omega$, where $L=\max_{\bx\in\Omega} x_1$.  Since this inequality
+holds for any $\epsilon>0$, the result follows.
+\end{proof}
+
+\begin{theorem}\label{thm: max min elliptic}
+Assume the $\mathcal{L}$ is uniformly elliptic, and that $u$ is continuous 
+on~$\overline{\Omega}$ and $C^2$ on~$\Omega$.  If $c\ge0$~and 
+$\mathcal{L}u=f$ on~$\Omega$, then
+\[
+\max_{\overline{\Omega}}u\le\bigl(\max_{\partial\Omega}u^+\bigr)
+	+C\max_{\overline{\Omega}}f^+
+\]
+and
+\[
+\min_{\overline{\Omega}}u\le\bigl(\min_{\partial\Omega}u^-\bigr)
+	+C\min_{\overline{\Omega}}f^-,
+\]
+where $C=\cosh(\tfrac12\mu\operatorname{diam}\Omega)$~and 
+$\mu=\max(1, (1+\|b_1\|_\infty)/\lambda_{\min}$.
+\end{theorem}
+\begin{proof}
+Without loss of generality, we may assume that
+$\Omega\subseteq B(\boldsymbol{0},r)$ for $r=\tfrac12\operatorname\Omega$.
+Let
+\[
+w(x)=\bigl(\max_{\partial\Omega}u^+\bigr)+v(x)\max_{\overline{\Omega}}f^+
+\quad\text{where}\quad
+v(x)=\cos(\mu r)-\cosh(\mu x_1),
+\]
+and observe that $v\ge0$ on~$\overline{\Omega}$ with
+\begin{align*}
+(\mathcal{L}v)(x)&=a_{11}(\bx)\mu^2\cosh(\mu x_1)-b_1(\bx)\mu\sinh(\mu x_1)
+	+c(\bx)\bigl(v(x)+\max_{\partial\Omega}u^+\bigr)\\
+	&\ge\bigl(\lambda_{\min}\mu^2-\|b_1\|_\infty\mu\bigr)\cosh(\mu x_1)
+	\ge(\lambda_{\min}\mu-\|b_1\|_\infty)\mu\ge1
+\end{align*}
+for $\bx\in\Omega$, so
+\[
+\mathcal{L}(u-w)=f-c(x)\max_{\partial\Omega}u^+
+	-(\mathcal{L}v)\max_{\overline{\Omega}}f^+\le0
+\quad\text{on $\Omega$.}
+\]
+By \cref{thm: max principle},
+\[
+u(\bx)-w(\bx)\le\max_{\partial\Omega}(u-w)^+\quad\text{for $\bx\in\Omega$,}
+\]
+and we see that
+\[
+u(\bx)-w(\bx)=\bigl(u(\bx)-\max_{\partial\Omega}u^+\bigr)
+	-v(x)\max_{\overline{\Omega}}f^+\le0
+	\quad\text{for $\bx\in\partial\Omega$.}
+\]
+Thus, $u-w\le0$ on~$\Omega$, and therefore
+\[
+\max_{\overline{\Omega}}u\le\max_{\overline{\Omega}}w
+	\le\bigl(\max_{\partial\Omega}u^+\bigr)
+	+\cosh(\mu r)\max_{\overline{\Omega}}f^+,
+\]
+proving the first inequality.  The second follows because 
+$\mathcal{L}(-u)=-f$, $(-u)^+=-(u^-)$ and $(-f)^+=-(f^-)$.
+\end{proof}
+
+Now consider the elliptic boundary-value problem
+\begin{equation}\label{eq: Dirichlet problem L}
+\mathcal{L}u=f\quad\text{in $\Omega$,}
+	\quad\text{with $u=g$ on $\partial\Omega$.}
+\end{equation}
+As an immediate consequence of \cref{thm: max min elliptic}, we obtain
+the desired \emph{a priori} estimate for~$u$ in terms of the data $f$~and $g$.
+
+\begin{theorem}\label{thm: a priori elliptic}
+Assume the $\mathcal{L}$ is uniformly elliptic and that $c\ge0$ on~$\Omega$.
+Then any solution $u\in C^2(\Omega)\cap C(\overline{\Omega})$ 
+of~\eqref{eq: Dirichlet problem L} satisfies
+\[
+\max_{\overline{\Omega}}|u|\le\max_{\partial\Omega}|g|
+	+C\max_{\overline{\Omega}}|f|.
+\]
+\end{theorem}
+
+\section{Discrete maximum principle}
+We now restrict our attention to a rectangular 
+domain~$\Omega=(0,L_x)\times(0,L_y)$ in~$\mathbb{R}^2$, and assume that the
+coefficients of $\mathcal{L}$ satisfy
+\[
+a_{jk}(x,y)=a_j(x,y)\delta_{jk}\quad\text{and}\quad
+b_j(x,y)=0\quad\text{for $j$, $k\in\{1,2\}$.}
+\]
+Thus,
+\begin{equation}\label{eq: L simple}
+(\mathcal{L}u)(x,y)=-a_1(x,y)(\partial_1^2u)(x,y)
+	-a_2(x,y)(\partial_2^2u)(x,y)+c(x,y)u(x,y),
+\end{equation}
+and we define the corresponding finite difference operator 
+\begin{multline*}
+(\mathcal{L}_{\Delta x,\Delta y}U)_{pq}=-a_1(x_p,y_q)\,
+	\frac{U_{p+1,q}-2U_{pq}+U_{p-1,q}}{\Delta x^2}\\
+	-a_2(x_p,y_q)\,
+	\frac{U_{p,q+1}-2U_{pq}+U_{p,q-1}}{\Delta y^2}
+	+c(x_p,y_q)U_{pq}.
+\end{multline*}
+The finite difference approximation to the boundary-value 
+problem~\eqref{eq: Dirichlet problem L} can then be written as
+\begin{equation}\label{eq: discrete bvp 2d}
+\begin{aligned}
+(\mathcal{L}_{\Delta x,\Delta y}U)_{pq}&=f_{pq}&&
+\text{for $(x_p,y_q)\in\Omega$,}\\
+U_{pq}&=g_{pq}&&\text{for $(x_p,y_q)\in\Gamma$,}
+\end{aligned}
+\end{equation}
+which, in the special case $a_1(x,y)=1$, $a_2(x,y)=1$, $c(x,y)=0$
+reduces to the five-point scheme \eqref{eq: 5-pt Poisson} for the Poisson
+
+The simplified operator~\eqref{eq: L simple} is uniformly elliptic iff
+there are positive constants $\lambda_{\min}$ and $\lambda_{\max}$ such that
+\[
+\lambda_{\min}\le a_1(x,y)\le\lambda_{\max}\quad\text{for $(x,y)\in\Omega$,}
+\]
+and we will assume throughout that this is the case.  Given a grid 
+point~$(x_{p^*},y_{q^*})\in\Omega$, let
+\[
+\operatorname{Nbr}(p^*,q^*)=\{(p+1,q),(p-1,q),(p,q+1),(p,q-1)\}.
+\]
+so that $(p,q)\in\operatorname{Nbr}(p^*,q^*)$ if and only if $(x_p,y_q)$ is 
+one of the four nearest neighbours to~$(x_{p^*},y_{q^*})$.  The following 
+discrete analogue of \cref{lem: Lu<0 Omega}.
+
+\begin{lemma}\label{lem: Lu<0 Omega discrete}
+If $c_{p,q}\ge0$ and $(\mathcal{L}_{\Delta x,\Delta y}U)_{p,q}<0$ for
+$(x_p,y_q)\in\Omega$, then there is no grid point~$(x_{p^*},y_{q^*})\in\Omega$
+such that
+\[
+U_{p^*,q^*}\ge0\quad\text{and}\quad\text{$U_{p,q}\le U_{p^*,q^*}$ 
+for $(p,q)\in\operatorname{Nbr}(p^*,q^*)$.}
+\]
+\end{lemma}
+\begin{proof}
+If such a grid point exists, then
+\[
+U_{p^*+1,q^*}+U_{p^*-1,q^*}\le 2U_{p^*,q^*}
+\quad\text{and}\quad
+U_{p^*,q^*+1}+U_{p^*,q^*-1}\le 2U_{p^*,q^*},
+\]
+so $(\mathcal{L}_{\Delta x,\Delta y}U)_{p^*,q^*}\ge0$, contradicting the
+second hypothesis of the lemma.
+\end{proof}
+
+A discrete analogue of \cref{thm: max principle} then follows; we use the
+abbreviation
+\[
+\max_{S}U^+=\max_{(x_p,y_q)\in S}U_{p,q}
+	\quad\text{for $S\subseteq\overline{\Omega}.$}
+\]
+
+\begin{theorem}
+If $c_{p,q}\ge0$ and $(\mathcal{L}_{\Delta x,\Delta y}U)_{p,q}\le0$
+for $(x_p,y_q)\in\Omega$, then
+\[
+\max_\Omega U\le\max_{\partial\Omega}U^+ \quad\text{for $(x_p,y_q)\in\Omega$.}
+\]
+\end{theorem}
+\begin{proof}
+Let $\epsilon>0$ and $\mu>0$, and put 
+\[
+W_{p,q}=U_{p,q}+\epsilon g(x_p)\quad\text{where $g(x)=e^{\mu x}$.}
+\]
+Since $g^{(4)}(x)=\mu^4e^{\mu x}\ge0$ for all~$x$, if follows by considering
+the remainder term for the Taylor expansion of~$g$ about~$x_p$ that
+\[
+\frac{g(x_{p+1}-2g(x_p)+g(x_{p-1}}{\Delta x^2}\ge g''(x_p)=\mu^2 e^{\mu x_p}.
+\]
+Hence, writing $a_{1,p,q}=a_1(x_p,y_q)$ and $c_{p,q}=c(x_p,y_q)$,
+\begin{align*}
+(\mathcal{L}_{\Delta x,\Delta y}W)_{p,q}
+	&=(\mathcal{L}_{\Delta x,\Delta y}U)_{p,q}+\epsilon\biggl(-a_{1,p,q}
+\frac{g(x_{p+1}-2g(x_p)+g(x_{p-1}}{\Delta x^2}+c_{p,q}g(x_p)\biggr)\\
+	&\le(\mathcal{L}_{\Delta x,\Delta y}U)_{p,q}+\epsilon\bigl(-a_{1,p,q}
+e^{\mu x_p}+c_{p,q}e^{\mu x_p}\bigr)\\
+	&\le0-\epsilon\bigl(\lambda_{\min}\mu^2-\|c\|_\infty\bigr)e^{\mu x_p},
+\end{align*}
+and by choosing $\mu^2>\|c\|_\infty/\lambda_{\min}$ we can ensure that
+$(\mathcal{L}_{\Delta x,\Delta y}W)_{p,q}<0$ for $(x_p,y_q)\in\Omega$.
+Applying \cref{lem: Lu<0 Omega discrete}, we conclude that
+\[
+\max_\Omega U\le\max_\Omega W\le\max_{\partial\Omega}W
+	\le\bigl(\max_{\partial\Omega}U\bigr)+\epsilon e^{\mu L_x}.
+\]
+Since this inequality holds for any $\epsilon>0$, the result follows.
+\end{proof}
+
+Next is a discrete version of \cref{thm: max min elliptic}.
+
+\begin{theorem}\label{thm: discrete max principle elliptic}
+If $c_{p,q}\ge0$ and $(\mathcal{L}_{\Delta x,\Delta y}U)_{p,q}=f_{p,q}$
+for $(x_p,y_q)\in\Omega$, then
+\[
+\max_\Omega U\le\max_{\partial\Omega}U^++C\max_{(x_p,y_q)\in\Omega} f^+_{p,q}.
+\]
+and
+\[
+\min_\Omega U\le\min_{\partial\Omega}U^-+C\max_{(x_p,y_q)\in\Omega}f^-_{p,q},
+\]
+where $C=L^2/(8\lambda_{\min})$.
+\end{theorem}
+\begin{proof}
+Let
+\[
+W_{p,q}=\bigl(\max_{\partial\Omega}U^+\bigr)
+	+v(x_p)\max_\Omega f^+_{\cdot,\cdot}
+\quad\text{where $v(x)=\frac{x(L_x-x)}{2\lambda_{\min}}$.}
+\]
+Since the second-order central difference quotient equals the exact second
+derivative for a quadratic polynomial,
+\[
+\frac{v(x_{p+1})-2v(x_p)+v(x_{p-1})}{\Delta x^2}=v''(x_p)
+	=\frac{-1}{\lambda_{\min}}
+\]
+and thus, noting that $v(x)\ge0$ for~$0\le x\le L_x$, we conclude that
+\[
+(\mathcal{L}_{\Delta x,\Delta y}v)_{p,q}=\frac{a_{1,p,q}}{\lambda_{\min}}
+	+c_{p,q}v_{p,q}\ge1\quad\text{for $(x_p,y_q)\in\Omega$.}
+\]
+It follows that
+\[
+(\mathcal{L}_{\Delta x,\Delta y}W)_{p,q}
+	=c_{p,q}\bigl(\max_{\partial\Omega}U^+\bigr)
+	+(\mathcal{L}_{\Delta x,\Delta y}V)_{p,q}
+	\bigl(\max_\Omega f^+_{\cdot,\cdot}\bigr)
+	\ge\bigl(\max_\Omega f^+_{\cdot,\cdot}\bigr)
+\]
+and so
+\[
+\bigl(\mathcal{L}_{\Delta x,\Delta y}(U-W)\bigr)_{p,q}
+	=f_{p,q}-(\mathcal{L}_{\Delta x,\Delta y}W)_{p,q}
+	\le f_{p,q}-\max_{\Omega}f^+_{\cdot,\cdot}\le0
+\quad\text{for $(x_p,y_q)\in\Omega$,}  
+\]
+with
+\[
+(U-W)_{p,q}=U_{p,q}-\bigl(\max_{\partial\Omega}U^+\bigr)
+	-V_p\max f^+_{\cdot,\cdot}\le0
+\quad\text{for $(x_p,y_q)\in\partial\Omega$.}  
+\]
+By \cref{thm: discrete max principle elliptic},
+\[
+\max_\Omega(U-W)\le\max_{\partial\Omega}(U-W)\le0,
+\]
+and the first inequality follows because $\max_{0\le x\le L_x}v(x)=C$ and so
+\[
+\max_\Omega U\le\max_\Omega W\le\bigl(\max_{\partial\Omega}U^+\bigr)
+	+C\max_\Omega f^+_{\cdot,\cdot}.
+\]
+The second follows because
+$\bigl(\mathcal{L}_{\Delta x,\Delta y}(-U)\bigr)_{p,q}=-f_p$,
+$(-U)^+_{p,q}=-(U^+_{p,q})$ and $(-f)^+_{p,q}=-(f^+_{p,q})$.
+\end{proof}
+
+Our final result for this section is a discrete version of 
+\cref{thm: a priori elliptic}.
+
+\begin{theorem}\label{thm: discrete apriori elliptic}
+If $c\ge0$ on $\Omega$, then the discrete boundary-value 
+problem~\eqref{eq: discrete bvp 2d} has a unique solutions~$U_{p,q}$, and
+\[
+\max_{\overline{\Omega}}|U|\le\max_{\partial\Omega}|g_{\cdot,\cdot}|
+	+C\max_\Omega|f_{\cdot,\cdot}|.
+\]
+\end{theorem}
+\begin{proof}
+The \emph{a priori} estimate follows at once from 
+\cref{thm: discrete max principle elliptic}, and shows that if $f_{p,q}=0$
+for all $(x_p,y_q)\in\Omega$~and if $g_{p,q}=0$ for all 
+$(x_p,y_q)\in\partial\Omega$, then the problem has only the trivial solution
+$U_{p,q}=0$ for all $(x_p,y_q)\in\overline{\Omega}$. Hence, the coefficient
+matrix for the associated linear system is non-singular, implying the
+existence and uniqueness of~$U_{p,q}$.
+\end{proof}
+
+\section{An error bound}
+
+We will say that the finite difference scheme used in~\eqref{eq: }
+is \emph{stable} if there is a constant~$C$ --- independent of $f$, $g$,
+$\Delta x$~and $\Delta y$ --- such that
+\begin{equation}\label{eq: stability elliptic Omega}
+\max_{\overline{\Omega}}|U|\le C\Bigl(\max_{\partial\Omega}|g_{\cdot,\cdot}|.
+\end{equation}
+For example, by \cref{thm: discrete apriori elliptic}, sufficient conditions
+for stability are that the simplified partial differential 
+operator~\eqref{eq: L simple} is uniformly elliptic with~$c\ge0$.  
+
+We define the local truncation error in the usual way, as
+\[
+\tau_{p,q}=f_{p,q}-(\mathcal{L}_{\Delta x,\Delta y}u)_{p,q}
+	=(\mathcal{L}u)_{p,q}-(\mathcal{L}_{\Delta x,\Delta y}u)_{p,q},
+\]
+and note that
+\begin{equation}\label{eq: tau pq bound}
+\begin{aligned}
+\tau_{p,q}&=-a_{1,p,q}\biggl(u_{xx}(x_p,y_q)
+	-\frac{u(x_{p+1},y_q)-2u(x_p,y_q)+u(x_{p-1},y_q)}{\Delta x^2}\biggr)\\
+	&\qquad{}-a_{2,p,q}\biggl(u_{yy}(x_p,y_q)
+	-\frac{u(x_p,y_{q+1})-2u(x_p,y_q)+u(x,y_{q-1})}{\Delta y^2}\biggr),
+\end{aligned}
+\end{equation}
+so, by \cref{thm: 2nd central diff},
+\begin{equation}\label{eq: tau pq bound}
+|\tau_{p,q}|\le\biggl(
+\frac{|a_{1,p,q}|}{12}\|\partial_1^4u\|_\infty\,\Delta x^2
++\frac{|a_{2,p,q}|}{12}\|\partial_2^4u\|_\infty\,\Delta y^2\biggr)
+\end{equation}
+The \emph{solution error},
+\[
+E_{p,q}=U_{p,q}-u(x_p,y_q),
+\]
+satisfies
+\[
+(\mathcal{L}_{\Delta x,\Delta y}E)_{p,q}
+	=(\mathcal{L}_{\Delta x,\Delta y}U)_{p,q}
+	-(\mathcal{L}_{\Delta x,\Delta y}u)_{p,q}
+	=f_{p,q}-(\mathcal{L}_{\Delta x,\Delta y}u)_{p,q}=\tau_{p,q},
+\]
+for $(x_p,y_q)\in\Omega$, with $E_{p,q}=g_{p,q}-g_{p,q}=0$
+for $(x_p,y_q)\in\partial\Omega$.  Replacing $U$, $f$ and $g$ 
+in~\eqref{eq: stability elliptic Omega} by $E$, $\tau$ and $0$, respectively,
+we have
+\[
+\max_{\overline{\Omega}}|U|\le C\max_\Omega|\tau_{\cdot,\cdot}|.
+\]
+Combining this estimate with~\eqref{eq: tau pq bound}, we obtain the error
+bound
+\[
+|U_{p,q}-u(x_p,y_q)|\le C\biggl(
+\frac{\|a_1\|_\infty}{12}\|\partial_1^4u\|_\infty\,\Delta x^2
++\frac{\|a_2\|_\infty}{12}\|\partial_2^4u\|_\infty\,\Delta y^2\biggr)
+\]
+for $(x_p,y_q)\in\overline{\Omega}$.  In other words,
+\[
+U_{p,q}=u(x_p,y_q)+O(\Delta x^2+\Delta y^2),
+\]
+showing that the finite difference scheme is indeed second-order 
+accurate.
+
 \section{Parabolic problems in 2D}
+Consider the following 2D initial-boundary value problem,
+\begin{equation}\label{eq: ibvp 2d}
+\begin{aligned}
+u_t-a\nabla^2u&=f(x,y,t)&&\text{for $(x,y)\in\Omega$ and $0<t<T$,}\\
+u&=g(x,y,t)&&\text{for $(x,y)\in\partial\Omega$ and $0<t<T$,}\\
+u&=u_0(x,y)&&\text{for $(x,y)\in\Omega$ when $t=0$,}
+\end{aligned}
+\end{equation}
+where, for simplicity, we assume that the coefficient~$a$ is a positive
+constant.
 
 \begin{Exercises}
 
