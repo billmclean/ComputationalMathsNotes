@@ -17,22 +17,22 @@ defined by
     +\frac{\partial^2u}{\partial y^2}.
 \]
 
-\section{Five-point difference scheme}
+\section{Five-point difference scheme}\label{sec: five point scheme}
 For simplicity, we now restrict our attention to the case when the spatial 
 domain is a rectangle,
-\[
+\begin{equation}\label{eq: Omega rectangle}
 \Omega=(0,L_x)\times(0,L_y).
-\]
+\end{equation}
 To set up the spatial finite difference grid, we fix positive integers $P$~and 
 $Q$, define the step sizes
 \[
 \Delta x=\frac{L_x}{P}\quad\text{and}\quad\Delta y=\frac{L_y}{Q},
 \]
 and define the grid points
-\[
+\begin{equation}\label{eq: xp yq grid}
 (x_p,y_q)=(p\,\Delta x,q\,\Delta y)
 \quad\text{for $0\le p\le P$ and $0\le q\le Q$.}
-\]
+\end{equation}
 Our is to compute $U_{p,q}\approx u(x_p,y_q)$ where $u$ is the solution 
 of~\eqref{eq: Poisson bvp}.
 
@@ -334,7 +334,7 @@ so that
 if we set $v_0=0=v_P$ and $w_0=0=w_Q$.  These relations correspond to the case 
 when $u(x,y)=v(x)w(y)$ so that $-u_{xx}=(-v'')w$~and $u_{yy}=v(-w'')$.
 
-\begin{theorem}
+\begin{theorem}\label{thm: Poisson matrix}
 Let
 \[
 \boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}+\boldsymbol{g}
@@ -1066,10 +1066,84 @@ u&=u_0(x,y)&&\text{for $(x,y)\in\Omega$ when $t=0$,}
 \end{aligned}
 \end{equation}
 where, for simplicity, we assume that the coefficient~$a$ is a positive
-constant.
+constant.  For the rectangular domain~\eqref{eq: Omega rectangle} and the
+grid \eqref{eq: xp yq grid}, we can define the semidiscrete finite difference
+solution~$U_{pq}(t)\approx u(x_p,y_q,t)$ by
+\[
+\frac{dU_{p,q}}{dt}-a\biggl(\frac{U_{p+1,q}-2U_{p,q}+U_{p-1,q}}{\Delta x^2}
+	+\frac{U_{p,q+1}-2U_{p,q}+U_{p,q-1}}{\Delta y^2}\biggr)=f_{p,q}(t)
+\]
+for $1\le p\le P-1$ and $1\le q\le Q-1$, together with the discrete
+boundary conditions
+\[
+U_{p,q}(t)=g(x_p,y_q,t)\quad
+	\text{for $(x_p,y_q)\in\partial\Omega$ and $1\le t\le T$,}
+\]
+and initial condition
+\[
+U_{p,q}(0)=u_0(x_p,y_q)\quad\text{for $1\le p\le P-1$ and $1\le q\le Q-1$.}
+\]
+Since
+\[
+-a\bigl(\delta_x^2U_{p,q}+\delta_y^2U_{p,q}\bigr)=f_{p,q}-\frac{dU_{p,q}}{dt},
+\]
+we see that
+\[
+\boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}(t)+\boldsymbol{g(t)}
+	-\frac{d\boldsymbol{U}}{dt}
+\]
+where $\boldsymbol{A}$ is the same matrix as in \cref{thm: Poisson matrix},
+and the vectors $\boldsymbol{f}(t)$~and $\boldsymbol{g}(t)$ are time-dependent
+vectors constructed from grid values of the functions $f$~and $g$, as in 
+\cref{example: 5-pt matrix}.  Thus, in matrix form the semidiscrete method is
+\[
+\frac{d\boldsymbol{U}}{dt}+\boldsymbol{A}\boldsymbol{U}
+	=\boldsymbol{f}(t)+\boldsymbol{g(t)} 
+\quad\text{for $0\le t\le T$, with $\boldsymbol{U}(0)=\boldsymbol{U}_0$.}
+\]
+Here, the column vector~$\boldsymbol{U}_0=[(U_0)_j]_{j=1}^M$ is defined
+by putting $(U_0)_j=u_0(x_p,y_q)$ for~$j$ as in~\eqref{eq: column-major}.
+
+By introducing the time levels~\eqref{eq: uniform tn}, we can consider a
+fully-discrete approximation
+\[
+U^n_{p,q}\approx U_{p,q}(t_n)\approx u(x_p,y_q,t_n).
+\]
+The forward Euler method for the 2D problem~\eqref{eq: ibvp 2d} is
+\[
+\frac{U^{n+1}_{p,q}-U^n_{p,q}}{\Delta t}
+	-a\biggl(\frac{U_{p+1,q}^n-2U_{p,q}^n+U_{p-1,q}^n}{\Delta x^2}
+	+\frac{U_{p,q+1}^n-2U_{p,q}^n+U_{p,q-1}^n}{\Delta y^2}\biggr)=f_{p,q}^n,
+\]
+for $0\le n\le N-1$, $1\le p\le P-1$ and $1\le q\le Q-1$, with the 
+fully-discrete boundary and initial conditions
+\begin{equation}\label{eq: fully discrete bc ic 2d}
+\begin{aligned}
+U^n_{p,q}&=g^n_{p,q}&
+&\text{for $0\le n\le N-1$ and $(x_p,y_q)\in\partial\Omega$,}\\
+U^0_{p,q}&=(U_0)_{p,q}&
+&\text{for $(x_p,y_q)\in\Omega$.}
+\end{aligned}
+\end{equation}
+Let
+\[
+\rho_x=\frac{a\,\Delta t}{\Delta x^2}\quad\text{and}\quad
+\rho_y=\frac{a\,\Delta t}{\Delta y^2},
+\]
+so that
+\[
+U^{n+1}_{p,q}-U^n_{p,q}-\rho_x\bigl(U^n_{p+1,q}-2U^n_{p,q}+U^n_{p-1,q}\bigr)
+	-\rho_y\bigl(U^n_{p,q+1}-2U^n_{p,q}+U^n_{p,q-1}\bigr)
+	=f^n_{p,q}
+\]
+and hence
+\[
+U^{n+1}_{p,q}=f^n_{p,q}+\rho_xU^n_{p-1,q}+\rho_yU^n_{p,q-1}
+	+(1-2\rho_x-2\rho_y)U^n_{p,q}+\rho_yU^n_{p,q+1}+\rho_xU^n_{p+1,q}.
+\]
+
 
 \begin{Exercises}
-
 \exercise
 Suppose that the matrices $\boldsymbol{A}$~and $\boldsymbol{B}$ have upper 
 bandwidth $s_{\boldsymbol{A}}$~and $s_{\boldsymbol{B}}$, respectively, and that 

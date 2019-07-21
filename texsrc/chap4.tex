@@ -195,10 +195,10 @@ which gives the desired estimate.
 
 \section{Time stepping}\label{sec: time stepping}
 We can use finite differences for the time integration, putting
-\[
+\begin{equation}\label{eq: uniform tn}
 t_n=n\,\Delta t\quad\text{for $0\le n\le N$,}
     \quad\text{where $\Delta t=\frac{T}{N}$,}
-\]
+\end{equation}
 and seeking $U^n_p\approx u_h(x_p,t_n)\approx u(x_p,t_n)$.
 
 \begin{example}
