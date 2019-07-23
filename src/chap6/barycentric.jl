@@ -79,7 +79,7 @@ function draw_vectors(a, b, c)
                  latexstring("b_", j), color="g",
                  horizontalalignment="center", verticalalignment="center")
         bhat = b[:,j] / norm(b[:,j])
-        λ = LinearAlgebra.dot(c - a[:,succ[j]], bhat)
+        λ = dot(c - a[:,succ[j]], bhat)
         foot = c - λ * bhat
         plot([c[1], foot[1]], [c[2], foot[2]], "--k")
         side = a[:,succ[j]] - a[:,prev[j]]
