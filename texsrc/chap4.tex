@@ -91,13 +91,114 @@ and
 \boldsymbol{g}(t)=[g_p(t)]_{p=1}^P,\qquad
 \boldsymbol{U}_0=[u_{0h}(x_p)]_{p=1}^P.
 \]
+By using an energy argument, we can show that $u_h$ is stable.
+
+\begin{theorem}
+Assume that $c(x)\ge0$.  Then, the semidiscrete finite element 
+method~\eqref{eq: semidiscrete fem 1d} has a unique 
+solution~$u_h(\cdot,t)\in S_h(t)$ for~$0\le t\le T$.  Furthermore, the
+method is stable in the sense that
+\[
+\|(u_h-\eta)(\cdot,t)\|\le\|(u-\eta)(\cdot,0)\|
+	+2\int_0^t\|(f-\eta_s-\mathcal{L}\eta)(\cdot,s)\|\,ds
+	\quad\text{for $0\le t\le T$,}
+\]
+where $\eta$ is any function satisfying
+\[
+\eta(\cdot,t)\in S_h(t),\qquad \eta(0,t)=\gamma_0(t),\qquad
+	a(L)\eta_x(L,t)=\gamma_L(t).
+\]  
+For example, we my choose
+\[
+\eta(x,t)=\gamma_0(t)+\frac{\gamma_L(t)}{a(L)}\,x.
+\]
+\end{theorem}
+\begin{proof}
+The existence and uniqueness of $u_h$ follows from a standard result for
+systems of ODEs.  To establish the stability estimate, we first
+use the energy inner product~\eqref{eq: energy iprod} to write
+\eqref{eq: semidiscrete fem 1d} as
+\[
+\iprod{(u_h)_t,v}+\iprod{u_h,v}_{\mathcal{L}}=\gamma_L(t)v(L)
+	+\iprod{f(\cdot,t),v}\quad\text{for all $v\in T_h$.}
+\]
+Thus, the difference 
+\[
+w(x,t)=u_h(x,t)-\eta(x,t)
+\]
+satisfies 
+\[
+w(\cdot,t)\in S_h(t)\quad\text{and}\quad
+w(0,t)=u_h(0,t)-\gamma_0(t)=0,
+\]
+implying that $w(\cdot,t)\in T_h$ for each~$t\in[0,T]$, and we see by
+choosing $v(x)=w(x,t)$ that
+\[
+\iprod{(u_h)_t,w(\cdot,t)}+\iprod{u_h,w(\cdot,t)}_{\mathcal{L}}
+	=\gamma_L(t)w(L,t)+\iprod{f(\cdot,t),w(\cdot,t)}.
+\]
+Since $u_h=w+\eta$,
+\[
+\iprod{w_t+\eta_t,w}+\iprod{w+\eta,w}_{\mathcal{L}}
+	=\gamma_L(t)w(L,t)+\iprod{f,w},
+\]
+and integration by parts gives
+\[
+\iprod{\eta,w}_{\mathcal{L}}=[a\eta_xw]_0^L+\iprod{\mathcal{L}\eta,w}
+	=\gamma_L(t)w(L,t)+\iprod{\mathcal{L}\eta,w}.
+\]
+Therefore,
+\[
+\iprod{w_t,w}+\|w\|_{\mathcal{L}}^2=\iprod{g,w}
+\quad\text{where}\quad g(x,t)=f(x,t)-\eta_t(x,t)-(\mathcal{L}\eta)(x,t).
+\]
+Observe that
+\[
+\iprod{w_t,w}=\frac{1}{2}\,\frac{d}{dt}\|w(\cdot,t)\|^2,
+\]
+so after integrating in time to arrive at the estimate
+\[
+\|w(\cdot,t)\|^2+2\int_0^t\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds
+\le\|w_0\|^2+2\int_0^t\iprod{g(\cdot,s),w(\cdot,s)}\,ds
+\quad\text{for $0\le t\le T$,}
+\]
+where 
+\[
+w_0(x)=w(x,0)=(u-\eta)(x,0).
+\]
+Since $\|w(\cdot,t)\|$ is a continuous function of~$t$, there is a 
+$t^*\in[0,t]$ such that 
+\[
+\|w(\cdot,t^*)\|=\max_{0\le s\le t}\|w(\cdot,s)\|. 
+\]
+Therefore, using the Cauchy--Schwarz inequality,
+\begin{multline*}
+\|w(\cdot,t)\|^2\le\|w(\cdot,t)\|^2+2\int_0^t\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds
+\le\|w(\cdot,t^*)\|^2+2\int_0^{t^*}\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds\\
+\le\|w_0\|^2+2\int_0^{t^*}\|g(\cdot,s)\|\|w(\cdot,s)\|\,ds
+\le\|w(\cdot,t^*)\|\biggl(\|w_0\|+2\int_0^t\|g(\cdot,s)\|\,ds\biggr),
+\end{multline*}
+so
+\[
+\|w(\cdot,t)\|\le\|w_0\|+2\int_0^t\|g(\cdot,s)\|\,ds,
+\]
+which gives the desired estimate.
+\end{proof}
+\begin{corollary}
+\begin{multline*}
+\|u_h(\cdot,t)\|\le\|u_{0h}\|+2\int_0^t\|f(\cdot,s)\|\,ds\\
+	+C\biggl(|\gamma_0(t)|+|\gamma_L(t)|
+	+\int_0^t\bigl(|\gamma_0(s)|+|\gamma_0'(s)|
+	+|\gamma_L(s)|+|\gamma_L'(s)|\bigr)\,ds\biggr).
+\end{multline*}
+\end{corollary}
 
 \section{Time stepping}\label{sec: time stepping}
 We can use finite differences for the time integration, putting
-\[
+\begin{equation}\label{eq: uniform tn}
 t_n=n\,\Delta t\quad\text{for $0\le n\le N$,}
     \quad\text{where $\Delta t=\frac{T}{N}$,}
-\]
+\end{equation}
 and seeking $U^n_p\approx u_h(x_p,t_n)\approx u(x_p,t_n)$.
 
 \begin{example}
@@ -172,7 +273,7 @@ the solution of the continuous problem $u_t+\mathcal{L}u=0$ is simply
 u(x,t)=e^{-\lambda_kt}\phi_k(x).
 \end{equation}
 We shall assume that $c(x)\ge0$ for $0<x<L$, which ensures that $\lambda_k>0$ 
-for all~$k$; see exercise~\ref{ex: lambda>0}.  Thus, the 
+for all~$k$; see exercise~\ref{ex: quadratic form}.  Thus, the 
 factor~$e^{-\lambda_kt}$ decreases monotonically to zero as~$t\to\infty$.
 
 Each of the matrices $\boldsymbol{A}$, $\boldsymbol{C}$~and $\boldsymbol{M}$ is 
@@ -371,7 +472,8 @@ it follows that
 \[
 \|\boldsymbol{U}^n\|_{\boldsymbol{M}}
     \le\Bigl(\max_{1\le k\le P}|1-\Delta t\,\Lambda_k|^n\Bigr)
-    \|\boldsymbol{U}_0\|_{\boldsymbol{M}}.
+    \|\boldsymbol{U}_0\|_{\boldsymbol{M}}
+	=(|1-\Delta t\,\Lambda_P)^n\|\boldsymbol{U}_0\|_{\boldsymbol{M}}.
 \]
 Hence, if $\Delta t\le 1/\Lambda_P$ then $\|\boldsymbol{U}^n\|_{\boldsymbol{M}}
 \le\|\boldsymbol{U}_0\|_{\boldsymbol{M}}$ and the forward Euler method is 
@@ -383,10 +485,9 @@ A similar argument shows that the backward Euler method gives
 \[
 \|\boldsymbol{U}^n\|_{\boldsymbol{M}}
     \le\Bigl(\max_{1\le k\le P}(1+\Delta t\,\Lambda_k)^{-n}\Bigr)
-    \|\boldsymbol{U}_0\|_{\boldsymbol{M}},
+    \|\boldsymbol{U}_0\|_{\boldsymbol{M}}
+	=(1+\Delta t\,\Lambda_1)^{-n}\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
 \]
-so $\|\boldsymbol{U}^n\|_{\boldsymbol{M}}\le(1+\Delta t\,\Lambda_1)^{-n}
-\|\boldsymbol{U}_0\|_{\boldsymbol{M}}\le\|\boldsymbol{U}_0\|_{\boldsymbol{M}}$
 and hence we have stability in the $\boldsymbol{M}$-norm for any~$\Delta t$.
 \end{example}
 
@@ -396,7 +497,9 @@ For the Crank--Nicolson method,
 \|\boldsymbol{U}^n\|_{\boldsymbol{M}}
     \le\biggl(\max_{1\le k\le P}\biggl|
     \frac{1-\tfrac12\Delta t\,\Lambda_k}{1+\tfrac12\Delta t\,\Lambda_k}
-    \biggr|^n\biggr)\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
+    \biggr|^n\biggr)\|\boldsymbol{U}_0\|_{\boldsymbol{M}}
+=\biggl|\frac{1-\tfrac12\Delta t\,\Lambda_1}{1+\tfrac12\Delta t\,\Lambda_1}
+	\biggr|^n\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
 \]
 and we again have stability in the $\boldsymbol{M}$-norm for any~$\Delta t$.
 \end{example}

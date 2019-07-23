@@ -1,7 +1,7 @@
 \chapter[Finite elements in 1D]{Finite elements for \\
 stationary problems in 1D}\label{chap: FEM 1d}
 
-Recall our model two-point boundary-value problem~\ref{eq: model 1d}, 
+Recall our model two-point boundary-value problem~\eqref{eq: model 1d}, 
 \begin{equation}\label{eq: model 1d chap 2}
 -u''=f(x)\quad\text{for $0<x<L$,}
 	\quad\text{with $u(0)=\gamma_0$ and $u(L)=\gamma_L$.}
@@ -223,8 +223,9 @@ $\boldsymbol{V}^T\boldsymbol{A}\boldsymbol{V}=0$ implies
 $\boldsymbol{V}=\boldsymbol{0}$.
 \end{proof}
 
-For example, if $P=6$ then the $5\times 5$ system of 
-equations~\eqref{eq: model FEM eqns} can be written in matrix form as
+\begin{example}
+If $P=6$ then the matrix form of the $5\times 5$ system of 
+equations~\eqref{eq: model FEM eqns} is
 \[
 \begin{bmatrix}
  h_1^{-1}+h_2^{-1}&        -h_2^{-1}&&&\\
@@ -237,15 +238,17 @@ equations~\eqref{eq: model FEM eqns} can be written in matrix form as
 =\begin{bmatrix}f_1\\ f_2\\ f_3\\ f_4\\ f_5\end{bmatrix}
 +\begin{bmatrix}h_1^{-1}\gamma_0\\ \\ \\ \\ h_6^{-1}\gamma_L\end{bmatrix}.
 \]
-Being positive-definite, the stiffness matrix is non-singular so this linear 
-system has a unique solution, which can be computed using the algorithms 
-described in section~\ref{sec: sym tridiagonal}.
+\end{example}
+
+Being positive-definite, the stiffness matrix is non-singular so the linear 
+system~\eqref{eq: model FEM eqns} has a unique solution, which can be 
+computed using the algorithms described in section~\ref{sec: sym tridiagonal}.
 
 \section{General self-adjoint problems}\label{sec: self-adjoint 1d}
-A second-order linear differential operator~$\mathcal{A}$ is 
+A second-order linear differential operator~$\mathcal{L}$ is 
 \emph{formally self-adjoint} if it can be written in the form
 \begin{equation}\label{eq: L self-adjoint}
-(\mathcal{A}u)(x)=-\bigl(a(x)u'\bigr)'+c(x)u(x).
+(\mathcal{L}u)(x)=-\bigl(a(x)u'\bigr)'+c(x)u(x).
 \end{equation}
 Here, the coefficients $a(x)$ and $c(x)$ are assumed to have the same 
 properties as in Chapter~\ref{chap: finite diff 1d}; in particular, $a(x)$ must 
@@ -253,12 +256,17 @@ satisfy the lower bound~\eqref{eq: ellipticity 1d}. For such an $\mathcal{L}$,
 consider the following two-point boundary-value problem with \emph{mixed 
 boundary conditions},
 \begin{equation}\label{eq: self-adjoint mixed}
-\mathcal{A}u=f(x)\quad\text{for $0<x<L$,}\quad
+\mathcal{L}u=f(x)\quad\text{for $0<x<L$,}\quad
 \text{with $u(0)=\gamma_0$ and $a(L)u'(L)=\gamma_L$.}
 \end{equation}
+Here, at the left end of the interval~$[0,L]$ we have imposed a
+\emph{Dirichlet boundary condition} that fixes the value of~$u(0)$, whereas
+at the right end we have imposed a \emph{Neumann boundary condition} that
+fixes the value of~$u'(L)$.
+
 Integration by parts implies that
 \begin{equation}\label{eq: Lu v by parts}
-\int_0^L(\mathcal{A}u)(x)v(x)\,dx
+\int_0^L(\mathcal{L}u)(x)v(x)\,dx
     =-\bigl[a(x)u'(x)v(x)\bigr]_0^L+\int_0^L\bigl(a(x)u'(x)v'(x)+c(x)u(x)v(x)
         \bigr)\,dx,
 \end{equation}
@@ -323,36 +331,41 @@ $\boldsymbol{C}$ is called the \emph{mass matrix}.  On the right-hand side,
 $\boldsymbol{f}$ is called the \emph{load vector}.  This terminology reflects 
 the historical origins of finite element methods in structural engineering.
 
-Assume now that $c(x)\ge0$.  We define two real inner products,
+We equip the vector space~$L^2(0,T)$ of square-integrable 
+functions~$v:[0,L]\to\mathbb{R}$ with its usual inner product
 \[
-\iprod{v,w}=\int_0^Lv(x)w(x)\,dx\quad\text{and}\quad
-\iprod{v,w}_{\mathcal{A}}=\int_0^L\bigl(a(x)v'(x)w'(x)+c(x)v(x)w(x)\bigr)\,dx
+\iprod{v,w}=\int_0^Lv(x)w(x)\,dx,
 \]
+and, provided $c(x)\ge0$ for~$0\le x\le L$, introduce the \emph{energy
+inner product}
+\begin{equation}\label{eq: energy iprod}
+\iprod{v,w}_{\mathcal{L}}=\int_0^L\bigl(a(x)v'(x)w'(x)+c(x)v(x)w(x)\bigr)\,dx,
+\end{equation}
 together with the corresponding norms
-$\|v\|_{\mathcal{A}}=\sqrt{\iprod{v,v}_{\mathcal{A}}}$~and
+$\|v\|_{\mathcal{L}}=\sqrt{\iprod{v,v}_{\mathcal{A}}}$~and
 $\|v\|=\sqrt{\iprod{v,v}}$; thus,
 \[
 \|v\|^2=\int_0^L|v(x)|^2\,dx
 \quad\text{and}\quad
-\|v\|_{\mathcal{A}}^2=\int_0^L\bigl(a(x)|v'(x)|^2+c(x)|v(x)|^2\bigr)\,dx.
+\|v\|_{\mathcal{L}}^2=\int_0^L\bigl(a(x)|v'(x)|^2+c(x)|v(x)|^2\bigr)\,dx.
 \]
 With this notation, we can re-write \eqref{eq: Lu=f weak 1d} as
 \begin{equation}\label{eq: <u,v>A}
-\iprod{u,v}_{\mathcal{A}}=\gamma_Lv(L)+\iprod{f,v}\quad\text{provided $v(0)=0$.}
+\iprod{u,v}_{\mathcal{L}}=\gamma_Lv(L)+\iprod{f,v}\quad\text{provided $v(0)=0$.}
 \end{equation}
 and can see from~\eqref{eq: self-adjoint mixed bc FEM} that $u_h\in S_h$
 satisfies
 \begin{equation}\label{eq: <uh,v>A}
-\iprod{u_h,v}_{\mathcal{A}}=\gamma_Lv(L)+\iprod{f,v}
+\iprod{u_h,v}_{\mathcal{L}}=\gamma_Lv(L)+\iprod{f,v}
 	\quad\text{for all $v\in T_h$.}
 \end{equation}
 
 \begin{lemma}\label{lem: v v'}
 If $v\in H^1(0,L)$, then
 \[
-\|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{A}}^2\bigr)
+\|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr)
 \quad\text{and}\quad
-|v(L)|^2\le 2\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{A}}^2\bigr),
+|v(L)|^2\le 2\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr),
 \]
 where the positive constant~$\beta$ is given by
 \[
@@ -365,29 +378,37 @@ Since $v(x)=v(0)+\int_0^xv'(y)\,dy$, the Cauchy--Schwarz inequality implies that
 |v(x)|^2&\le2|v(0)|^2+2\biggl(\int_0^x v'(y)\,dy\biggr)^2
 \le2|v(0)|^2+2\biggl(\int_0^x\frac{dy}{a(y)}\biggr)
 \biggl(\int_0^xa(y)|v'(y)|^2\,dy\biggr)\\
-	&\le2|v(0)|^2+2\beta\|v\|_{\mathcal{A}}^2
+	&\le2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2
 \end{align*}
 so
 \begin{align*}
-\|v\|^2&=\int_0^L|v(x)|^2\,dx\le 2L|v(0)|^2+2\beta L\|v\|_{\mathcal{A}}^2.
+\|v\|^2&=\int_0^L|v(x)|^2\,dx\le 2L|v(0)|^2+2\beta L\|v\|_{\mathcal{L}}^2.
 \end{align*}
 Similarly, since $v(L)=v(0)+\int_0^Lv'(y)\,dy$ we have
 \begin{align*}
 |v(L)|^2&\le2|v(0)|^2+2\biggl(\int_0^Lv'(y)\,\biggr)^2
 	\le2|v(0)|^2+2\biggl(\int_0^L\frac{dy}{a(y)}\biggr)
 	\biggl(\int_0^La(y)|v'(y)|^2\,dy\biggr)\\
-	&=2|v(0)|^2+2\beta\|v\|_{\mathcal{A}}^2,
+	&=2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2,
 \end{align*}
 as claimed.
 \end{proof}
 
+The \emph{Sobolev space} with differentiability index~$r$ is the vector
+space
+\begin{equation}\label{eq: Hr 1d def}
+H^r(0,L)=\{\,v\in L^2(0,L): \text{$v^{(k)}\in L^2(0,L)$ for $1\le k\le r$}\,\};
+\end{equation}
+thus, $v\in H^r(0,L)$ iff $v$, $v'$, \dots, $v^{(r)}$ are square integrable
+on~$[0,L]$.
+
 \begin{theorem}\label{thm: ||u||A}
 Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-
-point boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique
+point boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique weak
 solution~$u\in H^1(0,L)$, and there is a constant~$C>0$ (depending only on $L$,
 $a$~and $c$) such that
 \[
-\|u\|_{\mathcal{A}}^2\le C\bigl(|\gamma_0|^2+|\gamma_L|^2+\|f\|^2\bigr).
+\|u\|_{\mathcal{L}}^2\le C\bigl(|\gamma_0|^2+|\gamma_L|^2+\|f\|^2\bigr).
 \]
 \end{theorem}
 \begin{proof}
@@ -397,12 +418,12 @@ u_0(0)=u(0),\quad u_0(L)=0,\quad v(0)=0,\quad v(L)=u(L).
 \]
 By~\eqref{eq: <u,v>A},
 \[
-\iprod{u,u-u_0}_{\mathcal{A}}=\gamma_Lu(L)+\iprod{f,u-u_0}
+\iprod{u,u-u_0}_{\mathcal{L}}=\gamma_Lu(L)+\iprod{f,u-u_0}
 \]
 and so
 \[
-\|u\|_{\mathcal{A}}^2=\gamma_L u(L)+\iprod{f,u}-\iprod{f,u_0}
-	+\iprod{u,u_0}_{\mathcal{A}}.
+\|u\|_{\mathcal{L}}^2=\gamma_L u(L)+\iprod{f,u}-\iprod{f,u_0}
+	+\iprod{u,u_0}_{\mathcal{L}}.
 \]
 For any $\epsilon>0$, \cref{lem: v v'} gives
 \[
@@ -411,7 +432,7 @@ For any $\epsilon>0$, \cref{lem: v v'} gives
 \le\epsilon^{-1}\,\gamma_L^2
 	+\tfrac14\epsilon\,|u(L)|^2
 	\le\epsilon^{-1}\gamma_L^2+\tfrac12\epsilon\bigl(|u(0)|^2
-	+\beta\|u\|_{\mathcal{A}}^2\bigr),
+	+\beta\|u\|_{\mathcal{L}}^2\bigr),
 \]
 and by the Cauchy--Schwarz inequality,
 \begin{align*}
@@ -419,35 +440,35 @@ and by the Cauchy--Schwarz inequality,
 	\bigl(\tfrac12\epsilon^{1/2}\|u\|\bigr)
 	\le\epsilon^{-1}\|f\|^2+\tfrac14\epsilon\|u\|^2\\
 	&\le\epsilon^{-1}\|f\|^2
-	+\tfrac12 L\epsilon\bigl(|u(0)|^2+\beta\|u\|_{\mathcal{A}}^2\bigr).
+	+\tfrac12 L\epsilon\bigl(|u(0)|^2+\beta\|u\|_{\mathcal{L}}^2\bigr).
 \end{align*}
 Likewise,
 \[
 |\iprod{f,u_0}|\le\epsilon^{-1}\|f\|^2+\tfrac12\epsilon\|u_0\|^2
 \quad\text{and}\quad
-|\iprod{u,u_0}_{\mathcal{A}}|\le\epsilon^{-1}\|u_0\|_{\mathcal{A}}^2
-	+\tfrac14\epsilon\|u_0\|_{\mathcal{A}}^2,
+|\iprod{u,u_0}_{\mathcal{L}}|\le\epsilon^{-1}\|u_0\|_{\mathcal{L}}^2
+	+\tfrac14\epsilon\|u_0\|_{\mathcal{L}}^2,
 \]
 and, since $u(0)=\gamma_0$,
 \[
-\|u\|_{\mathcal{A}}^2\le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+\|u\|_{\mathcal{L}}^2\le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
 +\tfrac12\epsilon\bigl((1+L)|\gamma_0|^2+\|u_0\|^2
-	+\tfrac12\|u_0\|_{\mathcal{A}}^2+(1+L)\beta\|u\|_{\mathcal{A}}^2\bigr).
+	+\tfrac12\|u_0\|_{\mathcal{L}}^2+(1+L)\beta\|u\|_{\mathcal{L}}^2\bigr).
 \]
 Now choose $\epsilon=(1+L)^{-1}\beta^{-1}$ so that $\epsilon(1+L)\beta=1$ and 
 thus
 \[
-\|u\|_{\mathcal{A}}^2\le(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+\|u\|_{\mathcal{L}}^2\le(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
 	+\tfrac12\beta^{-1}|\gamma_0|^2+\tfrac12(1+L)^{-1}\beta^{-1}
-	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{A}}^2\bigr)
-	+\tfrac12\|u\|_{\mathcal{A}}^2.
+	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr)
+	+\tfrac12\|u\|_{\mathcal{L}}^2.
 \]
-After cancelling the term~$\tfrac12\|u\|_{\mathcal{A}}^2$ and multiplying both
+After cancelling the term~$\tfrac12\|u\|_{\mathcal{L}}^2$ and multiplying both
 sides by~$2$, we obtain
 \[
-\|u\|_{\mathcal{A}}^2\le2(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
+\|u\|_{\mathcal{L}}^2\le2(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
 	+\beta^{-1}|\gamma_0|^2+(1+L)^{-1}\beta^{-1}
-	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{A}}^2\bigr),
+	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr),
 \]
 with
 \[
@@ -460,16 +481,17 @@ and
 	a(x)+c(x)(L-x)^2\bigr)\,dx
 	\le\bigl(L^{-1}a_{\max}+\tfrac13L^2c_{\max}\bigr)|\gamma_0|^2,
 \]
-implying the desired estimate for~$\|u\|_{\mathcal{A}}^2$.
+implying the desired estimate for~$\|u\|_{\mathcal{L}}^2$.
 \end{proof}
 
 \section{Matrix assembly element-by-element}\label{sec: matrix assembly 1d}
 
 In the previous section, we used the nodal basis functions~$\chi_q$ to set up 
 the linear system~\eqref{eq: self-adjoint mixed equations}, but this approach 
-becomes very complicated in 2D~or 3D, or even in 1D with higher-order elements.
-Instead, a simpler method is to assemble the matrices $\boldsymbol{A}$~and 
-$\boldsymbol{C}$, and the vector~$\boldsymbol{f}$, element-by-element.  
+becomes very complicated in 2D~or 3D, or even in 1D when using 
+piecewise-polynomials of higher degree.  Instead, a simpler method is to 
+assemble the matrices $\boldsymbol{A}$~and $\boldsymbol{C}$, and the 
+vector~$\boldsymbol{f}$, element-by-element.  
 
 For~$1\le p\le P$, we put $\mathsf{n}\brak{p}_1=x_{p-1}$~and
 $\mathsf{n}\brak{p}_2=x_p$ so that the $p$th 
@@ -517,7 +539,7 @@ and the \emph{element load vector} by
 f\brak{p}_j=\int_{x_{p-1}}^{x_p}f(x)\psi_j\brak{p}(x)\,dx.
 \]
 
-\begin{example}
+\begin{example}\label{example: linear elt matrix 1d}
 We will show that for the constant coefficients $a(x)=1$ and $c(x)=1$, the
 element stiffness and mass matrices are simply
 \[
@@ -575,12 +597,37 @@ defined by
 \begin{equation}\label{eq: e pm def}
 t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r;
 \end{equation}
-for example, if $P=6$ then
+
+\begin{figure}
+\caption{Node numbering from \cref{example: node numbers 1d} with~$P=4$.}
+\begin{center}
+\begin{tikzpicture}[scale=3.0]
+\draw[-,thick](-0.5,0) -- (4.5,0);
+\draw[fill] (0,0) circle (0.03cm);
+\foreach \x in {1, ..., 4}
+    \draw[fill=red] (\x,0) circle (0.03cm);
+\node[below] at (0,-0.1) {$\mathsf{n}_5=0$};
+\node[below] at (1,-0.1) {$\mathsf{n}_1$};
+\node[below] at (2,-0.1) {$\mathsf{n}_2$};
+\node[below] at (3,-0.1) {$\mathsf{n}_3$};
+\node[below] at (4,-0.1) {$\mathsf{n}_4=L$};
+\node[above] at (0,0) {$\mathsf{n}\brak{1}_1$};
+\node[above] at (1,0) {$\mathsf{n}\brak{1}_2=\mathsf{n}\brak{2}_1$};
+\node[above] at (2,0) {$\mathsf{n}\brak{2}_2=\mathsf{n}\brak{3}_1$};
+\node[above] at (3,0) {$\mathsf{n}\brak{3}_2=\mathsf{n}\brak{4}_1$};
+\node[above] at (4,0) {$\mathsf{n}\brak{4}_2$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+\begin{example}\label{example: node numbers 1d}
+If $P=4$ then
 \[
 \boldsymbol{T}=\begin{bmatrix}
-7&1&2&3&4&5&6\\
-1&2&3&4&5&6&7\end{bmatrix}.
+5&1&2&3\\
+1&2&3&4\end{bmatrix}.
 \]
+\end{example}
 
 Writing $U\brak{p}_k=u_h(\mathsf{n}\brak{p}_k)$~and
 $V\brak{p}_j=v(\mathsf{n}\brak{p}_j)$, we see that
@@ -617,29 +664,49 @@ Therefore, \eqref{eq: self-adjoint mixed bc FEM} holds iff
 \sum_{p=1}^P\sum_{j=1}^2V\brak{p}_j
 \sum_{k=1}^2\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
     =\gamma_LV\brak{P}_2+\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_jf\brak{p}_j
-    \quad\text{for all $v\in T_h$,}
+    \quad\text{for all $v\in T_h$.}
 \]
-or equivalently, if we let
-$\mathfrak{I}_r=\{\,(p,j):\mathsf{n}\brak{p}_j=\mathsf{n}_r\,\}$, 
+
+For~$v\in V_h$, put
 \[
-\sum_{r=1}^{P+1}V_r\sum_{s=1}^{P+1}\biggl(\sum_{(p,j)\in\mathfrak{I}_r}
-    \sum_{(p,k)\in\mathfrak{I}_s}\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)
-    \biggr)U_s
-    =\gamma_LV_P+\sum_{r=1}^{P+1}V_r\biggl(\sum_{p=1}^P
-    \sum_{(p,j)\in\mathfrak{I}_r}^2f\brak{p}_j\biggr)
+V_r=v(\mathsf{n}\brak{p}_r)\quad\text{for $1\le r\le P+1$,}
 \]
-for all $v\in T_h$. Define 
+so that $V_r=V\brak{p}_j$ iff $r=t_{jp}$, and hence
 \[
-a_{rs}=\sum_{(p,j)\in\mathfrak{I}_r}
-    \sum_{(p,k)\in\mathfrak{I}_s}a\brak{p}_{jk},\qquad
-c_{rs}=\sum_{(p,j)\in\mathfrak{I}_r}
-    \sum_{(p,k)\in\mathfrak{I}_s}c\brak{p}_{jk},\qquad
-f_r=\sum_{(p,j)\in\mathfrak{I}_r}f\brak{p}_j,
+\sum_{p=1}^{P+1}\sum_{j=1}^2V\brak{p}_jf\brak{p}_j=\sum_{r=1}^PV_rf_r,
 \]
-and form the $P\times(P+1)$ matrices $\boldsymbol{A}=[a_{pq}]$~and 
-$\boldsymbol{C}=[c_{pq}]$, and the $P$-dimensional vector~$\boldsymbol{f}$.
-Since $\mathsf{n}_{P+1}=\mathsf{n}\brak{1}_1=x_0=0$ we have 
-$V_{P+1}=V\brak{1}_1=0$, so
+where
+\[
+f_r=\sum_{j\in\mathcal{I}_r}f\brak{p}_j
+\quad\text{and}\quad
+\mathcal{I}_r=\{\,(p,j):t_{jp}=r\,\}.
+\]
+Similarly, put $U_s=u_h(\mathsf{n}_s)$ so that $U_s=U\brak{p}_k$ iff 
+$s=t_{kp}$, and hence
+\[
+\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_j\sum_{k=1}^2
+\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
+=\sum_{r=1}^{P+1}V_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s
+\]
+where
+\[
+a_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}}a\brak{p}_{jk}
+\qquad\text{and}\qquad
+c_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}} c\brak{p}_{jk},
+\]
+with
+\[
+\mathcal{I}_{rs}=\{\,(p,j,k):\text{$t_{jp}=r$ and $t_{kp}=s$}\,\}.
+\]
+In this way, \eqref{eq: self-adjoint mixed bc FEM} holds iff
+\[
+\sum_{r=1}^PV_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s=\gamma_LV_{P}
+	+\sum_{r=1}^PV_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s,
+\]
+remembering that $V_{P+1}=v(\mathsf{n}_{P+1})=v(0)=0$.  Forming the 
+$P\times(P+1)$ matrices $\boldsymbol{A}=[a_{pq}]$~and 
+$\boldsymbol{C}=[c_{pq}]$, and the $P$-dimensional vector~$\boldsymbol{f}$,
+we see that
 \begin{equation}\label{eq: VT(A+C)U}
 \boldsymbol{V}^T\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
     =\gamma_LV_P+\boldsymbol{V}^T\boldsymbol{f}
@@ -732,10 +799,57 @@ $\boldsymbol{A}=[a_{pq}]\in\mathbb{R}^{P\times(P+1)}$
 \end{algorithm}
 
 \begin{example}\label{example: assemble A}
-Consider a uniform grid with $M=4$ subintervals, each of length~$h_m=1$,
-and suppose $a(x)=1=c(x)$. Assembling the $5\times4$ stiffness 
-matrix~$\boldsymbol{A}=[\boldsymbol{A}\free\quad\boldsymbol{A}\fix]$ amounts 
-to computing
+Let $L=4$ and consider a uniform grid with $P=4$ subintervals, and suppose 
+that $a(x)=1=c(x)$.  Thus, by \cref{example: linear elt matrix 1d},
+\[
+h_p=1,\quad\boldsymbol{A}\brak{p}=\begin{bmatrix}1&-1\\ -1&1\end{bmatrix},\quad
+\boldsymbol{C}=\frac{1}{6}\begin{bmatrix}2&1\\ 1&2\end{bmatrix},
+\]
+and by \cref{example: node numbers 1d},
+\[
+\mathcal{I}_1=\{(1,2),(2,1)\},\quad
+\mathcal{I}_2=\{(2,2),(3,1)\},\quad
+\mathcal{I}_3=\{(3,2),(4,1)\},\quad
+\mathcal{I}_4=\{(4,2)\},
+\]
+so
+\[
+f_1=f\brak{1}_2+f\brak{2}_1,\quad
+f_2=f\brak{2}_2+f\brak{3}_1,\quad
+f_3=f\brak{3}_2+f\brak{4}_1,\quad
+f_4=f\brak{4}_2.
+\]
+Furthermore,
+\begin{align*}
+\mathcal{I}_{11}&=\{(1,2,2),(2,1,1)\},&
+\mathcal{I}_{12}&=\{(2,1,2)\},&
+\mathcal{I}_{15}&=\{(1,2,1)\},\\
+\mathcal{I}_{21}&=\{(2,2,1)\},&
+\mathcal{I}_{22}&=\{(2,2,2),(3,1,1)\},&
+\mathcal{I}_{23}&=\{(3,1,2)\},\\
+\mathcal{I}_{32}&=\{(3,2,1)\},&
+\mathcal{I}_{33}&=\{(3,2,2),(4,1,1)\},&
+\mathcal{I}_{34}&=\{(4,1,2)\},\\
+\mathcal{I}_{43}&=\{(4,2,1)\},&
+\mathcal{I}_{44}&=\{(4,2,2)\},&&
+\end{align*}
+with $\mathcal{I}_{rs}=\emptyset$ otherwise, and hence
+\begin{align*}
+a_{11}&=a\brak{1}_{22}+a\brak{2}_{11},&
+a_{12}&=a\brak{2}_{12},&
+a_{15}&=a\brak{1}_{21},\\
+a_{21}&=a\brak{2}_{21},&
+a_{22}&=a\brak{2}_{22}+a\brak{3}_{11},&
+a_{23}&=a\brak{3}_{12},\\
+a_{32}&=a\brak{3}_{21},&
+a_{33}&=a\brak{3}_{22}+a\brak{4}_{11},&
+a_{34}&=a\brak{4}_{12},\\
+a_{43}&=a\brak{4}_{21},&
+a_{44}&=a\brak{4}_{22}.&&
+\end{align*}
+Assembling the $4\times5$ stiffness 
+matrix~$\boldsymbol{A}=[\boldsymbol{A}\free\quad\boldsymbol{A}\fix]$ 
+amounts to computing
 \[
 \left[
 \begin{array}{cccc|c}1&0&0&0&-1\\0&0&0&0&0\\0&0&0&0&0\\0&0&0&0&0\end{array}
@@ -747,7 +861,7 @@ to computing
 \begin{array}{cccc|c}0&0&0&0&0\\0&0&0&0&0\\0&0&1&-1&0\\0&0&-1&1&0\end{array}
 \right],
 \]
-so
+resulting in
 \[
 \boldsymbol{A}=\left[\begin{array}{cccc|c}
 2&-1&0&0&-1\\ -1&2&-1&0&0\\ 0&-1&2&-1&0\\ 0&0&-1&1&0\end{array}\right],\qquad
@@ -1241,7 +1355,7 @@ Subtracting \eqref{eq: <u,v>A} from~\eqref{eq: <uh,v>A}, we see that the
 error~$e_h=u_h-u$ in the finite element solution is energy-orthogonal to the 
 test space~$T_h$, that is, 
 \begin{equation}\label{eq: energy orthog}
-\iprod{e_h,v}_{\mathcal{A}}=0\quad\text{for all $v\in T_h$.}
+\iprod{e_h,v}_{\mathcal{L}}=0\quad\text{for all $v\in T_h$.}
 \end{equation}
 Using this property, we show in the next theorem that $u_h$ is the best 
 approximation to~$u$ by a function in the trial space~$S_h$, as measured by 
@@ -1250,25 +1364,25 @@ the energy norm.
 \begin{theorem}\label{thm: optimality}
 The finite element solution~$u_h\in S_h$ satisfies
 \[
-\|u_h-u\|_{\mathcal{A}}\le\|w-u\|_{\mathcal{A}}
+\|u_h-u\|_{\mathcal{L}}\le\|w-u\|_{\mathcal{A}}
 	\quad\text{for all $w\in S_h$.}
 \]
 \end{theorem}
 \begin{proof}
 Let $w\in S_h$ and observe that the error~$e_h=u_h-u$ satisfies
 \begin{align*}
-\|e_h\|_{\mathcal{A}}^2=\iprod{e_h,e_h}_{\mathcal{A}}
-	&=\iprod{e_h,u_h-u}_{\mathcal{A}}
-	=\iprod{e_h,u_h-w+w-u}_{\mathcal{A}}\\
-	&=\iprod{e_h,u_h-w}_{\mathcal{A}}+\iprod{e_h,w-u}_{\mathcal{A}}.
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,e_h}_{\mathcal{A}}
+	&=\iprod{e_h,u_h-u}_{\mathcal{L}}
+	=\iprod{e_h,u_h-w+w-u}_{\mathcal{L}}\\
+	&=\iprod{e_h,u_h-w}_{\mathcal{L}}+\iprod{e_h,w-u}_{\mathcal{A}}.
 \end{align*}
 Since $(u_h-w)(0)=u_h(0)-w(0)=\gamma_0-\gamma_0=0$ we see that $u_h-w\in T_h$
 and so the energy-orthogonality property~\eqref{eq: energy orthog} implies
-that $\iprod{e_h,u_h-w}_{\mathcal{A}}=0$.  Hence, by the Cauchy--Schwarz
+that $\iprod{e_h,u_h-w}_{\mathcal{L}}=0$.  Hence, by the Cauchy--Schwarz
 inequality,
 \[
-\|e_h\|_{\mathcal{A}}^2=\iprod{e_h,w-u}_{\mathcal{A}}
-	\le\|e_h\|_{\mathcal{A}}\|w-u\|_{\mathcal{A}},
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,w-u}_{\mathcal{A}}
+	\le\|e_h\|_{\mathcal{L}}\|w-u\|_{\mathcal{A}},
 \]
 which implies the desired inequality.
 \end{proof}
@@ -1282,14 +1396,14 @@ Assume that the solution~$u:[0,L]\to\mathbb{R}$ of the boundary-value
 problem~\eqref{eq: self-adjoint mixed} is~$C^{r+1}$.  Then,
 there is a constant~$C>0$, independent of~$h$, such that
 \[
-\|u_h-u\|_{\mathcal{A}}\le Ch^r\|u^{(r+1)}\|.
+\|u_h-u\|_{\mathcal{L}}\le Ch^r\|u^{(r+1)}\|.
 \]
 \end{theorem}
 \begin{proof}
 Let $w=\mathcal{Q}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
 so we may apply \cref{thm: optimality} and deduce that
 \begin{align*}
-\|u_h-u\|_{\mathcal{A}}^2\le\|w-u\|_{\mathcal{A}}^2
+\|u_h-u\|_{\mathcal{L}}^2\le\|w-u\|_{\mathcal{A}}^2
 	&\le a_{\max}\|w'-u'\|^2+c_{\max}\|w-u\|^2\\
 	&\le\bigl(a_{\max}C_{r,1}h^{2r}+c_{\max}C_{r,0}h^{2r+2}\bigr)
 	\|u^{(r+1)}\|^2\\
@@ -1306,9 +1420,9 @@ Observe that since $a(x)/a_{\min}\ge1$,
 \[
 \|v'\|^2=\int_0^L|v'(x)|^2\,dx\le\int_0^L\frac{a(x)}{a_{min}}\,|v'(x)|^2\,dx
 	=\frac{1}{a_{\min}}\int_0^La(x)|v'(x)|^2\,dx
-	\le\frac{\|v\|_{\mathcal{A}}^2}{a_{\min}},
+	\le\frac{\|v\|_{\mathcal{L}}^2}{a_{\min}},
 \]
-and in particular $\|u_h'-u'\|^2\le\|u_h-u\|^2_{\mathcal{A}}/a_{min}$.
+and in particular $\|u_h'-u'\|^2\le\|u_h-u\|^2_{\mathcal{L}}/a_{min}$.
 \end{proof}
 
 In some applications, an integral of the form
@@ -1324,34 +1438,34 @@ $u\in H^{r+1}(0,L)$, then
 \begin{theorem}
 If $0\le k\le r$, then
 \[
-|\iprod{u_h-u,\phi}|\le Ch^{k+1}\|\phi\|_{H^k(0,L)}\|u_h-u\|_{\mathcal{A}}.
+|\iprod{u_h-u,\phi}|\le Ch^{k+1}\|\phi\|_{H^k(0,L)}\|u_h-u\|_{\mathcal{L}}.
 \]
 \end{theorem}
 \begin{proof}
 Given $\phi$, let $\theta$ be the solution of the boundary-value problem
 \[
-\mathcal{A}\theta=\phi(x)\quad\text{for $0<x<L$,}
+\mathcal{L}\theta=\phi(x)\quad\text{for $0<x<L$,}
 	\quad\text{with $\theta(0)=0$ and $a(L)\theta'(L)=0$,}
 \]
 so that
 \[
-\iprod{\theta,v}_{\mathcal{A}}=\iprod{\phi,v}\quad\text{whenever $v(0)=0$.}
+\iprod{\theta,v}_{\mathcal{L}}=\iprod{\phi,v}\quad\text{whenever $v(0)=0$.}
 \]
 Since $(u_h-u)(0)=u_h(0)-u(0)=\gamma_0-\gamma_0=0$, it follows that
 \[
-\iprod{\phi,u_h-u}=\iprod{\theta,u_h-u}_{\mathcal{A}}
-	=\iprod{\theta-Q_{k+1,h}\theta,u_h-u}_{\mathcal{A}},
+\iprod{\phi,u_h-u}=\iprod{\theta,u_h-u}_{\mathcal{L}}
+	=\iprod{\theta-Q_{k+1,h}\theta,u_h-u}_{\mathcal{L}},
 \]
 where, in the second step, we used the fact that $u_h-u$ is energy-orthogonal
 to $Q_{k+1,h}\theta\in T_h$ because $k\le r$.  Hence, by the Cauchy--Schwarz 
 inequality,
 \[
-|\iprod{\phi,u_h-u}|\le\|\theta-Q_{k+1,h}\theta\|_{\mathcal{A}}
-	\|u_h-u\|_{\mathcal{A}}.
+|\iprod{\phi,u_h-u}|\le\|\theta-Q_{k+1,h}\theta\|_{\mathcal{L}}
+	\|u_h-u\|_{\mathcal{L}}.
 \]
 Since
 \[
-\|\theta-\mathcal{Q}_{k+1,h}\theta\|_{\mathcal{A}}^2
+\|\theta-\mathcal{Q}_{k+1,h}\theta\|_{\mathcal{L}}^2
 	\le a_{\max}\|\theta'-(\mathcal{Q}_{k+1,h}\theta)'\|
 	+c_{\max}\|\theta-\mathcal{Q}_{k+1,h}\theta\|
 	\le C\bigl(h^{k+1}+h^{k+2})\|\theta^{(k+2)}\|
@@ -1363,7 +1477,7 @@ followed by~\cref{thm: ||u||A},
 \[
 \|\theta''\|=\|(\phi-c\theta)/a\|
 	\le\frac{\|\phi\|+c_{\max}\|\theta\|}{a_{\min}}\le C\|\phi\|
-	\le C(\|\phi\|+\|\theta\|_{\mathcal{A}})\le C\|\phi\|,
+	\le C(\|\phi\|+\|\theta\|_{\mathcal{L}})\le C\|\phi\|,
 \]
 which proves the claim for~$k=0$.  For the inductive step, we let~$k\ge1$ and
 assume that 
@@ -1386,7 +1500,7 @@ and
 \[
 \|\theta^{(k)}\|\le C\biggl(\|\phi^{(k)}\|+\|\theta\|+\|\theta'\|
 	+\sum_{j=2}^{k+1}\|\theta^{(j)}\|\biggr)
-\le C\biggl(\|\phi^{(k)}\|+\|\theta\|_{\mathcal{A}}
+\le C\biggl(\|\phi^{(k)}\|+\|\theta\|_{\mathcal{L}}
 	+\sum_{j=0}^{k-1}\|\theta^{(j+2)}\|\biggr),
 \]
 implying that the induction goes through.
@@ -1584,6 +1698,18 @@ and hence conclude that the finite difference and finite element solutions
 agree to~$O(h^2)$.
 \end{description}
 
+\exercise
+Check that the energy inner product~\eqref{eq: energy iprod} is in fact an 
+inner product on the vector space of $C^1$ functions $v:[0,L]\to\mathbb{R}$ 
+satisfying $v(0)=0$, by checking that for all such functions
+\begin{description}
+\item{(i)} $\iprod{v,w}_{\mathcal{L}}$ is linear in~$v$ for fixed $w$, and
+vice versa.
+\item{(ii)} $\iprod{v,w}_{\mathcal{L}}=\iprod{w,v}_{\mathcal{L}}$.
+\item{(iii)} $\iprod{v,v}_{\mathcal{L}}\ge0$.
+\item{(iv)} If $\iprod{v,v}_{\mathcal{L}}=0$ then $v\equiv0$.
+\end{description}
+
 \exercise\label{ex: quadratic DoF 1d}
 Verify that the quadratic shape functions~\eqref{eq: quadratic psi 1d} on the 
 $p$th element~$[x_{p-1},x_p]$ satisfy \eqref{eq: quadratic DoF 1d}.
@@ -1639,12 +1765,20 @@ in~\eqref{eq: pi r y}.
 \item{(v)}
 Write a script to verify that the graph of~$K$ is as shown in 
 Figure~\ref{fig: quadrature kernel}.
+\item{(vi)}
+By considering the function~$f(x)=x^6$, show that 
+\[
+\int_{-1}^1K(y)\,dy=\frac{-2}{525}.
+\]
+\item{(vii)}
+Hence determine the constant~$C$ such that, given a $C^6$ function~$f$,
+there is a $\xi\in[-1,1]$ for which $Ef=Cf^{(6)}(\xi)$.
 \end{description}
 \begin{ans}
 (i) both sides equal $0$\quad (ii) $\int_0^1f(x)\,dx=w_1f(1)+w_2f(a)$\quad
 (iii) $a=1/\sqrt{5}$, $w_1=1/6$, $w_2=5/6$.\quad
-(iv) $K(y)=\pi_{6,y}(1)-\bigl(w_2\pi_{5,y}(-a)+w_2\pi_{5,y}(a)+w_1\pi_{5,y}(1)
-\bigr)$
+(iv) $K(y)=\pi_{6,y}(1)-\bigl(w_2\pi_{5,y}(-a)+w_2\pi_{5,y}(a)
++w_1\pi_{5,y}(1) \bigr)$\quad (vi) $C=-1/189,000$.
 \end{ans}
 
 \exercise\label{ex: assemble quadratic 1d}
