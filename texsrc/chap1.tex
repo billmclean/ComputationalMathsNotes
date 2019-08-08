@@ -478,6 +478,35 @@ sub-diagonal of~$\boldsymbol{L}$.}
 \end{algorithmic}
 \end{algorithm}
 
+Counting the numbers of arithmetic operations in Algorithms
+\ref{alg: LDLT}~ and \ref{alg: solve symmetric tridiagonal} yields
+\cref{tab: LDLT flops}.  If we use the in-place versions, 
+Algorithms \ref{alg: LDLT in place}~and 
+\ref{alg: solve symmetric tridiagonal in place}, then we have to store only
+$3n-1$ floating-point numbers.  Thus, the overall computational cost is 
+$O(n)$~operations and $O(n)$~storage, implying that the computational cost of
+solving the finite difference equations~\eqref{eq: model 1d discrete} is 
+$O(P)$~operations and $O(P)$~storage.  We therefore expect that the runtime and 
+memory requirements of a program to compute~$\boldsymbol{U}$ will scale 
+linearly with~$P$.
+
+\begin{table}
+\caption{Operation counts for solving a symmetric positive-definite, 
+tridiagonal linear system.}\label{tab: LDLT flops}
+\begin{center}
+\begin{tabular}{c|c|c}
+&Algorithm~\ref{alg: LDLT}
+&Algorithm~\ref{alg: solve symmetric 
+tridiagonal}\\
+\hline
+additions/subtractions&   $n-1$&$2(n-1)$\\
+       multiplications&$2(n-1)$&$2(n-1)$\\
+             divisions&   $n-1$&$n$
+\end{tabular}
+\end{center}
+\end{table}
+
+
 \section{General two-point boundary-value problem}
 \label{sec: gen two-point bvp}
 
