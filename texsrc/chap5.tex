@@ -609,14 +609,6 @@ of addition/subtractions.  There are also $n$ square roots and
 \]
 divisions.
 
-\begin{table}
-\caption{Approximate operation counts for solving a band symmetric 
-positive-definite linear system when $\beta\ll n$.}
-
-\end{table}
-
-
-
 
 \section{Maximum principle}
 \newcommand{\bx}{\boldsymbol{x}}
@@ -1213,6 +1205,56 @@ to compute $\boldsymbol{U}^n$ at the $n$th~time step.
 
 \begin{Exercises}
 \exercise
+Find $A\otimes B$~and $B\otimes A$ in each case.
+\begin{description}
+\item{(i)}
+\[
+A=\begin{bmatrix}2&0\\ 1&-7\\ 4&6 \end{bmatrix},\qquad
+B=\begin{bmatrix}1&-1\\ 2&0 \end{bmatrix}.
+\]
+\item{(ii)}
+\[
+A=\begin{bmatrix}2&5\\ 0&-1\end{bmatrix},\qquad
+B=\begin{bmatrix}1\\ 8\\ -9 \end{bmatrix}.
+\]
+\item{(iii)}
+\[
+A=\begin{bmatrix}3&-2&0 \end{bmatrix},\qquad
+B=\begin{bmatrix}1&-4\\ 3&2 \end{bmatrix}.
+\]
+\end{description}
+\begin{ans}
+(ii)
+\[
+A\otimes B=\begin{bmatrix}2B&5B\\0&-B\end{bmatrix}
+        =\left[\begin{array}{c|c}
+2&5\\ 15&40\\ -18&-45\\ 
+\hline
+0&-1\\ 0&-8\\ 0&9
+\end{array}\right].
+\]
+\[
+B\otimes A=\begin{bmatrix}A\\ 8A\\ -9A \end{bmatrix}
+=\left[\begin{array}{cc}
+2&5\\ 0&-1\\
+\hline
+16&40\\ 0&-8\\
+\hline
+-18&-45\\ 0&-9
+\end{array}\right].
+\]
+\end{ans}
+
+\exercise
+Prove the following properties of the Kronecker product.
+\begin{description}
+\item{(i)} $A\otimes(B+C)=A\otimes B+A\otimes C$.
+\item{(ii)} $(A+B)\otimes C=A\otimes C+B\otimes C$.
+\item{(iii)} $A\otimes(B\otimes C)=(A\otimes B)\otimes C$.
+\item{(iv)} $(A\otimes B)^T=A^T\otimes B^T$.
+\end{description}
+
+\exercise
 Suppose that the matrices $\boldsymbol{A}$~and $\boldsymbol{B}$ have upper 
 bandwidth $s_{\boldsymbol{A}}$~and $s_{\boldsymbol{B}}$, respectively, and that 
 the number of columns of~$\boldsymbol{A}$ equals the number of rows 
@@ -1328,5 +1370,74 @@ in~\eqref{eq: backward Euler 2d Cholesky}.
 \item{(iv)} How does the computational cost scale with the overall problem 
 size~$S=NPQ$?
 \end{description}
+
+\exercise
+Let $(r,\theta)$ denote the usual polar coordinates, and consider a
+domain~$\Omega$ of the form
+\[
+a<r<b 
+\quad\text{and}\quad 
+\alpha<\theta<\beta,
+\]
+with $a>0$~and $\beta-\alpha<2\pi$. It is natural to define polar
+grid points
+\[
+(r_p,\theta_q)=(p\,\Delta r, q\,\Delta\theta),\quad
+\Delta r=\frac{b-a}{P},\quad
+\Delta\theta=\frac{\beta-\alpha}{Q},
+\]
+for $0\le p\le P$~and $0\le q\le Q$.  Recall that
+\[
+\nabla^2u=\frac{1}{r}\frac{\partial}{\partial r}
+        \biggl(r\,\frac{\partial u}{\partial r}\biggr)
+        +\frac{1}{r^2}\,\frac{\partial^2u}{\partial\theta^2}.
+\]
+\begin{description}
+\item{(i)} Formulate a finite difference approximation to the Poisson problem
+\[
+\begin{aligned}
+-\nabla^2u&=f&\text{in $\Omega$,}\\
+u&=0&\text{on $\partial\Omega$,}
+\end{aligned}
+\]
+by setting up a $P\times Q$ rectangular grid in the
+$(r,\theta)$-plane.
+\item{(ii)}
+Suppose that $\Omega$ is a disk of radius~$b$ (so $a=0$,
+$\alpha=-\pi$~and $\beta=\pi$).  Formulate a finite difference
+method with $1+(P-1)Q$~unknowns.  Hint: you will need an equation
+at the origin.
+\end{description}
+\begin{ans}
+(i)
+Put $(r_p,\theta_q)=(a+p\,\Delta r,b+q\,\Delta\theta)$
+for $0\le p\le P$~and $0\le q\le Q$, where $\Delta r=(b-a)/P$~and
+$\Delta\theta=(\beta-\alpha)/Q$.  Then $U_{pq}\approx u(r_p,\theta_q)$
+should satisfy
+\begin{multline*}
+\frac{1}{\Delta r^2}\biggl(
+        -\frac{r_{p-1/2}}{r_p}\,U_{p-1,q}
+        +\frac{r_{p-1/2}+r_{p+1/2}}{r_p}\,U_{pq}
+        -\frac{r_{p+1/2}}{r_p}\,U_{p+1,q}\biggr)\\
+        +\frac{-U_{p,q-1}+2U_{pq}-U_{p,q+1}}{r_p^2\Delta\theta^2}
+        =f(r_p,\theta_q)
+\end{multline*}
+for $1\le p\le P-1$~and $1\le q\le Q-1$, with zero boundary conditions
+$U_{0q}=0=U_{Pq}$ for $0\le q\le Q$, and $U_{p0}=0=U_{pQ}$
+for~$0\le p\le P$.\quad
+(ii) Note that $u(r,\pi)=u(r,-\pi)$ so we have a periodic
+boundary condition in~$\theta$, that is $U_{pQ}=U_{p0}$
+for~$0\le q\le Q$.  Also, $u(0,\theta)$ is independent of~$\theta$,
+so $U_{0q}=U_{00}$ for $1\le q\le Q$.  Since $u=0$ when~$r=b$, we have
+$U_{Pq}=0$ for $0\le q\le Q$.  Thus, the $1+(P-1)Q$ unknowns are
+$U_{00}$ and $U_{pq}$ for $1\le p\le P-1$ and $1\le q\le Q$.  We can
+apply the finite difference equation above
+for $1\le p\le P-1$ and $1\le q\le Q$, giving $(P-1)Q$~equations.
+The extra equation is
+\[
+\frac{-U_{1,Q/2}+2U_{00}-U_{1,Q}}{\Delta r^2}
+\frac{-U_{1,Q/4}+2U_{00}-U_{1,3Q/4}}{\Delta r^2}=f(r_0,\theta_0).
+\]
+\end{ans}
 
 \end{Exercises}
