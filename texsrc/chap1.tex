@@ -1306,7 +1306,8 @@ Use Taylor expansion to find the coefficient~$c$ such that
 \end{ans}
 
 \begin{table}
-\caption{Errors in the approximations of $f'(a)$ from \cref{ex: complex deriv}.}
+\caption{Errors in the approximations of $f'(a)$ from 
+Exercise~\ref{ex: complex deriv}.}
 \label{tab: complex deriv}
 \begin{center}
 \renewcommand{\arraystretch}{1.2}
@@ -1329,7 +1330,7 @@ $10^{-10}$& 1.22e-06&0.00e+00
 Let $f$ be complex analytic in a neighbourhood of a point~$a$ on the real axis, 
 and assume that $f(x)$ is real when $x$ is real.
 \begin{description}
-\item{(i)} Show that $\Im f(a+ih)/h=f'(0)+O(h^2)$ if $h\to0$ with $h$~real.
+\item{(i)} Show that $\Im f(a+ih)/h=f'(0)+O(h^2)$ if $h\to0$ and $h$ is real.
 \item{(ii)} \cref{tab: complex deriv} shows the values of
 \[
 \epsilon_1(h)=\frac{f(a+h)-f(a-h)}{2h}-f'(0)
@@ -1337,8 +1338,8 @@ and assume that $f(x)$ is real when $x$ is real.
 \epsilon_2(h)=\frac{\Im f(a+ih)}{h}-f'(0),
 \]
 when $f(x)=x^2+\sin x$ and $a=1$, for different choices of~$h$, with all 
-computations performed in standard 64~bit floating-point arithmetic.
-
+computations performed in standard 64~bit floating-point arithmetic.  Explain 
+the different behavior of $\epsilon_1(h)$ and $\epsilon_2(h)$.
 \end{description}
 
 \exercise
@@ -1419,6 +1420,25 @@ $[U_p+C]$.
 \item{(vi)} If we interpret the ODE as a steady-state heat equation, what is 
 the physical meaning of the condition in~(ii)?
 \end{description}
+
+\exercise
+How can we use the $LDL^T$ factorization of an $n\times n$, symmetric 
+tridiagonal matrix~$\boldsymbol{A}$ to compute its determinant?
+\begin{ans} 
+$\det\boldsymbol{A}=d_1d_2\cdots d_n$
+\end{ans}
+
+\exercise
+Find the $LDL^T$ factorization of the matrix
+\[
+\boldsymbol{A}=\begin{bmatrix}1&-1&0&0\\ -1&4&6&0\\ 0&6&14&6\\ 0&0&6&22
+\end{bmatrix}.
+\]
+\begin{ans}
+$\boldsymbol{L}=\begin{bmatrix}1&0&0&0\\ -1&1&0&0\\ 0&2&1&0\\ 0&0&3&1 
+\end{bmatrix}$,
+$\boldsymbol{D}=\begin{bmatrix}1&&&\\ &3&&\\ &&2&&\\ &&&4\end{bmatrix}$
+\end{ans}
 
 \exercise
 If $\boldsymbol{A}$ is symmetric tridiagonal matrix, then instead of the 
