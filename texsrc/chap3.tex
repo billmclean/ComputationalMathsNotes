@@ -322,8 +322,8 @@ In this way, the scheme provides an \emph{explicit} formula for the solution
 at~$(x_p,t_{n+1})$ given the values at the three nearest grid 
 points $(x_{p-1},t_n)$, $(x_p,t_n)$~and $(x_{p+1},t_n)$ from the previous time 
 level.  We say the these four points constitute the \emph{stencil} for the 
-method; see Figure~\ref{fig: explicit Euler stencil}.
-Algorithm~\ref{alg: explicit Euler} shows how the 
+method; see \cref{fig: explicit Euler stencil}.
+\cref{alg: explicit Euler} shows how the 
 formula~\eqref{eq: explicit Euler stencil} is used to compute the finite 
 difference solution~$U^n_p$ by advancing from one time level to the next, 
 starting at~$t_0=0$.  
@@ -471,8 +471,7 @@ Since $u_t-au_{xx}=f$,
 	-a\biggl(u_{xx}-\frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x,t)}{\Delta x^2}
 \biggr)\biggr|,
 \]
-and, so by Exercise~\ref{ex: forward diff}~and 
-Theorem~\ref{thm: 2nd central diff},
+and, so by Exercise~\ref{ex: forward diff}~and \cref{thm: 2nd central diff},
 \[
 |\tau(x,t)|\le\frac{\Delta t}{2}\max_{t\le s\le t+\Delta t}|u_{tt}(x,s)|
 	+a\,\frac{\Delta x^2}{12}\,
@@ -528,7 +527,7 @@ E^0_p&=U^0_p-u(x_p,t_0)=u_0(x_p)-u_0(x_p)=0&&\text{for $1\le p\le P-1$.}
 Thus, $E^n_p$ is the explicit Euler solution obtained when $f^n_p$, 
 $\gamma_0^n$, $\gamma_L^n$~and $u_{0p}$ are replaced by $\tau^n_p$, $0$, 
 $0$~and $0$, respectively.  The restriction on the step sizes allows us to apply 
-the stability estimate of Theorem~\ref{thm: explicit Euler stability} to deduce 
+the stability estimate of \cref{thm: explicit Euler stability} to deduce 
 that
 \[
 \|\boldsymbol{E}^n_{0:P}\|_\infty
@@ -575,7 +574,7 @@ and thus
 for $1\le p\le P-1$ and $1\le n\le N$.  Thus, at the $n$th time level we have a 
 system of linear equations for the unknown $U^n_1$, $U^n_2$, \dots, $U^n_{P-1}$,
 with the right-hand sides involving the solution at the previous time level.
-The stencil for the scheme is shown in Figure~\ref{fig: implicit Euler stencil}.
+The stencil for the scheme is shown in \cref{fig: implicit Euler stencil}.
 
 \begin{figure}\label{fig: implicit Euler stencil}
 \caption{Computational stencil for the implicit Euler 
@@ -640,7 +639,7 @@ so we can compute~$\boldsymbol{U}^n$ via a factorization
 \boldsymbol{I}+\Delta t\,\boldsymbol{A}
 	=\boldsymbol{L}^T\boldsymbol{D}\boldsymbol{L},
 \]
-as shown in Algorithm~\ref{alg: implicit Euler}.
+as shown in \cref{alg: implicit Euler}.
 
 \begin{algorithm}
 \caption{Implicit Euler method.}
@@ -668,7 +667,7 @@ $[\ell_1,\ell_2,\ldots,\ell_{P-2}]^T$.
     \State $\ell_p=-\rho$
 \EndFor
 \State \textsc{Factorize!}($\boldsymbol{d}$, $\boldsymbol{\ell}$)
-\Comment Use Algorithm~\ref{alg: LDLT in place} to compute
+\Comment Use \cref{alg: LDLT in place} to compute
 $\boldsymbol{I}+\Delta t\,\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}
 \boldsymbol{L}^T$ in place.
 \For{$p=1:P-1$}
@@ -682,7 +681,7 @@ $\boldsymbol{I}+\Delta t\,\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}
     \State $U^n_{P-1}\gets U^n_{P-1}+a\gamma_L/\Delta x^2$
     \State \textsc{Solve}!($\boldsymbol{U}^n_{1:P-1}$,
 $\boldsymbol{d}$, $\boldsymbol{\ell}$)
-\Comment Use Algorithm~\ref{alg: solve symmetric tridiagonal in place} to solve
+\Comment Use \cref{alg: solve symmetric tridiagonal in place} to solve
 for $\boldsymbol{U}^n_{1:P-1}$ in place.
 \EndFor
 \end{algorithmic}
@@ -769,7 +768,7 @@ The local truncation error for the \emph{im}plicit Euler method is defined by
 	+a\,\frac{u(x+\Delta x,t)-2u(x,t)+u(x-\Delta x,t)}{\Delta x^2},
 \]
 and we can again estimate $\tau^n_p=\tau(x_p,t_n)$ by Taylor expansion
-(Exercise~\ref{ex: forward diff} and Theorem~\ref{thm: 2nd central diff}):
+(Exercise~\ref{ex: forward diff} and \cref{thm: 2nd central diff}):
 \[
 |\tau^n_p|\le\frac{\Delta t}{2}\max_{[0,L]\times[0,T]}|u_{tt}|
 	+a\,\frac{\Delta x^2}{12}\max_{[0,L]\times[0,T]}|u_{xxxx}|
@@ -803,7 +802,7 @@ in~$\Delta t$, that is,
 \]
 However, viewed as an approximation to~$u_t(x_p,t_{n-1/2})$, the backward 
 difference becomes a central difference (with step-size $\tfrac12\Delta t$), 
-and is therefore second-order accurate by Theorem~\ref{thm: first central diff}:
+and is therefore second-order accurate by \cref{thm: first central diff}:
 \[
 \frac{u(x,t_n)-u(x,t_{n-1})}{\Delta t}=u_t(x_p,t_{n-1/2})+O(\Delta t^2).
 \]
@@ -834,7 +833,7 @@ Thus,
 \[
 \frac{f(x+h)+f(x-h)}{2}-f(x)=\frac{(R_1f)(x,h)+(R_1f)(x,-h)}{2},
 \]
-so the result follows from Theorem~\ref{thm: Taylor remainder}.
+so the result follows from \cref{thm: Taylor remainder}.
 \end{proof}
 
 \begin{figure}
@@ -891,7 +890,7 @@ along with the usual discrete initial condition
 \[
 U^0_p=u_{0p}\quad\text{for $1\le p\le P-1$.}
 \]
-Figure~\ref{fig: Crank-Nicolson 1d} shows the stencil for the scheme.
+\cref{fig: Crank-Nicolson 1d} shows the stencil for the scheme.
 In matrix notation, the Crank--Nicolson method takes the form
 \begin{equation}\label{eq: Crank-Nicolson matrix}
 \frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
@@ -942,7 +941,7 @@ $f^{n-1/2}_p=u_t(x_p,t_{n-1/2})-au_{xx}(x_p,t_{n-1/2)}$ so
         -u_{xx}(x_p,t_n)\biggr).
 \end{align*}
 Applying Theorems \ref{thm: first central diff}~and \ref{thm: average} with 
-$h=\tfrac12\Delta t$, and Theorem~\ref{thm: 2nd central diff} with~$h=\Delta 
+$h=\tfrac12\Delta t$, and \cref{thm: 2nd central diff} with~$h=\Delta 
 x$, we conclude that
 \[
 |\tau^{n-1/2}_p|
@@ -956,7 +955,7 @@ $U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.
 
 \begin{Exercises}
 \exercise\label{ex: forward diff}
-Use Theorem~\ref{thm: Taylor remainder} to show that that if $f$ is $C^2$ on 
+Use \cref{thm: Taylor remainder} to show that that if $f$ is $C^2$ on 
 the closed interval~$[x,x+h]$, then
 \[
 \biggl|f'(x)-\frac{f(x+h)-f(x)}{h}\biggr|
@@ -968,9 +967,13 @@ and, similarly, if $f$ is $C^2$ on~$[x-h,x]$, then
 	\le\frac{h}{2}\max_{x-h\le y\le x}|f''(y)|,
 \]
 
+\exercise
+Count the numbers of arithmetic operations used in \cref{alg: explicit Euler} 
+to compute the explicit Euler solution.
+
 \exercise\label{ex: implicit Euler error}
-Prove Theorem~\ref{thm: implicit Euler error} by adapting the proof of 
-Theorem~\ref{thm: explicit Euler error}.
+Prove \cref{thm: implicit Euler error} by adapting the proof of 
+\cref{thm: explicit Euler error}.
 
 \exercise
 Consider the BDF2 (backward differentiation formula, second-order)
