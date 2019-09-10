@@ -591,6 +591,25 @@ a_{11}&a_{22}&a_{33}&a_{44}&a_{55}&a_{66}&a_{77}&a_{88}&a_{99}
 \end{bmatrix}.
 \]
 
+Computing the band Cholesky factor~$\boldsymbol{R}$ using 
+Algorithm~\ref{alg: band Chol}, the number of multiplications is
+\begin{multline*}
+\sum_{j=1}^n\biggl([j-\max(1,j-\beta)]
++\sum_{i=\max(1,j-\beta)}^j[i-\max(1,j-\beta)]\biggr)\\
+	=\sum_{j=1}^n\biggl([j-\max(1,j-\beta)]
+	+\sum_{i=0}^{j-\max(1,j-\beta)}i\biggr)
+	\le\sum_{j=1}^n\biggl(\beta+\sum_{i=1}^\beta i\biggr)
+	=n\bigl[\beta+\tfrac12\beta(\beta+1)\bigr].
+\end{multline*}
+Assuming that the bandwidth~$\beta$ is small compared to~$n$, we can see that 
+the multiplication counts is essentially $\tfrac12n\beta^2$, as is the number 
+of addition/subtractions.  There are also $n$ square roots and
+\[
+\sum_{j=1}^n\bigl[j-\max(1,j-\beta)+1]\le\sum_{j=1}^n(\beta+1)=n(\beta+1)
+\]
+divisions.
+
+
 \section{Maximum principle}
 \newcommand{\bx}{\boldsymbol{x}}
 \newcommand{\by}{\boldsymbol{y}}
@@ -1141,9 +1160,100 @@ and hence
 U^{n+1}_{p,q}=f^n_{p,q}+\rho_xU^n_{p-1,q}+\rho_yU^n_{p,q-1}
 	+(1-2\rho_x-2\rho_y)U^n_{p,q}+\rho_yU^n_{p,q+1}+\rho_xU^n_{p+1,q}.
 \]
+The proof of \cref{thm: explicit Euler stability} generalises to
+show that the scheme is stable if $1-2\rho_x-2\rho_y\ge0$, or equivalently if
+\[
+\Delta t\le\frac{\Delta x^2\,\Delta y^2}{2a(\Delta x^2+\Delta y^2)}
+	=\frac{\Delta x\,\Delta y}{2a(\theta+\theta^{-1})},
+\quad\text{where $\theta=\frac{\Delta x}{\Delta y}$.}
+\]
 
+The backward Euler method for the 2D problem~\eqref{eq: ibvp 2d} is
+\[
+\frac{U^n_{p,q}-U^{n-1}_{p,q}}{\Delta t}
+	-a\biggl(\frac{U_{p+1,q}^n-2U_{p,q}^n+U_{p-1,q}^n}{\Delta x^2}
+	+\frac{U_{p,q+1}^n-2U_{p,q}^n+U_{p,q-1}^n}{\Delta y^2}\biggr)=f_{p,q}^n,
+\]
+for $1\le n\le N$, $1\le p\le P-1$ and $1\le q\le P-1$, with the boundary 
+and initial conditions again given by~\eqref{eq: fully discrete bc ic 2d}.
+Rearranging the finite difference equation gives
+\[
+-\rho_yU^n_{p,q-1}-\rho_xU^n_{p-1,q}+(1+2\rho_x+2\rho_y)U^n_{p,q}
+-\rho_xU^n_{p+1,q}-\rho_yU^n_{p,q+1}=U^{n-1}_{p,q}+f^n_{p,q}\,\Delta t.
+\]
+In matrix notation, the backward Euler method looks the same as in 1D,
+\[
+\frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
+	+\boldsymbol{A}\boldsymbol{U}^n=\boldsymbol{f}^n+\boldsymbol{g}^n,
+\]
+and at the $n$th time step we must again solve the linear system
+\[
+(\boldsymbol{I}+\Delta t\,\boldsymbol{A})\boldsymbol{U}^n
+	=\boldsymbol{U}^{n-1}+\Delta t(\boldsymbol{f}^n+\boldsymbol{g}^n).
+\]
+However, $\boldsymbol{A}$ is now given by \cref{thm: Poisson matrix} and the 
+meanings of the vectors $\boldsymbol{U}^n$, 
+$\boldsymbol{f}^n=\boldsymbol{f}(t_n)$ and 
+$\boldsymbol{g}^n=\boldsymbol{g}(t_n)$ are also different from in
+\eqref{eq: implicit Euler 1d vector}.  The coefficient matrix is again 
+symmetric and positive-definite, with the same sparsity pattern 
+as~$\boldsymbol{A}$, so we can use a band Cholesky factorization,
+\begin{equation}\label{eq: backward Euler 2d Cholesky}
+\boldsymbol{I}+\Delta t\,\boldsymbol{A}=\boldsymbol{R}^T\boldsymbol{R},
+\end{equation}
+to compute $\boldsymbol{U}^n$ at the $n$th~time step.
 
 \begin{Exercises}
+\exercise
+Find $A\otimes B$~and $B\otimes A$ in each case.
+\begin{description}
+\item{(i)}
+\[
+A=\begin{bmatrix}2&0\\ 1&-7\\ 4&6 \end{bmatrix},\qquad
+B=\begin{bmatrix}1&-1\\ 2&0 \end{bmatrix}.
+\]
+\item{(ii)}
+\[
+A=\begin{bmatrix}2&5\\ 0&-1\end{bmatrix},\qquad
+B=\begin{bmatrix}1\\ 8\\ -9 \end{bmatrix}.
+\]
+\item{(iii)}
+\[
+A=\begin{bmatrix}3&-2&0 \end{bmatrix},\qquad
+B=\begin{bmatrix}1&-4\\ 3&2 \end{bmatrix}.
+\]
+\end{description}
+\begin{ans}
+(ii)
+\[
+A\otimes B=\begin{bmatrix}2B&5B\\0&-B\end{bmatrix}
+        =\left[\begin{array}{c|c}
+2&5\\ 15&40\\ -18&-45\\ 
+\hline
+0&-1\\ 0&-8\\ 0&9
+\end{array}\right].
+\]
+\[
+B\otimes A=\begin{bmatrix}A\\ 8A\\ -9A \end{bmatrix}
+=\left[\begin{array}{cc}
+2&5\\ 0&-1\\
+\hline
+16&40\\ 0&-8\\
+\hline
+-18&-45\\ 0&-9
+\end{array}\right].
+\]
+\end{ans}
+
+\exercise
+Prove the following properties of the Kronecker product.
+\begin{description}
+\item{(i)} $A\otimes(B+C)=A\otimes B+A\otimes C$.
+\item{(ii)} $(A+B)\otimes C=A\otimes C+B\otimes C$.
+\item{(iii)} $A\otimes(B\otimes C)=(A\otimes B)\otimes C$.
+\item{(iv)} $(A\otimes B)^T=A^T\otimes B^T$.
+\end{description}
+
 \exercise
 Suppose that the matrices $\boldsymbol{A}$~and $\boldsymbol{B}$ have upper 
 bandwidth $s_{\boldsymbol{A}}$~and $s_{\boldsymbol{B}}$, respectively, and that 
@@ -1248,4 +1358,86 @@ $r_{ij}=\rb{\beta+1+i-j,j}$.}
 \end{algorithmic}
 \end{center}
 \end{ans}
+
+\exercise
+Describe the 2D version of the Crank--Nicolson method, and count the number of 
+floating-point operations needed for each of the following computations.
+\begin{description}
+\item{(i)} Finding the Cholesky factor~$\boldsymbol{R}$ 
+in~\eqref{eq: backward Euler 2d Cholesky}.
+\item{(ii)} Solving for~$\boldsymbol{U}^n$ for a single choice of~$n$.
+\item{(iii)} Completing the whole calculation.
+\item{(iv)} How does the computational cost scale with the overall problem 
+size~$S=NPQ$?
+\end{description}
+
+\exercise
+Let $(r,\theta)$ denote the usual polar coordinates, and consider a
+domain~$\Omega$ of the form
+\[
+a<r<b 
+\quad\text{and}\quad 
+\alpha<\theta<\beta,
+\]
+with $a>0$~and $\beta-\alpha<2\pi$. It is natural to define polar
+grid points
+\[
+(r_p,\theta_q)=(p\,\Delta r, q\,\Delta\theta),\quad
+\Delta r=\frac{b-a}{P},\quad
+\Delta\theta=\frac{\beta-\alpha}{Q},
+\]
+for $0\le p\le P$~and $0\le q\le Q$.  Recall that
+\[
+\nabla^2u=\frac{1}{r}\frac{\partial}{\partial r}
+        \biggl(r\,\frac{\partial u}{\partial r}\biggr)
+        +\frac{1}{r^2}\,\frac{\partial^2u}{\partial\theta^2}.
+\]
+\begin{description}
+\item{(i)} Formulate a finite difference approximation to the Poisson problem
+\[
+\begin{aligned}
+-\nabla^2u&=f&\text{in $\Omega$,}\\
+u&=0&\text{on $\partial\Omega$,}
+\end{aligned}
+\]
+by setting up a $P\times Q$ rectangular grid in the
+$(r,\theta)$-plane.
+\item{(ii)}
+Suppose that $\Omega$ is a disk of radius~$b$ (so $a=0$,
+$\alpha=-\pi$~and $\beta=\pi$).  Formulate a finite difference
+method with $1+(P-1)Q$~unknowns.  Hint: you will need an equation
+at the origin.
+\end{description}
+\begin{ans}
+(i)
+Put $(r_p,\theta_q)=(a+p\,\Delta r,b+q\,\Delta\theta)$
+for $0\le p\le P$~and $0\le q\le Q$, where $\Delta r=(b-a)/P$~and
+$\Delta\theta=(\beta-\alpha)/Q$.  Then $U_{pq}\approx u(r_p,\theta_q)$
+should satisfy
+\begin{multline*}
+\frac{1}{\Delta r^2}\biggl(
+        -\frac{r_{p-1/2}}{r_p}\,U_{p-1,q}
+        +\frac{r_{p-1/2}+r_{p+1/2}}{r_p}\,U_{pq}
+        -\frac{r_{p+1/2}}{r_p}\,U_{p+1,q}\biggr)\\
+        +\frac{-U_{p,q-1}+2U_{pq}-U_{p,q+1}}{r_p^2\Delta\theta^2}
+        =f(r_p,\theta_q)
+\end{multline*}
+for $1\le p\le P-1$~and $1\le q\le Q-1$, with zero boundary conditions
+$U_{0q}=0=U_{Pq}$ for $0\le q\le Q$, and $U_{p0}=0=U_{pQ}$
+for~$0\le p\le P$.\quad
+(ii) Note that $u(r,\pi)=u(r,-\pi)$ so we have a periodic
+boundary condition in~$\theta$, that is $U_{pQ}=U_{p0}$
+for~$0\le q\le Q$.  Also, $u(0,\theta)$ is independent of~$\theta$,
+so $U_{0q}=U_{00}$ for $1\le q\le Q$.  Since $u=0$ when~$r=b$, we have
+$U_{Pq}=0$ for $0\le q\le Q$.  Thus, the $1+(P-1)Q$ unknowns are
+$U_{00}$ and $U_{pq}$ for $1\le p\le P-1$ and $1\le q\le Q$.  We can
+apply the finite difference equation above
+for $1\le p\le P-1$ and $1\le q\le Q$, giving $(P-1)Q$~equations.
+The extra equation is
+\[
+\frac{-U_{1,Q/2}+2U_{00}-U_{1,Q}}{\Delta r^2}
+\frac{-U_{1,Q/4}+2U_{00}-U_{1,3Q/4}}{\Delta r^2}=f(r_0,\theta_0).
+\]
+\end{ans}
+
 \end{Exercises}

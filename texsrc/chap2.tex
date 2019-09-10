@@ -1699,6 +1699,46 @@ agree to~$O(h^2)$.
 \end{description}
 
 \exercise
+Consider a differential operator $\mathcal{L}u=-(au')'+bu'+cu$.  The term in 
+$u'$ means that $\mathcal{L}$ is not self-adjoint (assuming $b$ is not 
+identically zero), and the weak formulation of the mixed boundary-value 
+problem~\eqref{eq: self-adjoint mixed} changes from~\eqref{eq: Lu=f weak 1d} to
+\[
+\int_0^L\bigl(au'v'+bu'v+cuv\bigr)\,dx
+    =\gamma_Lv(L)+\int_0^Lfv\,dx\quad\text{provided $v(0)=0$,}
+\]
+with $u(0)=\gamma_0$, and the linear 
+system~\eqref{eq: self-adjoint mixed equations} is now of the form
+\[
+\bigl(\boldsymbol{A}+\boldsymbol{B}+\boldsymbol{C}\bigr)\boldsymbol{U}
+    =\boldsymbol{f}+\boldsymbol{g}.
+\]
+\begin{description}
+\item{(i)} Why does the energy inner product no longer make sense.
+\item{(ii)} How are the entries $b_{pq}$ of the matrix~$\boldsymbol{B}$ defined 
+in terms of the nodal basis functions~$\phi_p$?
+\item{(iii)} Assume now that $b(x)\equiv1$ and we use piecewise-linear elements.
+\begin{description}
+\item{(a)} Find the diagonal entries~$b_{pp}$ of~$\boldsymbol{B}$.
+\item{(b)} Find the sub-diagonal entries~$b_{p,p-1}$ and super-diagonal 
+entries~$b_{p-1,p}$.
+\item{(c)} Write out $\boldsymbol{B}$ in the case $P=5$.
+\end{description}
+\end{description}
+\begin{ans}
+(ii) $b_{pq}=\int_0^Lb(x)\phi_q'(x)\phi_p(x)\,dx$\\
+(iii) (a) $b_{00}=-1/2$, $b_{pp}=0$ for~$1\le p\le P-1$, $b_{PP}=1/2$\\
+(b) $b_{p,p-1}=-1/2$ and $b_{p-1,p}=1/2$ for $1\le p\le P$
+(c) $\boldsymbol{B}=\begin{bmatrix}
+ 0& 1& 0& 0&0\\
+-1& 0& 1& 0&0\\
+ 0&-1& 0& 1&0\\
+ 0& 0&-1& 0&1\\
+ 0& 0& 0&-1&0\end{bmatrix}$
+\end{ans}
+
+
+\exercise
 Check that the energy inner product~\eqref{eq: energy iprod} is in fact an 
 inner product on the vector space of $C^1$ functions $v:[0,L]\to\mathbb{R}$ 
 satisfying $v(0)=0$, by checking that for all such functions
@@ -1775,8 +1815,8 @@ Hence determine the constant~$C$ such that, given a $C^6$ function~$f$,
 there is a $\xi\in[-1,1]$ for which $Ef=Cf^{(6)}(\xi)$.
 \end{description}
 \begin{ans}
-(i) both sides equal $0$\quad (ii) $\int_0^1f(x)\,dx=w_1f(1)+w_2f(a)$\quad
-(iii) $a=1/\sqrt{5}$, $w_1=1/6$, $w_2=5/6$.\quad
+(i) both sides equal $0$\quad (ii) $\int_0^1f(x)\,dx=w_1f(1)+w_2f(a)$\\
+(iii) $a=1/\sqrt{5}$, $w_1=1/6$, $w_2=5/6$.\\
 (iv) $K(y)=\pi_{6,y}(1)-\bigl(w_2\pi_{5,y}(-a)+w_2\pi_{5,y}(a)
 +w_1\pi_{5,y}(1) \bigr)$\quad (vi) $C=-1/189,000$.
 \end{ans}
