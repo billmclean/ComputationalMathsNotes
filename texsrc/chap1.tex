@@ -582,11 +582,11 @@ the result follows at once.
 \end{proof}
 
 The approximations \eqref{eq: u'' approx}~and
-\[
+\begin{equation}\label{eq: u' approx}
 \frac{u(x_{p+1})-u(x_{p-1})}{2\,\Delta x}
 	=\frac{u(x_p+\Delta x)-u(x_p-\Delta x)}{2\,\Delta x}
 	\approx u'(x_p)
-\]
+\end{equation}
 suggest the following discrete approximation to~$(\mathcal{L}u)(x_p)$, 
 \begin{equation}\label{eq: Lu Delta x}
 (\mathcal{L}_{\Delta x}U)_p=
@@ -1391,7 +1391,7 @@ constant~$C$.
 \item{(ii)} Show that if $u(x)$ exists, then 
 $\gamma_0+\gamma_L+\int_0^Lf(x)\,dx=0$.
 \item{(iii)} Use central difference approximations of the 
-form \eqref{eq: u'' approx}~and \eqref{eq: bc finite diff 1d} to derive a 
+form \eqref{eq: u'' approx}~and \eqref{eq: u' approx} to derive a 
 $(P+1)\times(P+1)$ linear system 
 $\boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}+\boldsymbol{g}$ that yields
 $U_p\approx u(x_p)$ for~$0\le p\le P$.  When $P=5$ you should obtain
