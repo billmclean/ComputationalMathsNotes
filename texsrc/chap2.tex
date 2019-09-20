@@ -1821,6 +1821,17 @@ there is a $\xi\in[-1,1]$ for which $Ef=Cf^{(6)}(\xi)$.
 +w_1\pi_{5,y}(1) \bigr)$\quad (vi) $C=-1/189,000$.
 \end{ans}
 
+\exercise
+Repeat the steps of Exercise~\ref{ex: quadrature kernel} for a quadrature rule
+of the form
+\[
+\int_{-1}^1 f(x)\,dx\approx w_1f(-a)+w_2f(0)+w_1f(a).
+\]
+\begin{ans}
+$w_1=5/9$, $w_2=8/9$, $a=\sqrt{3/5}$.
+\end{ans}
+
+
 \exercise\label{ex: assemble quadratic 1d}
 Consider the two-point boundary-value problem~\eqref{eq: self-adjoint mixed} 
 where $\mathcal{L}$ is of the form~\eqref{eq: L self-adjoint}, and let
@@ -1922,5 +1933,20 @@ with~\eqref{eq: K2 symmetry}.
 Sketch the graphs of the piecewise-quadratic nodal basis functions $\chi_1$, 
 $\chi_2$, \dots, $\chi_{2P+1}$ used in section~\ref{sec: Sturm-Liouville}
 for the case~$P=4$.
+
+\exercise
+Let $x_1=-1$, $x_2=0$, $x_3=1$, $x_4=2$ and consider the 
+function~$f(x)=|x|$.
+\begin{description}
+\item{(i)} Find the corresponding Lagrange interpolation polynomials 
+$\ell_1(x)$, $\ell_2(x)$, $\ell_3(x)$ and $\ell_4(x)$.
+\item{(ii)} Hence write down $\mathcal{I}_3f$, the cubic interpolant to~$f$.
+\end{description}
+\begin{ans}
+(i) $\ell_1(x)=-\tfrac16 x(x-1)(x-2)$, $\ell_2(x)=\tfrac12(x+1)(x-1)(x-2)$,
+$\ell_3(x)=-\tfrac12(x+1)x(x-2)$, $\ell_4(x)=\tfrac16(x+1)x(x-1)$.\quad
+(ii) $(\mathcal{I}_3f)(x)=\ell_1(x)+\ell_3(x)+2\ell_4(x)$
+\end{ans}
+
 
 \end{Exercises}
