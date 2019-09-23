@@ -11,6 +11,7 @@
 *.cb
 *.cb2
 .*.lb
+texsrc/.kile
 
 ## Intermediate documents:
 *.dvi
