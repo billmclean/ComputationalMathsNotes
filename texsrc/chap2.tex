@@ -1638,7 +1638,7 @@ the nodal values of the piecewise-linear finite element solution
 by~$U^{\mathrm{e}}_p=u_h(x_p)\approx u(x_p)$.  Let 
 \[
 f^{\,\mathrm{d}}_p=f(x_p)\quad\text{and}\quad
-f^{\,\mathrm{e}}_p=\frac{1}{h}\int_{x_{p-1}}^{x_p}f(x)\chi_p(x)\,dx
+f^{\,\mathrm{e}}_p=\frac{1}{h}\int_{x_{p-1}}^{x_{p+1}}f(x)\chi_p(x)\,dx
 \quad\text{for $1\le p\le P-1$,}
 \]
 where $\chi_p$ is the $p$th piecewise-linear nodal basis function (that is, the 
@@ -1668,31 +1668,39 @@ so that $\boldsymbol{A}\boldsymbol{U}^{\mathrm{d}}=\boldsymbol{f}^{\,\mathrm{d}}
 \item{(i)} Show that $\boldsymbol{A}\boldsymbol{U}^{\mathrm{e}}
 =\boldsymbol{f}^{\,\mathrm{e}}+\boldsymbol{g}$.
 \item{(ii)} By applying Theorem~\ref{thm: discrete apriori 1D} to the finite 
-difference equation satisfied by $U^{\mathrm{d}}_p-U^{\mathrm{e}}_p$, deduce 
+difference equation satisfied by $U^{\mathrm{e}}_p-U^{\mathrm{d}}_p$, deduce 
 that
 \[
-\max_{0\le p\le P}\bigl|U^{\mathrm{d}}_p-U^{\mathrm{e}}_p\bigr|
-    \le\frac{L^2}{8a_{\mathrm{min}}}\,\max_{1\le q\le P-1}
-    \bigl|f^{\,\mathrm{d}}_q-f^{\,\mathrm{e}}_q\bigr|.
+\max_{0\le p\le P}\bigl|U^{\mathrm{e}}_p-U^{\mathrm{d}}_p\bigr|
+    \le\frac{L^2}{8}\,\max_{1\le p\le P-1}
+    \bigl|f^{\,\mathrm{e}}_p-f^{\,\mathrm{d}}_p\bigr|.
 \]
 \item{(iii)}
-Use Taylor expansion to show that
+Let $\delta_pf=f^{\,\mathrm{e}}_p-f^{\,\mathrm{d}}_p$, and
+verify that $\delta_pf=0$ for all $f\in\mathbb{P}_1$.
+(Hint: consider $f(x)=1$ and $f(x)=x-x_p$.)
+\item{(iv)}
+By applying $\delta_p$ to the Taylor expansion
 \[
-f^{\,\mathrm{d}}_q-f^{\,\mathrm{e}}_q=\frac{1}{h^2}\int_{x_{q-1}}^{x_{q+1}}
-    K_q(y)f''(y)\,dy
+f(x)=f(x_{p-1})+f'(x_{p-1})(x-x_{p-1})+\int_{x_{p-1}}^x
+	(x-y)f''(y)\,dy,
 \]
-where
+show that 
 \[
-K_q(y)=\frac{1}{3!}\times\begin{cases}
-        (y-x_{q-1})^3,&x_{q-1}<y<x_q,\\
-        (x_{q+1}-y)^3,&x_q<y<x_{q+1}.
+\delta_pf=\int_{x_{p-1}}^{x_{p+1}} K_p(y)f''(y)\,dy
+\]
+where, using the notation~\eqref{eq: pi r y},
+\[
+K_p(y)=\delta_p\pi_{1,y}=\frac{1}{6h^2}\times\begin{cases}
+        (y-x_{p-1})^3,&x_{p-1}<y<x_p,\\
+        (x_{p+1}-y)^3,&x_p<y<x_{p+1}.
 \end{cases}
 \]
-\item{(iv)}
+\item{(v)}
 Deduce using the Integral Mean Value Theorem that
 \[
-f^{\,\mathrm{d}}_q-f^{\,\mathrm{e}}_q=\frac{h^2}{4!}\,f''(\xi)
-\quad\text{for some $\xi\in[x_{q-1},x_{q+1}]$,}
+f^{\,\mathrm{e}}_q-f^{\,\mathrm{d}}_q=\frac{h^2}{12}\,f''(\xi)
+\quad\text{for some $\xi\in[x_{p-1},x_{p+1}]$,}
 \]
 and hence conclude that the finite difference and finite element solutions 
 agree to~$O(h^2)$.
