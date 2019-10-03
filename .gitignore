@@ -11,7 +11,7 @@
 *.cb
 *.cb2
 .*.lb
-texsrc/.kile
+texsrc/which_chapters.tex
 
 ## Intermediate documents:
 *.dvi
