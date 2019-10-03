@@ -954,6 +954,16 @@ Crank--Nicolson method is unconditionally stable, and so
 $U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.
 
 \begin{Exercises}
+
+\exercise
+Show that if the solution~$u(x,t)$ of~\eqref{eq: heat ivp 1d} is continuous
+at $(x,t)=(0,0)$ and at $(x,t)=(L,0)$, then
+\[
+\gamma_0'(0)-au_0''(0)=f(0,0)
+\quad\text{and}\quad
+\gamma_L'(0)-au_0''(L)=f(L,0).
+\]
+
 \exercise\label{ex: forward diff}
 Use \cref{thm: Taylor remainder} to show that that if $f$ is $C^2$ on 
 the closed interval~$[x,x+h]$, then
@@ -970,6 +980,38 @@ and, similarly, if $f$ is $C^2$ on~$[x-h,x]$, then
 \exercise
 Count the numbers of arithmetic operations used in \cref{alg: explicit Euler} 
 to compute the explicit Euler solution.
+
+\exercise
+Let $\phi_k(x)=\sin(k\pi x/L)$.
+\begin{description}
+\item{(i)} Show that 
+\[
+\phi_k(x_{p+1})+\phi_k(x_{p-1})=\biggl(2\cos\frac{k\pi\,\Delta x}{2}\biggr)\,
+	\phi_k(x_p).
+\]
+\item{(ii)} Deduce that
+\[
+-\frac{\phi_k(x_{p+1}-2\phi_k(x_p)+\phi_k(x_{p-1})}{\Delta x^2}
+	=\Lambda_k\phi_k(x_p)\quad\text{where}\quad
+\Lambda_k=\frac{2}{\Delta x^2}\biggl(1-\cos\frac{k\pi\,\Delta x}{L}\biggr).
+\]
+\item{(iii)} Show
+\[
+\Lambda_k=\biggl(\frac{2}{\Delta x}\,\sin\frac{k\pi\,\Delta x}{2L}\biggr)^2.
+\]
+\item{(iv)}
+Find $\lambda_k=\lim_{\Delta x\to0}\Lambda_k$ and verify that 
+$-\phi_k''=\lambda_k\phi_k$.
+\item{(v)}
+Suppose that $u_0(x)=\sin(k\pi x/L)$, $f(x,t)\equiv0$ and 
+$\gamma_0(t)\equiv 0\equiv\gamma_L(t)$.  Find $R$ such that the explicit
+Euler solution is~$U^n_p=R^n\phi_k(x_p)$.
+\item{(vi)} Show that if $a\,\Delta t/\Delta x^2\le1/2$ then $-1\le R<1$
+and so $|U^n_p|\le1$ for all $n$~and $p$.
+\end{description}
+\begin{ans}
+(iii) $R=1-a\lambda_k\,\Delta t$\quad(iv) $\lambda_k=(k\pi/L)^2$
+\end{ans}
 
 \exercise\label{ex: implicit Euler error}
 Prove \cref{thm: implicit Euler error} by adapting the proof of 
