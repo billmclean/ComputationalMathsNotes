@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 x = np.array([-2,  2, 2, 1, -1, -2, 0])
-y = np.array([-2, -2, 0, 2,  2,  0, 0])
+y = np.array([-1, -1, 0, 1,  1,  0, 0])
 triangles = np.array([[0, 6, 5],
                       [0, 1, 6],
                       [1, 2, 6],
@@ -51,5 +51,6 @@ for j in range(n_edg):
 ax = plt.gca()
 ax.axis([-2.2, 2.2, -2.2, 2.2])
 ax.axis('off')
+ax.axis('equal')
 plt.show()
 plt.savefig('good_triangulation.pdf')
