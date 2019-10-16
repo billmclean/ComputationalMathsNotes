@@ -2,14 +2,14 @@ from matplotlib.tri import Triangulation
 import matplotlib.pyplot as plt
 import numpy as np
 
-x = np.array([-2,  2, 2, 1, -1, -2, 0,  0])
-y = np.array([-2, -2, 0, 2,  2,  0, 0, -2])
-triangles = np.array([[0, 7, 5],
-                      [2, 5, 7],
-                      [1, 2, 7],
-                      [2, 3, 6],
-                      [3, 4, 6],
-                      [4, 5, 6]])
+x = np.array([ 0, -2,  0,  2, 2, 1, -1, -2])
+y = np.array([ 0, -2, -2, -2, 0, 2,  2,  0])
+triangles = np.array([[1, 2, 7],
+                      [2, 4, 7],
+                      [2, 3, 4],
+                      [0, 4, 5],
+                      [0, 5, 6],
+                      [0, 6, 7]])
 mypoly = Triangulation(x, y, triangles)
 n_pts = len(x)
 n_tri = triangles.shape[0]
@@ -21,8 +21,8 @@ def centroid(j, tri):
 
 plt.triplot(mypoly, color='k')
 plt.plot(x, y, 'or')
-x_offset = 0.1 * np.array([-1,  1, 1, 1, -1, -1,  0,  0])
-y_offset = 0.1 * np.array([-1, -1, 0, 1,  1,  0, -2, -2])
+x_offset = 0.1 * np.array([ 0, -1,  0,  1, 1, 1, -1, -1])
+y_offset = 0.1 * np.array([-2, -1, -2, -1, 0, 1,  1,  0])
 
 for j in range(n_pts):
     plt.text(x[j]+x_offset[j], y[j]+y_offset[j], j+1, color='r',
