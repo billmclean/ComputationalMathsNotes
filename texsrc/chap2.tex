@@ -1699,7 +1699,7 @@ K_p(y)=\delta_p\pi_{1,y}=\frac{1}{6h^2}\times\begin{cases}
 \item{(v)}
 Deduce using the Integral Mean Value Theorem that
 \[
-f^{\,\mathrm{e}}_q-f^{\,\mathrm{d}}_q=\frac{h^2}{12}\,f''(\xi)
+f^{\,\mathrm{e}}_p-f^{\,\mathrm{d}}_p=\frac{h^2}{12}\,f''(\xi)
 \quad\text{for some $\xi\in[x_{p-1},x_{p+1}]$,}
 \]
 and hence conclude that the finite difference and finite element solutions 
@@ -1727,22 +1727,23 @@ system~\eqref{eq: self-adjoint mixed equations} is now of the form
 in terms of the nodal basis functions~$\phi_p$?
 \item{(iii)} Assume now that $b(x)\equiv1$ and we use piecewise-linear elements.
 \begin{description}
-\item{(a)} Find the diagonal entries~$b_{pp}$ of~$\boldsymbol{B}$.
-\item{(b)} Find the sub-diagonal entries~$b_{p,p-1}$ and super-diagonal 
-entries~$b_{p-1,p}$.
+\item{(a)} Show that 
+$b_{pq}+b_{qp}=\delta_{Pq}\delta_{Pp}-\delta_{0q}\delta_{0p}$.
+\item{(b)} Hence find the diagonal entries $b_{pp}$ for $1\le p\le P$, and
+the off-diagonal entries $b_{p,p-1}$~and $b_{p-1,p}$ for $2\le p\le P$.
 \item{(c)} Write out $\boldsymbol{B}$ in the case $P=5$.
 \end{description}
 \end{description}
 \begin{ans}
 (ii) $b_{pq}=\int_0^Lb(x)\phi_q'(x)\phi_p(x)\,dx$\\
-(iii) (a) $b_{00}=-1/2$, $b_{pp}=0$ for~$1\le p\le P-1$, $b_{PP}=1/2$\\
-(b) $b_{p,p-1}=-1/2$ and $b_{p-1,p}=1/2$ for $1\le p\le P$
-(c) $\boldsymbol{B}=\begin{bmatrix}
+(iii) (b) $b_{00}=-1/2$, $b_{pp}=0$ for~$1\le p\le P-1$, $b_{PP}=1/2$\\
+$b_{p,p-1}=-1/2$ and $b_{p-1,p}=1/2$ for $1\le p\le P$
+(c) $\boldsymbol{B}=\frac{1}{2}\begin{bmatrix}
  0& 1& 0& 0&0\\
 -1& 0& 1& 0&0\\
  0&-1& 0& 1&0\\
  0& 0&-1& 0&1\\
- 0& 0& 0&-1&0\end{bmatrix}$
+ 0& 0& 0&-1&1\end{bmatrix}$
 \end{ans}
 
 
@@ -1766,7 +1767,7 @@ $p$th element~$[x_{p-1},x_p]$ satisfy \eqref{eq: quadratic DoF 1d}.
 Recall the formulae \eqref{eq: a reference 1d}~and
 \eqref{eq: c reference 1d} for the element stiffness and mass matrices using 
 the quadratic shape functions~\eqref{eq: quadratic shape funcs 1d} on the 
-reference element~$[0,1]$. 
+reference element~$[0,1]$.  Assume that $a(x)=1$ and $c(x)=1$.
 \begin{description}
 \item{(i)} Verify that $\Psi_3(1-\xi)=\Psi_1(\xi)$ and 
 $\Psi_2(1-\xi)=\Psi_2(\xi)$.
@@ -1774,7 +1775,7 @@ $\Psi_2(1-\xi)=\Psi_2(\xi)$.
 $a\brak{p}_{11}=a\brak{p}_{33}$, $a\brak{p}_{12}=a\brak{p}_{32}$,
 $c\brak{p}_{11}=c\brak{p}_{33}$, $c\brak{p}_{12}=c\brak{p}_{32}$.
 \item{(iii)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
-for the element stiffness and mass matrices when $a(x)=1$~and $c(x)=1$.
+for the element stiffness and mass matrices.
 \end{description}
 
 \begin{figure}
@@ -1816,17 +1817,18 @@ Figure~\ref{fig: quadrature kernel}.
 \item{(vi)}
 By considering the function~$f(x)=x^6$, show that 
 \[
-\int_{-1}^1K(y)\,dy=\frac{-2}{525}.
+\int_{-1}^1K(y)\,dy=\frac{-32}{525}.
 \]
 \item{(vii)}
-Hence determine the constant~$C$ such that, given a $C^6$ function~$f$,
-there is a $\xi\in[-1,1]$ for which $Ef=Cf^{(6)}(\xi)$.
+Hence determine the constant~$c$ such that, given a $C^6$ function~$f$,
+there is a $\xi\in[-1,1]$ for which $Ef=cf^{(6)}(\xi)$.
 \end{description}
 \begin{ans}
 (i) both sides equal $0$\quad (ii) $\int_0^1f(x)\,dx=w_1f(1)+w_2f(a)$\\
 (iii) $a=1/\sqrt{5}$, $w_1=1/6$, $w_2=5/6$.\\
 (iv) $K(y)=\pi_{6,y}(1)-\bigl(w_2\pi_{5,y}(-a)+w_2\pi_{5,y}(a)
-+w_1\pi_{5,y}(1) \bigr)$\quad (vi) $C=-1/189,000$.
++w_1\pi_{5,y}(1) \bigr)$\\
+(vi) $c=\dfrac{-32}{6!\times525}=\dfrac{-2}{23,625}$.
 \end{ans}
 
 \exercise
@@ -1930,7 +1932,7 @@ Example~\ref{example: quadratic interp}.
 $(\mathcal{Q}_2g)(x)=(\mathcal{Q}_2f)(-x)$.
 \item{(ii)} Deduce that if $f$ is $C^3$ on~$[-1,1]$, then
 \[
-\int_{-1}^1K_2(-x,y)f'''(y)\,dy=\int_{-1}^1K_2(x,y)g'''(y)\,dy
+\int_{-1}^1K_2(-x,y)f'''(y)\,dy=-\int_{-1}^1K_2(x,y)g'''(y)\,dy
 	\quad\text{for $-1\le x\le 1$.}
 \]
 \item{(iii)} Hence show that $K_2(-x,y)=-K_2(x,-y)$, in agreement 

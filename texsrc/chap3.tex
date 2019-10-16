@@ -376,7 +376,7 @@ $0\le n\le N$.
 \EndFor
 \For{$n=0:N-1$}
     \For{$p=1:P-1$}
-        \State $U^n_{p+1}=f^n_p\,\Delta t
+        \State $U^{n+1}_p=f^n_p\,\Delta t
                 +\rho U^n_{p-1}+(1-2\rho)U^n_p+\rho U^n_{p+1}$
     \EndFor                
 \EndFor
@@ -956,8 +956,14 @@ $U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.
 \begin{Exercises}
 
 \exercise
-Show that if the solution~$u(x,t)$ of~\eqref{eq: heat ivp 1d} is continuous
-at $(x,t)=(0,0)$ and at $(x,t)=(L,0)$, then
+If the solution~$u(x,t)$ of~\eqref{eq: heat ivp 1d} is continuous
+at $(x,t)=(0,0)$ and $(L,0)$, then we must have
+\[
+u_0(0)=u(0,0)=\gamma_0(0)\quad\text{and}\quad
+u_0(L)=u(L,t)=\gamma_L(0).
+\]
+Show that if $u_t$ and $u_{xx}$ are continuous at~$(x,t)=(L,0)$ and $(L,0)$,
+then
 \[
 \gamma_0'(0)-au_0''(0)=f(0,0)
 \quad\text{and}\quad
@@ -980,6 +986,11 @@ and, similarly, if $f$ is $C^2$ on~$[x-h,x]$, then
 \exercise
 Count the numbers of arithmetic operations used in \cref{alg: explicit Euler} 
 to compute the explicit Euler solution.
+\begin{ans}
+About $4NP$~multiplications and $3NP$ additions, not counting the cost of
+evaluating $f$ at $(N-1)(P-1)$~grid points, and $\gamma_0$~and $\gamma_L$
+at $N$ grid points.
+\end{ans}
 
 \exercise
 Let $\phi_k(x)=\sin(k\pi x/L)$.
