@@ -51,5 +51,6 @@ for j in range(n_edg):
 ax = plt.gca()
 ax.axis([-2.2, 2.2, -2.2, 2.2])
 ax.axis('off')
+ax.axis('equal')
 plt.show()
 plt.savefig('good_triangulation.pdf')
