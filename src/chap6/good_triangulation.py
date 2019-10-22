@@ -33,15 +33,15 @@ for j in range(n_tri):
     plt.text(xc, yc, j+1, color='b',
              verticalalignment='center', horizontalalignment='center')
   
-edges = np.array([[1,2],
+edges = np.array([[6,1],
+                  [1,2],
                   [2,3],
                   [3,4],
                   [4,5],
-                  [5,6],
-                  [6,1]])
+                  [5,6]])
 n_edg = edges.shape[0]
-x_offset = 0.1 * np.array([ 0, 1, 1, 0, -1, -1])
-y_offset = 0.1 * np.array([-1, 0, 0, 1,  0,  0])
+x_offset = 0.1 * np.array([-1,  0, 1, 1, 0, -1])
+y_offset = 0.1 * np.array([ 0, -1, 0, 1, 1,  1])
 for j in range(n_edg):
     midx = 0.5 * ( x[edges[j,0]] + x[edges[j,1]] )
     midy = 0.5 * ( y[edges[j,0]] + y[edges[j,1]] )
