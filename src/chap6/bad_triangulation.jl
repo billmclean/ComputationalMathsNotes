@@ -11,13 +11,13 @@ T = [ 2  3  3  1  1  1
 E = [ 2 3 4 5 6 7 8
       3 4 5 6 7 8 2 ]
 
-tri = Triangulation(N, T, E)
+tri = Triangulation(N, T, E, 7)
 
 figure(1)
 draw_triangles(tri)
 enumerate_triangles(tri)
 enumerate_vertices(tri)
-mark_first_local_vertex(tri, 0.3)
+#mark_first_local_vertex(tri, 0.3)
 axis("off")
 axis("equal")
 savefig("bad_triangulation.pdf")

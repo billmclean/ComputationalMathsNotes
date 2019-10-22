@@ -1,6 +1,7 @@
 module Triangulations
 
 using PyPlot
+using ArgCheck
 
 export Triangulation, draw_triangles, enumerate_triangles, enumerate_vertices,
        enumerate_bdry_edges, local_enumerate_vertices, mark_first_local_vertex
@@ -35,11 +36,14 @@ struct Triangulation
     N :: Matrix{Float64}
     T :: Matrix{Int64}
     E :: Matrix{Int64}
+    QN :: Int64
     Centroid :: Matrix{Float64}
     Midpoint :: Matrix{Float64}
-    function Triangulation(N, T, E)
+    function Triangulation(N, T, E, QN)
+        M = size(N, 2)
         P = size(T, 2)
         Q = size(E, 2)
+        @argcheck QN ≤ Q
         xp = zeros(3)
         yp = zeros(3)
         Centroid = zeros(2, P)
@@ -56,12 +60,12 @@ struct Triangulation
             Midpoint[1,q] = sum(xq) / 2
             Midpoint[2,q] = sum(yq) / 2
         end
-        return new(N, T, E, Centroid, Midpoint)
+        return new(N, T, E, QN, Centroid, Midpoint)
     end
 end
 
 function draw_triangles(tri::Triangulation, fmt="k")
-    N, T = tri.N, tri.T
+    N, T, E, QN = tri.N, tri.T, tri.E, tri.QN
     P = size(T, 2)
     xp = zeros(4)
     yp = zeros(4)
@@ -74,6 +78,15 @@ function draw_triangles(tri::Triangulation, fmt="k")
         xp[4] = xp[1]
         yp[4] = yp[1]
         plot(xp, yp, fmt)
+    end
+    xq = zeros(2)
+    yq = zeros(2)
+    for q = QN+1:size(E,2)
+       for j = 1:2
+          xq[j] = N[1, E[j,q]]
+          yq[j] = N[2, E[j,q]]
+       end 
+       plot(xq, yq, fmt, linewidth=3)
     end
 end
 
@@ -142,6 +155,7 @@ function mark_first_local_vertex(tri::Triangulation, offset)
         plot([x], [y], "k*")
     end
 end
+
 function enumerate_bdry_edges(tri::Triangulation, offset)
     N, E, Midpoint = tri.N, tri.E, tri.Midpoint
     Q = size(E, 2)
