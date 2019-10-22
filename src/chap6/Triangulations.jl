@@ -3,7 +3,7 @@ module Triangulations
 using PyPlot
 
 export Triangulation, draw_triangles, enumerate_triangles, enumerate_vertices,
-       enumerate_bdry_edges, local_enumerate_vertices
+       enumerate_bdry_edges, local_enumerate_vertices, mark_first_local_vertex
 
 function vertices!(xp, yp, N, T, p)
     for j = 1:3
@@ -124,6 +124,24 @@ function local_enumerate_vertices(tri::Triangulation, offset)
     end
 end
 
+function mark_first_local_vertex(tri::Triangulation, offset)
+    N, T, Centroid = tri.N, tri.T, tri.Centroid
+    P = size(T, 2)
+    xp = zeros(3)
+    yp = zeros(3)
+    vec = zeros(2)
+    for p = 1:P
+        vertices!(xp, yp, N, T, p)
+        vec[1] = Centroid[1,p] - xp[1]
+        vec[2] = Centroid[2,p] - yp[1]
+        len = hypot(vec[1], vec[2])
+        vec[1] *= offset/len
+        vec[2] *= offset/len
+        x = xp[1] + vec[1]
+        y = yp[1] + vec[2]
+        plot([x], [y], "k*")
+    end
+end
 function enumerate_bdry_edges(tri::Triangulation, offset)
     N, E, Midpoint = tri.N, tri.E, tri.Midpoint
     Q = size(E, 2)
