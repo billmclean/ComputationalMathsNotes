@@ -268,7 +268,7 @@ d_1&   &   &   &\\
 \]
 having the property that
 \begin{equation}\label{eq: L D LT}
-\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T.
+\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^\top.
 \end{equation}
 Given a right-hand side vector~$\boldsymbol{b}$, we can solve the linear system
 $\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ by solving in sequence the three
@@ -276,7 +276,7 @@ linear systems
 \begin{equation}\label{eq: LDLT systems}
 \boldsymbol{L}\boldsymbol{z}=\boldsymbol{b},\qquad
 \boldsymbol{D}\boldsymbol{y}=\boldsymbol{z},\qquad
-\boldsymbol{L}^T\boldsymbol{x}=\boldsymbol{y},
+\boldsymbol{L}^\top\boldsymbol{x}=\boldsymbol{y},
 \end{equation}
 because it will then follow that
 \[
@@ -306,7 +306,7 @@ z_5&=b_5-\ell_4 z_4,& y_5&=z_5/d_5,& x_1&=y_1-\ell_1x_2.\\
 \end{align*}
 Matrix multiplication gives
 \[
-\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T=\begin{bmatrix}
+\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^\top=\begin{bmatrix}
       d_1&      \ell_1d_1&               &               &         \\
 \ell_1d_1&d_2+\ell_1^2d_1&      \ell_2d_2&               &         \\
          &      \ell_2d_2&d_3+\ell_2^2d_2&      \ell_3d_3&         \\
@@ -1421,9 +1421,9 @@ Consider the two-point boundary-value problem
 constant~$C$.
 \item{(ii)} Show that if $u(x)$ exists, then 
 $\gamma_0+\gamma_L+\int_0^Lf(x)\,dx=0$.
-\item{(iii)} Use central difference approximations of the 
-form \eqref{eq: u'' approx}~and \eqref{eq: u' approx} to derive a 
-$(P+1)\times(P+1)$ linear system 
+\item{(iii)} Use central difference approximations of the form 
+\eqref{eq: u'' approx}~and \eqref{eq: u' approx} to derive a $(P+1)\times(P+1)$ 
+linear system 
 $\boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}+\boldsymbol{g}$ that yields
 $U_p\approx u(x_p)$ for~$0\le p\le P$.  When $P=5$ you should obtain
 \[
@@ -1441,6 +1441,9 @@ $U_p\approx u(x_p)$ for~$0\le p\le P$.  When $P=5$ you should obtain
 +\frac{1}{\Delta x}
 \begin{bmatrix}\gamma_0\\ 0\\ 0\\ 0\\ 0\\ \gamma_L\end{bmatrix}.
 \]
+Hint: applying central differences at $x_0$~and $x_P$ requires the use of 
+``ghost'' grid points $x_{-1}$~and $x_{P+1}$ lying outside the interval~$[0,L]$.
+However, the boundary conditions allow you to eliminate $U_{-1}$~and $U_{P+1}$.
 \item{(iv)} Show that if $\boldsymbol{U}=[U_p]$ is a solution, then so is 
 $[U_p+C]$.
 \item{(v)} Show that if a solution~$\boldsymbol{U}$ exists, then
@@ -1454,14 +1457,14 @@ in~(v)?
 \end{description}
 
 \exercise
-How can we use the $LDL^T$ factorization of an $n\times n$, symmetric 
+How can we use the $LDL^\top$ factorization of an $n\times n$, symmetric 
 tridiagonal matrix~$\boldsymbol{A}$ to compute its determinant?
 \begin{ans} 
 $\det\boldsymbol{A}=d_1d_2\cdots d_n$
 \end{ans}
 
 \exercise
-Find the $LDL^T$ factorization of the matrix
+Find the $LDL^\top$ factorization of the matrix
 \[
 \boldsymbol{A}=\begin{bmatrix}1&-1&0&0\\ -1&4&6&0\\ 0&6&14&6\\ 0&0&6&22
 \end{bmatrix}.
@@ -1476,8 +1479,8 @@ $\boldsymbol{D}=\begin{bmatrix}1&&&\\ &3&&\\ &&2&&\\ &&&4\end{bmatrix}$
 If $\boldsymbol{A}$ is symmetric tridiagonal matrix, then instead of the 
 factorization~\eqref{eq: L D LT} we can seek a tridiagonal, upper triangular
 matrix~$\boldsymbol{R}$ such that 
-$\boldsymbol{A}=\boldsymbol{R}^T\boldsymbol{R}$.  We call $\boldsymbol{R}$ the 
-\emph{Cholesky factor} of~$\boldsymbol{A}$.
+$\boldsymbol{A}=\boldsymbol{R}^\top\boldsymbol{R}$.  We call $\boldsymbol{R}$ 
+the \emph{Cholesky factor} of~$\boldsymbol{A}$.
 \begin{description}
 \item{(i)} Show that if a matrix~$\boldsymbol{A}$ has a Cholesky factorization, 
 then $\boldsymbol{A}$ is necessarily symmetric and positive semidefinite.
@@ -1499,6 +1502,9 @@ general, $n\times n$~case.
 \item{(v)} Formulate an in-place version of the algorithm in part~(iv).
 \item{(vi)} How is the Cholesky factorization used to solve a linear 
 system~$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$?
+\item{(vii)} Show that the algorithm is stable (provided $\boldsymbol{A}$ is 
+positive-definite) in the sense that all entries of~$\boldsymbol{R}$ can be 
+bounded by entries of~$\boldsymbol{A}$.
 \end{description}
 \begin{ans}
 (i)
