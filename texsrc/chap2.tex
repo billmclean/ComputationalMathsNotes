@@ -45,14 +45,19 @@ v_p(x_p)=v_{p+1}(x_p)\quad\text{for $1\le p\le P-1$.}
 \end{equation}
 Exercise~\ref{ex: V_h vector space} shows that the set of all continuous, 
 piecewise-linear functions forms a vector space~$V_h$.  Each $v\in V_h$ is 
-determined by its values at the grid points, 
-since
+determined by its values at the grid points.  To see why, define polynomials
+of degree at most~$1$,
 \begin{equation}\label{eq: piecewise linear v}
-v(x)=v_p(x)=\frac{1}{h_p}\bigl((x_p-x)v(x_{p-1})+(x-x_{p-1})v(x_p)\bigr)
-    \quad\text{for $x_{p-1}\le x\le x_p$.}
+\tilde v_p(x)=\frac{1}{h_p}\bigl((x_p-x)v(x_{p-1})+(x-x_{p-1})v(x_p)\bigr)
+    \quad\text{for $x_{p-1}\le x\le x_p$,}
 \end{equation}
-In particular, the $q$th \emph{nodal basis function} $\chi_q\in V_h$ is the 
-unique continuous, piecewise-linear function satisfying
+and observe that $\tilde v_p(x_{p-1})=v(x_{p-1})$~and $\tilde v_p(x_p)=v(x_p)$. 
+By uniqueness of polynomial interpolation, it follows 
+from~\eqref{eq: v piecewise} that $\tilde v_p=v_p$ for~$1\le p\le P$.
+
+In particular, we can define the $q$th \emph{nodal basis function} 
+$\chi_q\in V_h$ to be the unique continuous, piecewise-linear function 
+satisfying
 \begin{equation}\label{eq: chi q x p}
 \chi_q(x_p)=\delta_{pq}\quad\text{for $p$, $q\in\{0, 1, 2, \ldots, P\}$,}
 \end{equation}
@@ -62,7 +67,7 @@ where $\delta_{pq}$ is the Kronecker delta, that is,
 1,&\text{if $p=q$,}\\ 0,&\text{if $p\ne q$.} 
 \end{cases}
 \]
-It follows from \eqref{eq: piecewise linear v} that, when $1\le q\le P-1$,
+The formula~\eqref{eq: piecewise linear v} shows that, when $1\le q\le P-1$,
 \begin{equation}\label{eq: chi_q formula}
 \chi_q(x)=\begin{cases}
 	(x-x_{q-1})/h_q,&\text{for $x_{q-1}\le x\le x_q$,}\\
@@ -262,7 +267,8 @@ boundary conditions},
 Here, at the left end of the interval~$[0,L]$ we have imposed a
 \emph{Dirichlet boundary condition} that fixes the value of~$u(0)$, whereas
 at the right end we have imposed a \emph{Neumann boundary condition} that
-fixes the value of~$u'(L)$.
+fixes the value of~$u'(L)$; note that $a(L)\ne0$ due to our 
+assumption~\eqref{eq: ellipticity 1d}.
 
 Integration by parts implies that
 \begin{equation}\label{eq: Lu v by parts}
@@ -361,7 +367,7 @@ satisfies
 \end{equation}
 
 \begin{lemma}\label{lem: v v'}
-If $v\in H^1(0,L)$, then
+If $v$~and $v'$ belong to~$L^2(0,L)$, then
 \[
 \|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr)
 \quad\text{and}\quad
@@ -403,8 +409,8 @@ thus, $v\in H^r(0,L)$ iff $v$, $v'$, \dots, $v^{(r)}$ are square integrable
 on~$[0,L]$.
 
 \begin{theorem}\label{thm: ||u||A}
-Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-
-point boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique weak
+Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-point 
+boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique weak
 solution~$u\in H^1(0,L)$, and there is a constant~$C>0$ (depending only on $L$,
 $a$~and $c$) such that
 \[

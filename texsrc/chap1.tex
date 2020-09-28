@@ -212,7 +212,7 @@ the coefficient matrix are left blank.  The problem
 -u''=5e^{-x}\quad\text{for $0\le x\le2$,}
     \quad\text{with $u(0)=-1$ and $u(2)=5/2$,}
 \]
-then 
+has the solution
 \[
 u(x)=A+Bx+5e^{-x}\quad
 \text{where $A=\gamma_0+5$ and $B=(\gamma_L-A-5e^{-L})$.}
@@ -223,7 +223,7 @@ reasonable approximation to~$u(x_p)$ in this case.
 
 Several questions arise naturally with regard to the above numerical method.
 \begin{enumerate}
-\item Does the linear system arising for the finite difference approximation 
+\item Does the linear system arising from the finite difference approximation 
 always have a unique solution?
 \item If so, what is an efficient way to compute the $U_p$?
 \item How accurate is the approximation~$U_p\approx u(x_p)$?
@@ -268,7 +268,7 @@ d_1&   &   &   &\\
 \]
 having the property that
 \begin{equation}\label{eq: L D LT}
-\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T.
+\boldsymbol{A}=\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^\top.
 \end{equation}
 Given a right-hand side vector~$\boldsymbol{b}$, we can solve the linear system
 $\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$ by solving in sequence the three
@@ -276,7 +276,7 @@ linear systems
 \begin{equation}\label{eq: LDLT systems}
 \boldsymbol{L}\boldsymbol{z}=\boldsymbol{b},\qquad
 \boldsymbol{D}\boldsymbol{y}=\boldsymbol{z},\qquad
-\boldsymbol{L}^T\boldsymbol{x}=\boldsymbol{y},
+\boldsymbol{L}^\top\boldsymbol{x}=\boldsymbol{y},
 \end{equation}
 because it will then follow that
 \[
@@ -306,7 +306,7 @@ z_5&=b_5-\ell_4 z_4,& y_5&=z_5/d_5,& x_1&=y_1-\ell_1x_2.\\
 \end{align*}
 Matrix multiplication gives
 \[
-\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^T=\begin{bmatrix}
+\boldsymbol{L}\boldsymbol{D}\boldsymbol{L}^\top=\begin{bmatrix}
       d_1&      \ell_1d_1&               &               &         \\
 \ell_1d_1&d_2+\ell_1^2d_1&      \ell_2d_2&               &         \\
          &      \ell_2d_2&d_3+\ell_2^2d_2&      \ell_3d_3&         \\
@@ -950,7 +950,7 @@ with $v(0)=u_1(0)-u_2(0)=\gamma_0-\gamma_0=0$ and
 $v(L)=u_1(L)-u_2(L)=\gamma_L-\gamma_L=0$, so $\|v\|_\infty\le0$ by 
 Theorem~\ref{thm: Lu=f apriori infty}, which means that $u_1=u_2$ on~$[0,L]$.
 
-Similarly, since $\mathcal{L}$ is linear,
+Similarly, since $\mathcal{L}$ is linear, we find that
 \[
 \mathcal{L}\delta u=\delta f\quad\text{on $(0,L)$,}
     \quad\text{with $\delta u(0)=\delta\gamma_0$ 
@@ -1210,9 +1210,9 @@ showing that the finite difference method is \emph{second-order accurate}.
 
 It turns out that for many numerical methods, there is an exponent~$r>0$ and a 
 continuous function~$v(x)$ such that
-\[
-E_p=U_p-u(x_p)=v(x_p)\,\Delta x^r+O(\Delta x^{r+\epsilon}
-\]
+\begin{equation}\label{eq: Ep asymp}
+E_p=U_p-u(x_p)=v(x_p)\,\Delta x^r+O(\Delta x^{r+\epsilon})
+\end{equation}
 for some~$\epsilon>0$.  Therefore, if we let
 \[
 \mathcal{E}(\Delta x)=\max_{0\le p\le P}|E_p|
@@ -1232,8 +1232,35 @@ r\approx\log_2\frac{\mathcal{E}(2\,\Delta x)}{\mathcal{E}(\Delta x)}.
 More precisely, the logarithm on the right will converge to~$r$ 
 as~$\Delta x\to0$.
 
-\begin{example}
- 
+\begin{table}
+\caption{Convergence behaviour of the finite difference solution from
+\cref{example: bvp1d conv}}\label{table: bvp1d conv}
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{r|cc}
+\multicolumn{1}{c|}{$P$}&max error&rate\\
+\hline
+   8&   5.28e-03&\\
+  16&   1.33e-03&   1.986\\
+  32&   3.34e-04&   1.998\\
+  64&   8.35e-05&   1.999\\
+ 128&   2.09e-05&   2.000
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{example}\label{example: bvp1d conv}
+Let $e_P=\max_{0\le p\le P}|U_p-u(x_p)|$ denote the maximum error in the finite 
+difference solution for a grid with $P$~subintervals.  The argument above shows 
+that if the error behaves as in~\eqref{eq: Ep asymp} then
+\begin{equation}\label{eq: eP asymp}
+r\approx\log_2\frac{E_{P/2}}{E_P}.
+\end{equation}
+\Cref{table: bvp1d conv} shows the values of the maximum error~$e_P$ and 
+the estimated convergence rates according to~\eqref{eq: eP asymp} as we 
+repeatedly double~$P$, using the problem from \cref{example: bvp1d example}.
+These results confirm that the finite difference scheme is second-order 
+accurate, that is, $r=2$.
 \end{example}
 
 \begin{Exercises}
@@ -1267,6 +1294,10 @@ v_2'(x)=\frac{u_1(x)[-f(x)]}{W(x)}=-\frac{u_1(x)f(x)}{W(x)}.
 \item{(iii)}
 Find $v_1$~and $v_2$, using the boundary conditions $u(0)=\gamma_0$~and 
 $u(L)=\gamma_L$ to determine the constants of integration.
+\item{(iv)} Deduce from \eqref{eq: model 1d exact soln} that if $f(x)\ge0$ 
+for~$0\le x\le L$, then the graph of~$u(x)$ is always above the straight line 
+joining $(0,\gamma_0)$~and $(L,\gamma_L)$.  What if $f(x)\le0$ 
+for~$0\le x\le L$?
 \end{description}
 \begin{ans}
 (i) $W(x)=L$\quad (ii) $v_1'=\dfrac{xf(x)}{L}$, 
@@ -1290,7 +1321,7 @@ $\log\cos x=cx^2+O(x^4)$.
 $\dfrac{x-\sinh x}{x^3}=c+O(x^2)$.
 \end{description}
 \begin{ans}
-(i) $7/6$\quad (ii) $-1/2$\quad (iii) $-1/6$
+(i) $5/6$\quad (ii) $-1/2$\quad (iii) $-1/6$
 \end{ans}
 
 \exercise
@@ -1298,7 +1329,7 @@ Use Taylor expansion to find the coefficient~$c$ such that
 \begin{description}
 \item{(i)} $\dfrac{3u(x)-4u(x-\Delta x)+u(x-2\Delta x)}{2\Delta x}
 =u'(x)+cu'''(x)\,\Delta x^2+O(\Delta x^3)$.
-\item{(ii)} $\dfrac{-u(x+2\Delta x)+4u(x+\Delta)-3u(x)}{2\Delta x}
+\item{(ii)} $\dfrac{-u(x+2\Delta x)+4u(x+\Delta x)-3u(x)}{2\Delta x}
 =u'(x)+cu'''(x)\,\Delta x^2+O(\Delta x^3)$.
 \end{description}
 \begin{ans}
@@ -1390,9 +1421,9 @@ Consider the two-point boundary-value problem
 constant~$C$.
 \item{(ii)} Show that if $u(x)$ exists, then 
 $\gamma_0+\gamma_L+\int_0^Lf(x)\,dx=0$.
-\item{(iii)} Use central difference approximations of the 
-form \eqref{eq: u'' approx}~and \eqref{eq: u' approx} to derive a 
-$(P+1)\times(P+1)$ linear system 
+\item{(iii)} Use central difference approximations of the form 
+\eqref{eq: u'' approx}~and \eqref{eq: u' approx} to derive a $(P+1)\times(P+1)$ 
+linear system 
 $\boldsymbol{A}\boldsymbol{U}=\boldsymbol{f}+\boldsymbol{g}$ that yields
 $U_p\approx u(x_p)$ for~$0\le p\le P$.  When $P=5$ you should obtain
 \[
@@ -1410,7 +1441,10 @@ $U_p\approx u(x_p)$ for~$0\le p\le P$.  When $P=5$ you should obtain
 +\frac{1}{\Delta x}
 \begin{bmatrix}\gamma_0\\ 0\\ 0\\ 0\\ 0\\ \gamma_L\end{bmatrix}.
 \]
-\item{(iv)} Show that $\boldsymbol{U}=[U_p]$ is a solution, then so is 
+Hint: applying central differences at $x_0$~and $x_P$ requires the use of 
+``ghost'' grid points $x_{-1}$~and $x_{P+1}$ lying outside the interval~$[0,L]$.
+However, the boundary conditions allow you to eliminate $U_{-1}$~and $U_{P+1}$.
+\item{(iv)} Show that if $\boldsymbol{U}=[U_p]$ is a solution, then so is 
 $[U_p+C]$.
 \item{(v)} Show that if a solution~$\boldsymbol{U}$ exists, then
 \[
@@ -1418,18 +1452,19 @@ $[U_p+C]$.
 \Delta x=0.
 \]
 \item{(vi)} If we interpret the ODE as a steady-state heat equation, what is 
-the physical meaning of the condition in~(ii)?
+the physical meaning of the condition in~(ii), and of its discrete analogue 
+in~(v)?
 \end{description}
 
 \exercise
-How can we use the $LDL^T$ factorization of an $n\times n$, symmetric 
+How can we use the $LDL^\top$ factorization of an $n\times n$, symmetric 
 tridiagonal matrix~$\boldsymbol{A}$ to compute its determinant?
 \begin{ans} 
 $\det\boldsymbol{A}=d_1d_2\cdots d_n$
 \end{ans}
 
 \exercise
-Find the $LDL^T$ factorization of the matrix
+Find the $LDL^\top$ factorization of the matrix
 \[
 \boldsymbol{A}=\begin{bmatrix}1&-1&0&0\\ -1&4&6&0\\ 0&6&14&6\\ 0&0&6&22
 \end{bmatrix}.
@@ -1444,8 +1479,8 @@ $\boldsymbol{D}=\begin{bmatrix}1&&&\\ &3&&\\ &&2&&\\ &&&4\end{bmatrix}$
 If $\boldsymbol{A}$ is symmetric tridiagonal matrix, then instead of the 
 factorization~\eqref{eq: L D LT} we can seek a tridiagonal, upper triangular
 matrix~$\boldsymbol{R}$ such that 
-$\boldsymbol{A}=\boldsymbol{R}^T\boldsymbol{R}$.  We call $\boldsymbol{R}$ the 
-\emph{Cholesky factor} of~$\boldsymbol{A}$.
+$\boldsymbol{A}=\boldsymbol{R}^\top\boldsymbol{R}$.  We call $\boldsymbol{R}$ 
+the \emph{Cholesky factor} of~$\boldsymbol{A}$.
 \begin{description}
 \item{(i)} Show that if a matrix~$\boldsymbol{A}$ has a Cholesky factorization, 
 then $\boldsymbol{A}$ is necessarily symmetric and positive semidefinite.
@@ -1467,6 +1502,9 @@ general, $n\times n$~case.
 \item{(v)} Formulate an in-place version of the algorithm in part~(iv).
 \item{(vi)} How is the Cholesky factorization used to solve a linear 
 system~$\boldsymbol{A}\boldsymbol{x}=\boldsymbol{b}$?
+\item{(vii)} Show that the algorithm is stable (provided $\boldsymbol{A}$ is 
+positive-definite) in the sense that all entries of~$\boldsymbol{R}$ can be 
+bounded by entries of~$\boldsymbol{A}$.
 \end{description}
 \begin{ans}
 (i)
