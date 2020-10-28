@@ -996,7 +996,7 @@ Using such an approximation yields, for the element stiffness matrix,
 \boldsymbol{A}\brak{p}\approx
 	\widetilde{\boldsymbol{A}}\brak{p}=[\tilde a_{jk}\brak{p}]
 \quad\text{where}\quad
-\tilde a\brak{p}_{jk}=\frac{1}{h_p}\sum_{j=1}^Jw_la(x_{p-1}+\xi_lh_p)
+\tilde a\brak{p}_{jk}=\frac{1}{h_p}\sum_{\ell=1}^Jw_la(x_{p-1}+\xi_lh_p)
 	\Psi'_k(\xi_l)\Psi'_j(\xi_l),
 \]
 and for the element mass matrix,
@@ -1004,7 +1004,7 @@ and for the element mass matrix,
 \boldsymbol{C}\brak{p}\approx
 	\widetilde{\boldsymbol{C}}\brak{p}=[\tilde c_{jk}\brak{p}]
 \quad\text{where}\quad
-\tilde c\brak{p}_{jk}=h_p\sum_{j=1}^Jw_lc(x_{p-1}+\xi_lh_p)
+\tilde c\brak{p}_{jk}=h_p\sum_{\ell=1}^Jw_lc(x_{p-1}+\xi_lh_p)
 	\Psi_k(\xi_l)\Psi_j(\xi_l).
 \]
 With the help of the connectivity matrix~$\boldsymbol{T}$, the $3\times3$ 
@@ -1730,7 +1730,7 @@ system~\eqref{eq: self-adjoint mixed equations} is now of the form
 \begin{description}
 \item{(i)} Why does the energy inner product no longer make sense.
 \item{(ii)} How are the entries $b_{pq}$ of the matrix~$\boldsymbol{B}$ defined 
-in terms of the nodal basis functions~$\phi_p$?
+in terms of the nodal basis functions~$\chi_p$?
 \item{(iii)} Assume now that $b(x)\equiv1$ and we use piecewise-linear elements.
 \begin{description}
 \item{(a)} Show that 
@@ -1764,6 +1764,7 @@ vice versa.
 \item{(iii)} $\iprod{v,v}_{\mathcal{L}}\ge0$.
 \item{(iv)} If $\iprod{v,v}_{\mathcal{L}}=0$ then $v\equiv0$.
 \end{description}
+Assume throughout that $c(x)\ge0$ for all~$x$.
 
 \exercise\label{ex: quadratic DoF 1d}
 Verify that the quadratic shape functions~\eqref{eq: quadratic psi 1d} on the 
@@ -1777,12 +1778,17 @@ reference element~$[0,1]$.  Assume that $a(x)=1$ and $c(x)=1$.
 \begin{description}
 \item{(i)} Verify that $\Psi_3(1-\xi)=\Psi_1(\xi)$ and 
 $\Psi_2(1-\xi)=\Psi_2(\xi)$.
-\item{(ii)} Deduce that
+\item{(ii)} What can you conclude about the first derivatives $\Psi_j'$?
+\item{(iii)} Deduce that
 $a\brak{p}_{11}=a\brak{p}_{33}$, $a\brak{p}_{12}=a\brak{p}_{32}$,
 $c\brak{p}_{11}=c\brak{p}_{33}$, $c\brak{p}_{12}=c\brak{p}_{32}$.
-\item{(iii)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
+\item{(iv)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
 for the element stiffness and mass matrices.
 \end{description}
+\begin{ans}
+(ii) $\Psi_1'(\xi)=-\Psi_3'(1-\xi)$ and $\Psi_2'(\xi)=-\Psi_2'(1-\xi)$.
+\end{ans}
+
 
 \begin{figure}
 \caption{The Peano kernel $K(y)$ for the quadrature rule of 
@@ -1855,7 +1861,7 @@ where $\mathcal{L}$ is of the form~\eqref{eq: L self-adjoint}, and let
 L=2,\qquad a(x)=1,\qquad c(x)=0,\qquad f(x)=18.
 \]
 \begin{description}
-\item{(i)} Suppose we take a uniform mesh with~$M=6$ subintervals and apply the 
+\item{(i)} Suppose we take a uniform mesh with~$P=6$ subintervals and apply the 
 finite element method using quadratic elements.  Write down the connectivity 
 matrix~$\boldsymbol{T}=[t_{jp}]$, the stiffness matrix~$\boldsymbol{A}$ and 
 the load vector~$\boldsymbol{f}$. Hint: adapt the approach used in 

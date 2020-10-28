@@ -244,3 +244,5 @@ TSWLatexianTemp*
 
 *.kilepr
 ansfile.tex
+
+texsrc/.kile
