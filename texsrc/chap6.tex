@@ -680,7 +680,7 @@ $\lambda=1/6$~or $1/2$.  See Figure~\ref{fig: quadrature points}.
 rule~\eqref{eq: 3 quad} with $\lambda=1/6$ (left) and $\lambda=1/2$ (right).}
 \label{fig: quadrature points}
 \begin{center}
-\includegraphics[scale=0.85]{../src/chap6/quadrature_points.pdf}
+\includegraphics[scale=0.85]{../src/chap6/quadrature_points-crop.pdf}
 \end{center}
 \end{figure}
 
@@ -694,8 +694,66 @@ To achieve higher accuracy, we can consider a six-point quadrature rule
 depending on the parameters $w$, $\lambda_1$~and $\lambda_2$, with 
 $\boldsymbol{x}\brak{K}_p=\boldsymbol{x}\brak{K}_p(\lambda)$ defined as 
 in~\eqref{eq: 3 quad points}.
-
 \end{exercise}
 
+\begin{figure}
+\caption{A triangulation}\label{fig: triangulation}
+\begin{center}
+\begin{tikzpicture}[scale=0.70]
+\draw[-,very thick] (-6,0) -- (0,-6);
+\draw[-] (0,-6) -- (6,0) -- (6,6) -- (3,9) -- (0,6) -- (-6,0);
+\draw[-] (-6,0) -- (6,0);
+\draw[-] (0,-6) -- (0,6) -- (6,6) -- (0,0);
+\node at (3,7.5) {\textbf{1}};
+\node at (2,4) {\textbf{2}};
+\node at (-2,2) {\textbf{3}};
+\node at (4,2) {\textbf{4}};
+\node at (-2,-2) {\textbf{5}};
+\node at (2,-2) {\textbf{6}};
+\draw[fill,white] (3,9)  circle (0.30); \draw (3,9) circle (0.30);
+\node at (3, 9) {$1$};
+\draw[fill,white] (0,6)  circle (0.30); \draw (0,6)  circle (0.30);
+\node at (0, 6) {$2$};
+\draw[fill,white] (6,6)  circle (0.30); \draw (6,6)  circle (0.30);
+\node at  (6, 6) {$3$};
+\draw[fill,white] (0,0)  circle (0.30); \draw (0,0)  circle (0.30);
+\node at  (0, 0) {$4$};
+\draw[fill,white] (6,0)  circle (0.30); \draw (6,0)  circle (0.30);
+\node       at  (6, 0) {$5$};
+\draw[fill,white] (-6,0) circle (0.30); \draw (-6,0) circle (0.30);
+\node at (-6, 0) {$6$};
+\draw[fill,white] (0,-6) circle (0.30); \draw (0,-6) circle (0.30);
+\node       at  (0,-6) {$7$};
+\node at (5.4,6.3) {*};
+\node at (5.4,5.7) {*};
+\node at (-0.3,0.5) {*};
+\node at (0.7,0.3) {*};
+\node at (-0.3,-5.4) {*};
+\node at (5.3,-0.4) {*};
+\node[below left] at (-3,-3) {$\Gamma_{\mathrm{D}}$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+
+\exercise
+Consider the triangulation shown in Figure~\ref{fig: triangulation}.
+The global node numbers are circled and the element numbers are in bold.
+The choice of the first node in each element is indicated with an asterisk,
+after which the second and third follow \textbf{counterclockwise}. The
+part~$\Gamma_{\mathrm{D}}$ of the boundary where a Dirichlet boundary 
+condition applies is shown in a thicker line (between nodes $6$~and $7$).  Let
+$\boldsymbol{f}=[f_r]$ and $\boldsymbol{A}=[a_{rs}]$ denote the global load 
+vector and the global stiffness matrix, and let
+$\boldsymbol{f}\brak{p}=[f\brak{p}_j]$~and 
+$\boldsymbol{A}\brak{p}=[a\brak{p}_{jk}]$ denote 
+the element load vector and element stiffness matrix for the $p$th element 
+($1\le p\le6$).  
+\begin{description}
+\item{(a)} Write out the $3\times6$ connectivity matrix.
+\item{(b)} Express $f_4$ as a sum over entries~$f\brak{p}_j$ of the element 
+load vectors.
+\item{(c)} Express $a_{22}$, $a_{35}$~and $a_{47}$ as sums over 
+entries~$a\brak{p}_{jk}$ of the element matrices.
+\end{description}
 
 \end{Exercises}
