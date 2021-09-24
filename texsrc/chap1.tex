@@ -96,11 +96,8 @@ immediate consequence of the inequality
 	&\le\biggl(\max_{x\le y\le x+h}|f^{(k+1)}(y)|\biggr)
 	\int_x^{x+h}\frac{(x+h-y)^k}{k!}\,dy.
 \end{align*}
-
 The expansion for~$f(x-y)$ and the bound for~$(R_kf)(x,-h)|$ follow in a 
 similar fashion.
-
-
 \end{proof}
 
 
@@ -218,7 +215,7 @@ u(x)=A+Bx+5e^{-x}\quad
 \text{where $A=\gamma_0+5$ and $B=(\gamma_L-A-5e^{-L})$.}
 \]
 Figure~\ref{fig: bvp1d example} shows that $U_p$ does in fact provide a 
-reasonable approximation to~$u(x_p)$ in this case.
+reasonable approximation to~$u(x_p)$ in this case using only $P=6$~subintervals.
 \end{example}
 
 Several questions arise naturally with regard to the above numerical method.
@@ -488,7 +485,7 @@ $O(n)$~operations and $O(n)$~storage, implying that the computational cost of
 solving the finite difference equations~\eqref{eq: model 1d discrete} is 
 $O(P)$~operations and $O(P)$~storage.  We therefore expect that the runtime and 
 memory requirements of a program to compute~$\boldsymbol{U}$ will scale 
-linearly with~$P$.
+linearly with~$P$ for our 1D boundary-value problem.  
 
 \begin{table}
 \caption{Operation counts for solving a symmetric positive-definite, 
@@ -609,8 +606,8 @@ Four cases can occur.
 (\mathcal{L}_{\Delta x}U)_p=f_p\quad\text{for $1\le p\le P-1$,}\quad
 \text{with $\beta_0U_0=\gamma_0$ and $\beta_LU_P=\gamma_L$.}
 \]
-Eliminating $U_0=\gamma_0/\beta_0$~and $U_P=\gamma_L/\beta_L$ leads to a linear 
-system for $U_1$, $U_2$, \dots, $U_{P-1}$.
+Eliminating $U_0=\gamma_0/\beta_0$~and $U_P=\gamma_L/\beta_L$ leads to a 
+$(P-1)\times(P-1)$ linear system for $U_1$, $U_2$, \dots, $U_{P-1}$.
 \item If $\alpha_0\ne0$ and $\alpha_L=0$, then we require
 \[
 (\mathcal{L}_{\Delta x}U)_p=f_p\quad\text{for $0\le p\le P-1$,}\quad
@@ -618,8 +615,8 @@ system for $U_1$, $U_2$, \dots, $U_{P-1}$.
 and $\beta_LU_P=\gamma_L$.}
 \]
 Eliminating $U_{-1}=U_1+2\,\Delta x\,(\beta_0U_0-\gamma_0)/\alpha_0$ and 
-$U_P=\gamma_L/\beta_L$ leads to a linear system for $U_0$, $U_1$, \dots, 
-$U_{P-1}$.
+$U_P=\gamma_L/\beta_L$ leads to a $P\times P$ linear system for $U_0$, 
+$U_1$, \dots, $U_{P-1}$.
 \item If $\alpha_0=0$ and $\alpha_L\ne0$, then we require
 \[
 (\mathcal{L}_{\Delta x}U)_p=f_p\quad\text{for $1\le p\le P$,}\quad
@@ -627,8 +624,8 @@ $U_{P-1}$.
 $\alpha_L\,\frac{U_{P+1}-U_{P-1}}{2\,\Delta x}+\beta_LU_P=\gamma_L$.}
 \]
 Eliminating $U_0=\gamma_0/\beta_0$ and
-$U_{P+1}=U_{P-1}+2\,\Delta x(\gamma_L-\beta_LU_P)/\alpha_L$ leads to a linear 
-system for $U_1$, $U_2$, \dots, $U_P$.
+$U_{P+1}=U_{P-1}+2\,\Delta x(\gamma_L-\beta_LU_P)/\alpha_L$ leads to a 
+$P\times P$ linear system for $U_1$, $U_2$, \dots, $U_P$.
 \item If $\alpha_0\ne0$ and $\alpha_L\ne0$, then we require
 \[
 (\mathcal{L}_{\Delta x}U)_p=f_p\quad\text{for $0\le p\le P$,}
@@ -639,8 +636,8 @@ with
 \quad\text{and}\quad
 \alpha_L\,\frac{U_{P+1}-U_{P-1}}{2\,\Delta x}+\beta_LU_P=\gamma_L.
 \]
-Eliminating $U_{-1}$~and $U_{P+1}$ leads to a linear system for
-$U_0$, $U_1$, \dots, $U_P$.
+Eliminating $U_{-1}$~and $U_{P+1}$ leads to a $(P+1)\times(P+1)$ linear system 
+for $U_0$, $U_1$, \dots, $U_P$.
 \end{enumerate}
 
 In case~1, the first equation is
@@ -848,15 +845,14 @@ v(x)=\cosh(\mu L/2)-\cosh\mu(x-L/2),
 and observe that $v\ge0$ on~$[0,L]$ with
 \begin{align*}
 (\mathcal{L}v)(x)&=a(x)\mu^2\cosh\mu(x-L/2)
-	-b(x)\mu\sinh\mu(x-L/2)\\
-	&\qquad{}+c(x)\bigl(\max\{u^+(0),u^+(L)\}+v(x)\big)\\
+	-b(x)\mu\sinh\mu(x-L/2)+c(x)v(x)\\
 	&\ge\bigl(a_{\min}\mu^2-\|b\|_\infty\mu\bigr)\cosh\mu(x-L/2)
 	\ge(a_{\min}\mu-\|b\|_\infty)\mu\ge1
 \end{align*}
 for $0<x<L$, so
 \[
 \mathcal{L}(u-w)=f-c(x)\max\{u^+(0),u^+(L)\}-(\mathcal{L}v)\max_{[0,L]}f^+
-	\le0\quad\text{on $(0,L)$.}
+    \le f-\max_{[0,L]}f^+\le0\quad\text{on $(0,L)$.}
 \]
 By Theorem~\ref{thm: max principle 1d},
 \[
@@ -873,7 +869,7 @@ and
 Thus, $u-w\le0$ on~$(0,L)$, and therefore 
 \[
 \max_{[0,L]}u\le\max_{[0,L]}w(x)=w(L/2)=\max\{u^+(0),u^+(L)\}
-	+v(L/2)\max_{[0,L]}f, 
+	+v(L/2)\max_{[0,L]}f^+, 
 \]
 proving the first inequality.  
 The second follows because $\mathcal{L}(-u)=-f$, $(-u)^+=-u^-$~and
@@ -989,7 +985,7 @@ The following discrete analogue of Theorem~\ref{lem: Lu<0} holds.
 \begin{lemma}\label{lem: discrete LU<0}
 Assume \eqref{eq: discrete max assumptions}.
 If $c_p\ge0$ and $(\mathcal{L}_{\Delta x}U)_p<0$ for~$1\le p\le P-1$, then
-the is no $p^*$ in the range $1\le p^*\le P-1$ for which
+there is no $p^*$ in the range $1\le p^*\le P-1$ for which
 \[
 U_{p^*}\ge 0,\qquad U_{p^*-1}\le U_{p^*}\qquad\text{and}\qquad
 U_{p^*+1}\le U_{p^*}.
@@ -1321,16 +1317,16 @@ $\log\cos x=cx^2+O(x^4)$.
 $\dfrac{x-\sinh x}{x^3}=c+O(x^2)$.
 \end{description}
 \begin{ans}
-(i) $5/6$\quad (ii) $-1/2$\quad (iii) $-1/6$
+(i) $7/6$\quad (ii) $-1/2$\quad (iii) $-1/6$
 \end{ans}
 
 \exercise
 Use Taylor expansion to find the coefficient~$c$ such that
 \begin{description}
-\item{(i)} $\dfrac{3u(x)-4u(x-\Delta x)+u(x-2\Delta x)}{2\Delta x}
-=u'(x)+cu'''(x)\,\Delta x^2+O(\Delta x^3)$.
-\item{(ii)} $\dfrac{-u(x+2\Delta x)+4u(x+\Delta x)-3u(x)}{2\Delta x}
-=u'(x)+cu'''(x)\,\Delta x^2+O(\Delta x^3)$.
+\item{(i)} $\dfrac{3u(x)-4u(x-h)+u(x-2h)}{2h}
+=u'(x)+cu'''(x)\,h^2+O(h^3)$.
+\item{(ii)} $\dfrac{-u(x+2h)+4u(x+h)-3u(x)}{2h}
+=u'(x)+cu'''(x)\,h^2+O(h^3)$.
 \end{description}
 \begin{ans}
 (i) $c=-1/3$ \quad(ii) $c=-1/3$
