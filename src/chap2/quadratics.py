@@ -1,4 +1,4 @@
-# Run in isympy
+from sympy import *
 
 x = symbols('x')
 
