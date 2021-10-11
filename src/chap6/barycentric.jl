@@ -7,18 +7,18 @@ c = (1/3) * sum(a, dims=2)
 
 figure(1)
 
-function level_sets(a, j)
+function level_sets(a, j, ξ)
     prev = [3, 1, 2]
     succ = [2, 3, 1]
-    start = zeros(2, 4)
-    finish = zeros(2, 4)
-    for k = 1:4
-        ξ = (k-1)/3
+    m = length(ξ)
+    start = zeros(2, m)
+    finish = zeros(2, m)
+    for k = 1:m
         η = -0.3
-        start[:,k] = ( a[:,prev[j]] + ξ * ( a[:,j] - a[:,prev[j]] ) 
+        start[:,k] = ( a[:,prev[j]] + ξ[k] * ( a[:,j] - a[:,prev[j]] ) 
                       + η * ( a[:,succ[j]] - a[:,prev[j]] ) )
-        η = 1.1 - ξ 
-        finish[:,k] = ( a[:,prev[j]] + ξ * ( a[:,j] - a[:,prev[j]] ) 
+        η = 1.1 - ξ[k] 
+        finish[:,k] = ( a[:,prev[j]] + ξ[k] * ( a[:,j] - a[:,prev[j]] ) 
                       + η * ( a[:,succ[j]] - a[:,prev[j]] ) )
     end
     return start, finish
@@ -31,7 +31,8 @@ function draw_level_sets(a, j)
     vals = ["0", "1/3", "2/3", "1"]
     ha = ["left", "center", "right"]
     va = ["center", "center", "center"]
-    start, finish = level_sets(a, j)
+    ξ = [0, 1/3, 2/3, 1]
+    start, finish = level_sets(a, j, ξ)
     for k = 1:4
         plot([ start[1,k], finish[1,k] ], [ start[2,k], finish[2,k] ], "b",
             linewidth=0.5)
@@ -127,3 +128,4 @@ end
 draw_quadratic_triangle(a, c, 0.15)
 axis("equal")
 axis("off")
+savefig("midpoints.pdf")

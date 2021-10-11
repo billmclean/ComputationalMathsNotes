@@ -1630,7 +1630,7 @@ space.
 \exercise
 Show that the trial set~\eqref{eq: Sh 1D} is a \emph{convex subset} of~$V_h$,
 that is, if $v$, $w\in S_h$ then $\lambda v+\mu w\in S_h$ for all $\lambda\ge0$
-and $\mu\ge$ such that $\lambda+\mu=1$.
+and $\mu\ge0$ such that $\lambda+\mu=1$.
 
 \exercise
 Prove that $\{\chi_p\}_{p=0}^P$ is a basis for~$V_h$, and that 
@@ -1650,13 +1650,13 @@ f^{\,\mathrm{e}}_p=\frac{1}{h}\int_{x_{p-1}}^{x_{p+1}}f(x)\chi_p(x)\,dx
 where $\chi_p$ is the $p$th piecewise-linear nodal basis function (that is, the 
 ``hat function'' centred on~$x_p$).  Let
 \[
-\boldsymbol{A}=\frac{1}{h^2}\begin{bmatrix}
- 2&-1&      &      &      &\\
--1& 2&    -1&      &      &\\
-  &  &\ddots&\ddots&\ddots&\\
-  &  &      &    -1&     2&-1\\
-  &  &      &      &    -1& 2
-\end{bmatrix},\quad
+\boldsymbol{A}=\frac{1}{h^2}\left[\begin{array}{rrrrr}
+ 2&    -1&      &      &\\
+-1&     2&    -1&      &\\
+  &\ddots&\ddots&\ddots&\\
+  &      &    -1&     2&-1\\
+  &      &      &    -1& 2
+\end{array}\right],\quad
 \boldsymbol{f}^{\,\mathrm{d}}=\begin{bmatrix}
 f^{\,\mathrm{d}}_1\\                              
 f^{\,\mathrm{d}}_2\\                              

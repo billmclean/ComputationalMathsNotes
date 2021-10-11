@@ -424,8 +424,8 @@ coordinates of a given point~$\boldsymbol{x}$ can be computed as follows.
 \begin{theorem}\label{thm: barycentric}
 With the notation above,
 \[
-\xi_p=\tfrac13+\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{c})
-\quad\text{for $p\in\{1,2,3\}$.}
+\xi_j=\tfrac13+\boldsymbol{b}_j\cdot(\boldsymbol{x}-\boldsymbol{c})
+\quad\text{for $j\in\{1,2,3\}$.}
 \]
 \end{theorem}
 \begin{proof}
@@ -470,21 +470,21 @@ whereas
 \boldsymbol{b}_1\cdot(\boldsymbol{a}_2-\boldsymbol{a}_3)
 =0=\boldsymbol{b}_2\cdot(\boldsymbol{a}_1-\boldsymbol{a}_3),
 \]
-so, for $p\in\{1,2\}$,
+so, for $j\in\{1,2\}$,
 \[
-\boldsymbol{b}_p\cdot(\boldsymbol{c}-\boldsymbol{a}_3)
-    =\boldsymbol{b}_p\cdot(
+\boldsymbol{b}_j\cdot(\boldsymbol{c}-\boldsymbol{a}_3)
+    =\boldsymbol{b}_j\cdot(
 \tfrac13\boldsymbol{a}_1+\tfrac13\boldsymbol{a}_2+\tfrac13\boldsymbol{a}_3
     -\boldsymbol{a}_3)
-    =\tfrac13\boldsymbol{b}_p\cdot(\boldsymbol{a}_1-\boldsymbol{a}_3)
-    +\tfrac13\boldsymbol{b}_p\cdot(\boldsymbol{a}_2-\boldsymbol{a}_3)
+    =\tfrac13\boldsymbol{b}_j\cdot(\boldsymbol{a}_1-\boldsymbol{a}_3)
+    +\tfrac13\boldsymbol{b}_j\cdot(\boldsymbol{a}_2-\boldsymbol{a}_3)
     =\tfrac13
 \]
 and hence
 \[
-\xi_p=\boldsymbol{b}_p\cdot(
+\xi_j=\boldsymbol{b}_j\cdot(
     \boldsymbol{x}-\boldsymbol{c}+\boldsymbol{c}-\boldsymbol{a}_3)
-    =\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{c})+\tfrac13.
+    =\boldsymbol{b}_j\cdot(\boldsymbol{x}-\boldsymbol{c})+\tfrac13.
 \]
 Finally,
 \[
@@ -574,16 +574,16 @@ $\boldsymbol{b}_3$ defined in~\eqref{eq: bp vector def}.}\label{fig: b vectors}
 Recalling \eqref{eq: xi psi}~and Theorem~\ref{thm: barycentric}, the linear 
 shape functions are given by
 \[
-\psi_p(\boldsymbol{x})=\xi_p
-    =\tfrac13+\boldsymbol{b}_p\cdot(\boldsymbol{x}-\boldsymbol{a}_p)
-    \quad\text{for $p\in\{1,2,3\}$,}
+\psi_j(\boldsymbol{x})=\xi_j
+    =\tfrac13+\boldsymbol{b}_j\cdot(\boldsymbol{x}-\boldsymbol{a}_j)
+    \quad\text{for $j\in\{1,2,3\}$,}
 \]
 and so
 \[
-\nabla\psi_p=\boldsymbol{b}_p\quad\text{for $p\in\{1,2,3\}$.}
+\nabla\psi_j=\boldsymbol{b}_j\quad\text{for $j\in\{1,2,3\}$.}
 \]
-Thus, $\boldsymbol{b}_p$ is orthogonal to the level sets of~$\psi_p$ and in 
-particular to the side of~$K$ opposite~$\boldsymbol{a}_p$, as shown in 
+Thus, $\boldsymbol{b}_j$ is orthogonal to the level sets of~$\psi_j$ and in 
+particular to the side of~$K$ opposite~$\boldsymbol{a}_j$, as shown in 
 Figure~\ref{fig: b vectors}.
 
 Using the same approach as in the 1D case in 
@@ -592,28 +592,28 @@ $M\times(M+R)$ global stiffness
 matrix~$\boldsymbol{A}=[\,\boldsymbol{A}'\quad\boldsymbol{A}'']$ from 
 the $3\times3$ element stiffness matrices
 \[
-\boldsymbol{A}\brak{K}=\bigl[a\brak{K}_{pq}\bigr]_{p,q=1}^3
+\boldsymbol{A}\brak{K}=\bigl[a\brak{K}_{ij}\bigr]_{i,j=1}^3
 \quad\text{where}\quad
-a\brak{K}_{pq}=\int_Ka\nabla\psi_q\brak{K}\cdot\nabla\psi\brak{K}_p.
+a\brak{K}_{ij}=\int_Ka\nabla\psi_j\brak{K}\cdot\nabla\psi\brak{K}_i.
 \]
 Likewise, the $M\times(M+R)$ global mass 
 matrix~$\boldsymbol{C}=[\,\boldsymbol{C}'\quad\boldsymbol{C}'']$ will be 
 assembled from the $3\times3$ element mass matrices,
 \[
-\boldsymbol{C}\brak{K}=\bigl[c\brak{K}_{pq}\bigr]_{p,q=1}^3
+\boldsymbol{C}\brak{K}=\bigl[c\brak{K}_{ij}\bigr]_{i,j=1}^3
 \quad\text{where}\quad
-c\brak{K}_{pq}=\int_Kc\psi_q\brak{K}\psi\brak{K}_p.
+c\brak{K}_{ij}=\int_Kc\psi_j\brak{K}\psi\brak{K}_i.
 \]
 Explicitly, the entries of the element stiffness matrix are
 \[
-a\brak{K}_{pq}=\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_K a
-    =\boldsymbol{b}_q\cdot\boldsymbol{b}_p\int_0^1\int_0^{1-\xi_1}
+a\brak{K}_{ij}=\boldsymbol{b}_j\cdot\boldsymbol{b}_i\int_K a
+    =\boldsymbol{b}_j\cdot\boldsymbol{b}_i\int_0^1\int_0^{1-\xi_1}
         a\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\,d\xi_2\,d\xi_1,
 \]
 and those of the element mass matrix are
 \[
-c\brak{K}_{pq}=\int_Kc\xi_q\xi_p=\int_0^1\int_0^{1-\xi_1}
-        c\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_q\xi_p\,d\xi_2\,d\xi_1,
+c\brak{K}_{ij}=\int_Kc\xi_j\xi_i=\int_0^1\int_0^{1-\xi_1}
+        c\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_j\xi_i\,d\xi_2\,d\xi_1,
 \]
 remembering that $\xi_3=1-\xi_1-\xi_2$.
 In particular, if $a(\boldsymbol{x})=1$~and $c(\boldsymbol{x})=1$, then
@@ -632,12 +632,78 @@ Theorem~\ref{thm: int xi} shows that
 
 The 3-dimensional element load vector is defined by
 \[
-\boldsymbol{f}\brak{K}=[f\brak{K}_p]_{p=1}^3
+\boldsymbol{f}\brak{K}=[f\brak{K}_i]_{i=1}^3
 \quad\text{where}\quad
-f\brak{K}_p=\int_K f\psi\brak{K}_p
-	=\int_0^1\int_0^{1-\xi_1}f\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_p
+f\brak{K}_i=\int_K f\psi\brak{K}_i
+	=\int_0^1\int_0^{1-\xi_1}f\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_i
 	\,d\xi_2 \,d\xi_1
 \]
+
+\section{Quadratic elements}
+
+\begin{figure}
+\caption{The midpoint $\boldsymbol{m}_j$ of the side opposite to the 
+vertex~$\boldsymbol{a}_j$ for $j\in\{1,2,3\}$.}
+\label{fig: midpoints}
+\begin{center}
+\includegraphics[scale=0.75]{../src/chap6/midpoints.pdf}
+\end{center}
+\end{figure}
+
+A general quadratic polynomial in two variables $x_1$~and $x_2$ has the form
+\[
+v(x_1,x_2)=a_{00}+a_{10}x_1+a_{01}x_2+a_{20}x_1^2+a_{11}x_1x_2+a_{02}x_2^2.
+\]
+Thus, the space of all such polynomials has dimension~$6$ and we therefore 
+require $6$ nodes in our triangular element~$K$. For $j\in\{1,2,3\}$, let 
+$\boldsymbol{m}_j$ denote the midpoint of the side of the triangle~$K$ opposite 
+the vertex~$\boldsymbol{a}_j$, as illustrated in
+\cref{fig: midpoints}.  The barycentric coordinates of $\boldsymbol{m}_1$, 
+$\boldsymbol{m}_2$, $\boldsymbol{m}_3$ are then $(0,\tfrac12,\tfrac12)$,
+$(\tfrac12,0,\tfrac12)$, $(\tfrac12,\tfrac12,0)$, respectively.  We then define 
+our 6~nodes in the element~$K$ by
+\[
+\boldsymbol{n}\brak{K}_1=\boldsymbol{a}_1,\quad
+\boldsymbol{n}\brak{K}_2=\boldsymbol{a}_2,\quad
+\boldsymbol{n}\brak{K}_3=\boldsymbol{a}_3,\quad
+\boldsymbol{n}\brak{K}_4=\boldsymbol{m}_1,\quad
+\boldsymbol{n}\brak{K}_5=\boldsymbol{m}_2,\quad
+\boldsymbol{n}\brak{K}_6=\boldsymbol{m}_3,
+\]
+and the corresponding quadratic shape functions~$\psi\brak{K}_j$ 
+for~$1\le \le 6$ by requiring that
+\[
+\psi\brak{K}_j(\boldsymbol{n}\brak{K}_i)=\delta_{ij}
+\quad\text{for $i$, $j\in\{1,2,3,4,5,6\}$.}
+\]
+As functions of the barycentric coordinates, we easily verify that
+\[
+\psi\brak{K}_1(\boldsymbol{x})=2\xi_1(\xi_1-\tfrac12),\qquad
+\psi\brak{K}_2(\boldsymbol{x})=2\xi_2(\xi_2-\tfrac12),\qquad
+\psi\brak{K}_3(\boldsymbol{x})=2\xi_3(\xi_3-\tfrac12),
+\]
+and
+\[
+\psi\brak{K}_4(\boldsymbol{x})=4\xi_2\xi_3,\qquad
+\psi\brak{K}_5(\boldsymbol{x})=4\xi_3\xi_1,\qquad
+\psi\brak{K}_6(\boldsymbol{x})=4\xi_1\xi_2.
+\]
+Since $\nabla\xi_j=\boldsymbol{b}_j$, 
+\[
+\nabla\psi\brak{K}_j(\boldsymbol{x})=(4\xi_j-1)\boldsymbol{b}_j
+\quad\text{for $1\le j\le 3$,}
+\]
+and
+\begin{align*}
+\nabla\psi\brak{K}_4(\boldsymbol{x})
+    &=4(\xi_2\boldsymbol{b}_3+\xi_3\boldsymbol{b}_2),\\
+\nabla\psi\brak{K}_5(\boldsymbol{x})
+    &=4(\xi_3\boldsymbol{b}_1+\xi_1\boldsymbol{b}_3),\\
+\nabla\psi\brak{K}_6(\boldsymbol{x})
+    &=4(\xi_1\boldsymbol{b}_2+\xi_2\boldsymbol{b}_1).
+\end{align*}
+Using \cref{thm: int xi}
+
 
 
 
