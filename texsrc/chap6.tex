@@ -650,6 +650,26 @@ vertex~$\boldsymbol{a}_j$ for $j\in\{1,2,3\}$.}
 \end{center}
 \end{figure}
 
+\begin{figure}
+\caption{Quadratic shape functions}
+\label{fig: quad shape funcs}
+\hfil
+\includegraphics[scale=0.8]{../src/chap6/quad_shape_funcs/psi1-crop.pdf}
+\hfil
+\includegraphics[scale=0.8]{../src/chap6/quad_shape_funcs/psi2-crop.pdf}
+\hfil
+\includegraphics[scale=0.8]{../src/chap6/quad_shape_funcs/psi3-crop.pdf}
+\hfil
+\\[2\jot]
+\includegraphics[scale=0.8]{../src/chap6/quad_shape_funcs/psi4-crop.pdf}
+\hfil
+\includegraphics[scale=0.8]{../src/chap6/quad_shape_funcs/psi5-crop.pdf}
+\hfil
+\includegraphics[scale=0.8]{../src/chap6/quad_shape_funcs/psi6-crop.pdf}
+\hfil
+\end{figure}
+
+
 A general quadratic polynomial in two variables $x_1$~and $x_2$ has the form
 \[
 v(x_1,x_2)=a_{00}+a_{10}x_1+a_{01}x_2+a_{20}x_1^2+a_{11}x_1x_2+a_{02}x_2^2.
@@ -688,6 +708,7 @@ and
 \psi\brak{K}_5(\boldsymbol{x})=4\xi_3\xi_1,\qquad
 \psi\brak{K}_6(\boldsymbol{x})=4\xi_1\xi_2.
 \]
+\cref{fig: quad shape funcs} plots these functions for a typical triangle.
 Since $\nabla\xi_j=\boldsymbol{b}_j$, 
 \[
 \nabla\psi\brak{K}_j(\boldsymbol{x})=(4\xi_j-1)\boldsymbol{b}_j
