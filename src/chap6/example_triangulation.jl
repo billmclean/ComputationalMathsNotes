@@ -1,5 +1,5 @@
 using PyPlot
-using Triangulate
+using Triangulation_diagrams
 
 N = [ -1  -1  -1  0   0  1  0
        2   0  -2  0  -2  0  2 ]
@@ -13,7 +13,7 @@ E = [ 7  1  2  3  5  6
 
 QN = 4
 
-tri = Triangulation(N, T, E, 4)
+tri = Triangulation(N, T, E, QN)
 
 figure(1)
 draw_triangles(tri)
