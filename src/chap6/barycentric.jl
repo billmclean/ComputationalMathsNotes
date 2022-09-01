@@ -103,7 +103,7 @@ savefig("b_vectors.pdf")
 
 figure(3)
 
-function draw_quadratic_triangle(a, c, d)
+function draw_quadratic_triangle(a, c, d, sz=12)
     J = [1, 2, 3, 1]
     plot(a[1,J], a[2,J], "-k")
     m = zeros(2, 3)
@@ -115,12 +115,14 @@ function draw_quadratic_triangle(a, c, d)
         offset = a[:,j] - c
         offset *= d / norm(offset)
         text(a[1,j]+offset[1], a[2,j]+offset[2], s, color="r",
-            horizontalalignment="center", verticalalignment="center")
+            horizontalalignment="center", verticalalignment="center",
+            fontsize=sz)
         s = latexstring("m_", j)
         offset = m[:,j] - c
         offset *= d / norm(offset)
         text(m[1,j]+offset[1], m[2,j]+offset[2], s, color="r",
-            horizontalalignment="center", verticalalignment="center")
+            horizontalalignment="center", verticalalignment="center",
+            fontsize=sz)
     end
     plot(a[1,:], a[2,:], "ro", m[1,:], m[2,:], "ro")
 end

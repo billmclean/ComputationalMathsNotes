@@ -636,6 +636,56 @@ stability condition of Theorem~\ref{thm: explicit Euler stability} for the
 finite difference case.
 \end{ans}
 
+\begin{comment}
+\exercise
+Consider an ODE initial-value problem
+\[
+\frac{d\boldsymbol{u}}{dt}+\boldsymbol{A}\boldsymbol{u}=\boldsymbol{0}
+\quad\text{for $0\le t\le T$,}
+    \quad\text{with $\boldsymbol{u}(0)=\boldsymbol{u}_0$.}
+\]
+We will compare three finite difference schemes for computing
+\[
+\boldsymbol{U}^n\approx\boldsymbol{u}(t_n)\quad
+    \text{for $0\le n\le N$,}\quad
+    \text{where $t_n=n\,\Delta t$ and $\Delta t=\frac{T}{N}$,}
+\]
+in the case
+\[
+\boldsymbol{A}=\begin{bmatrix}\tfrac12&-20\\ 0&20 \end{bmatrix},\qquad
+\boldsymbol{u}_0=\begin{bmatrix}0\\ 1 \end{bmatrix},\qquad
+T=3,\qquad N=.
+\]
+\begin{description}
+\item{(i)} Find the eigenvalues and eigenvectors of~$\boldsymbol{A}$ and hence
+determine the exact solution $\boldsymbol{u}(t)$.
+\item{(ii)} Write a script to compute the numerical solutions using the
+following schemes.
+\begin{itemize}
+\item Explicit Euler:
+\[
+\frac{\boldsymbol{U}^{n+1}-\boldsymbol{U}^n}{\Delta t}
+    +\boldsymbol{A}\boldsymbol{U}^n=\boldsymbol{0}.
+\]
+\item Implicit Euler:
+\[
+\frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
+    +\boldsymbol{A}\boldsymbol{U}^n=\boldsymbol{0}.
+\]
+\item Crank--Nicolson:
+\[
+\frac{\boldsymbol{U}^n-\boldsymbol{U}^{n-1}}{\Delta t}
+    +\boldsymbol{A}\boldsymbol{U}^{n-1/2}=\boldsymbol{0}.
+\]
+\end{itemize}
+\item{(iii)}
+Plot the exact and numerical solutions as shown in
+\end{description}
+\begin{ans}
+$u_1(t)=\tfrac{40}{39}(e^{-t/2}-e^{-20t})$ and $u_2(t)=e^{-20t}$.
+\end{ans}
+\end{comment}
+
 \end{Exercises}
 
 

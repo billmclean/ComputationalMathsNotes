@@ -137,7 +137,7 @@ we see that if $u$ is a $C^2$ solution of~\eqref{eq: self-adjoint bvp 2d}, and
 if $v$ is $C^1$, then
 \begin{equation}\label{eq: Lu=f weak 2d}
 \int_\Omega\bigl(a\nabla u\cdot\nabla v+cuv\bigr)=\int_\Omega fv
-	-\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}v
+	+\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}v
 	\quad\text{provided $v=0$ on $\Gamma_{\mathrm{D}}$.}
 \end{equation}
 Compare this property with its 1D equivalent~\eqref{eq: Lu=f weak 1d}.
@@ -222,14 +222,14 @@ denote the vertices of the triangle~$K$, and let $\psi\brak{K}_1$,
 $\psi\brak{K}_2$, $\psi\brak{K}_3$ denote the unique linear functions 
 satisfying
 \begin{equation}\label{eq: psi node triangle}
-\psi\brak{K}_p(\mathsf{n}\brak{K}_p)=\delta_{p,q}
-	\quad\text{for $p$, $q\in\{1,2,3\}$.}
+\psi\brak{K}_j(\mathsf{n}\brak{K}_i)=\delta_{jk}
+	\quad\text{for $i$, $j\in\{1,2,3\}$.}
 \end{equation}
 In Section~\ref{sec: barycentric}, we will derive explicit representations of 
 these functions.  The property~\eqref{eq: psi node triangle} implies that if 
 $v\in V_h$ then
 \[
-v(x,y)=\sum_{q=1}^3v(\mathsf{n}\brak{K}_q)\psi\brak{K}_q(x,y)
+v(x,y)=\sum_{i=1}^3v(\mathsf{n}\brak{K}_i)\psi\brak{K}_i(x,y)
 	\quad\text{for $(x,y)\in K$,}
 \]
 showing that $v$ is uniquely determined by its values at the nodes 
@@ -243,19 +243,19 @@ $0$ at all other nodes.}\label{fig: tent func}
 \end{center}
 \end{figure}
 
-In fact, suppose that $\mathsf{n}_1$, $\mathsf{n}_2$, \dots, $\mathsf{n}_N$ is 
-an enumeration of the nodes of~$\mathcal{T}$.  For~$1\le j\le N$, we 
-define~$\chi_j\in V_h$ by requiring
+In fact, suppose that $\mathsf{n}_1$, $\mathsf{n}_2$, \dots, $\mathsf{n}_M$ is 
+an enumeration of the nodes of~$\mathcal{T}$.  For~$1\le r\le M$, we 
+define~$\chi_r\in V_h$ by requiring
 \begin{equation}\label{eq: chi 2d}
-\chi_k(\mathsf{n}_j)=\delta_{jk}\quad\text{for $j$, $k\in\{1, 2, \dots, N\}$.}
+\chi_r(\mathsf{n}_s)=\delta_{rs}\quad\text{for $r$, $s\in\{1, 2, \dots, M\}$.}
 \end{equation}
 Figure~\ref{fig: tent func} shows an example of such a ``tent function''.  
 If $v\in V_h$, then
 \[
-v(x,y)=\sum_{k=1}^N v(\mathsf{n}_k)\chi_k(x,y)
+v(x,y)=\sum_{r=1}^M v(\mathsf{n}_r)\chi_r(x,y)
 	\quad\text{for $(x,y)\in\Omega\cup\Gamma$,}
 \]
-and we call $\{\chi_1,\chi_2,\ldots,\chi_N\}$ the \emph{nodal basis} for~$V_h$
+and we call $\{\chi_1,\chi_2,\ldots,\chi_M\}$ the \emph{nodal basis} for~$V_h$
 (Exercise~\ref{ex: nodal basis}).
 
 \section{Finite element method}
@@ -271,17 +271,19 @@ remaining vertices are called the \emph{free nodes}; these belong
 to~$\Omega\cup\Gamma_{\mathrm{N}}$, but note that the collision points, where
 $\Gamma_{\mathrm{D}}$~and $\Gamma_{\mathrm{N}}$ meet, are among the fixed nodes.
 
-Suppose that there are $M$~free nodes and $R$~fixed nodes. It is convenient to 
-number the nodes so that free nodes come first, followed by the fixed nodes.
-That is, $\mathsf{n}_1$, $\mathsf{n}_2$, \dots, 
-$\mathsf{n}_M$ are free, and $\mathsf{n}_{M+1}$, $\mathsf{n}_{M+2}$, \dots, 
-$\mathsf{n}_{M+R}$ are fixed.  
+Suppose that there are $M\free$~free nodes and $M\fix$~fixed nodes, giving a 
+total of $M=M\free+M\fix$~nodes. It is convenient to number the nodes so that 
+free ones come first, followed by the fixed ones. That is, $\mathsf{n}_1$, 
+$\mathsf{n}_2$, \dots, $\mathsf{n}_{M\free}$ are free, and 
+$\mathsf{n}_{M\free+1}$, $\mathsf{n}_{M\free+2}$, \dots, $\mathsf{n}_M$ are 
+fixed.  
 
 Let $g_{\mathrm{D},h}:\Gamma_{\mathrm{D}}\to\mathbb{R}$ be a piecewise-linear 
 approximation to~$g_{\mathrm{D}}$.  An obvious choice is the interpolant, so
 that
 \[
-g_{\mathrm{D},h}(\mathsf{n}_k)=g(\mathsf{n}_k)\quad\text{for $M+1\le k\le M+R$.}
+g_{\mathrm{D},h}(\mathsf{n}_r)=g(\mathsf{n}_r)
+    \quad\text{for $M\free+1\le r\le M$.}
 \]
 We define the trial set
 \[
@@ -295,77 +297,89 @@ Recalling \eqref{eq: Lu=f weak 2d}, the finite element
 solution~$u_h\in S_h$ is then defined by requiring that
 \begin{equation}\label{eq: FEM 2d}
 \int_\Omega\bigl(a\nabla u_h\cdot\nabla v+cu_hv\bigr)=\int_\Omega fv
-	-\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}v
+	+\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}v
 	\quad\text{for all $v\in T_h$.}
 \end{equation}
 
 We expand the finite element solution in the nodal basis, and enforce the 
 Dirichlet boundary condition to obtain the representation
 \begin{equation}\label{eq: uh U 2d}
-u_h(x,y)=\sum_{k=1}^NU_k\chi_k(x,y)=\sum_{k=1}^MU_k\chi_k(x,y)
-    +\sum_{k=M+1}^{M+R}g_{D,h}(\mathsf{n}_k)\chi_k(x,y).
+u_h(x,y)=\sum_{s=1}^MU_s\chi_s(x,y)=\sum_{s=1}^{M\free}U_s\chi_s(x,y)
+    +\sum_{s=M\free+1}^M g_{D,h}(\mathsf{n}_s)\chi_s(x,y).
 \end{equation}
-Since $\{\chi_1,\chi_2,\ldots,\chi_M\}$ is a basis for the trial space~$T_h$, 
-the requirement~\eqref{eq: FEM 2d} is equivalent to
+Since $\{\chi_1,\chi_2,\ldots,\chi_{M\free}\}$ is a basis for the trial 
+space~$T_h$, the requirement~\eqref{eq: FEM 2d} is equivalent to
 \begin{equation}\label{eq: FEM 2d alt}
-\int_\Omega\bigl(a\nabla u_h\cdot\nabla\chi_j+cu_h\chi_j\bigr)
-    =\int_\Omega f\chi_j
-    -\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}\chi_j
-    \quad\text{for $1\le j\le M$,}
+\int_\Omega\bigl(a\nabla u_h\cdot\nabla\chi_r+cu_h\chi_r\bigr)
+    =\int_\Omega f\chi_r
+    -\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}\chi_r
+    \quad\text{for $1\le r\le M\free$,}
 \end{equation}
 and so, after inserting the representation~\eqref{eq: uh U 2d}, we obtain an 
-$M\times M$~linear system
+$M\free\times M\free$~linear system
+\begin{equation}\label{eq: FEM 2D linear system}
+\sum_{s=1}^{M\free}\bigl(a_{rs}+c_{rs}\bigr)U_s
+    =f_r+g_{\mathrm{N},r}-\sum_{s=M\free+1}^M(a_{rs}+c_{rs})g_{\mathrm{D},s}
+    \quad\text{for $1\le r\le M\free$,}
+\end{equation}
+where
 \[
-\sum_{k=1}^M\bigl(a_{jk}+c_{jk}\bigr)U_k
-    =f_j+g_{\mathrm{N},j}-\sum_{k=M+1}^{M+R}(a_{jk}+c_{jk})g_{\mathrm{D},k}
-    \quad\text{for $1\le j\le M$,}
+a_{rs}=\int_\Omega a\nabla\chi_s\cdot\nabla\chi_r,\qquad
+c_{rs}=\int_\Omega c\chi_s\chi_r,\qquad
+f_r=\int_\Omega f\chi_r,\qquad
+g_{\mathrm{N},r}=\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}\chi_r,
+\]
+and $g_{\mathrm{D},s}=g_{\mathrm{D},h}(\boldsymbol{n}_s)$. Let 
+\[
+\boldsymbol{U}=[U_s]_{s=1}^M
+    =\begin{bmatrix}\boldsymbol{U}\free\\ \boldsymbol{U}\fix \end{bmatrix}
+\quad\text{where}\quad
+\boldsymbol{U}\free=\begin{bmatrix}U_1\\ U_2\\ \vdots\\ U_{M\free}\end{bmatrix}
+\quad\text{and}\quad
+\boldsymbol{U}\fix=\begin{bmatrix}U_{M\free+1}\\ U_{M\free+2}\\ \vdots\\ U_M
+\end{bmatrix},
+\]
+and 
+\[
+\boldsymbol{A}=[a_{rs}]_{\substack{1\le r\le M\free\\ 1\le s\le M}}
+=[\,\boldsymbol{A}\free\quad\boldsymbol{A}\fix\,]
 \]
 where
 \[
-a_{jk}=\int_\Omega a\nabla\chi_k\cdot\nabla\chi_j,\qquad
-c_{jk}=\int_\Omega c\chi_k\chi_j,\qquad
-f_j=\int_\Omega f\chi_j,\qquad
-g_{\mathrm{N},j}=\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}}\chi_j,
-\]
-and $g_{\mathrm{D},k}=g_{\mathrm{D},h}(\boldsymbol{n}_k)$. Let 
-\[
-\boldsymbol{U}=[U_k]_{k=1}^{M+R}
-    =\begin{bmatrix}\boldsymbol{U}'\\ \boldsymbol{U}'' \end{bmatrix}
-\quad\text{where}\quad
-\boldsymbol{U}'=[U_k]_{k=1}^M
+\boldsymbol{A}\free=\begin{bmatrix}
+a_{11}&\cdots&a_{1M\free}\\
+\vdots&\ddots&\vdots\\
+a_{M\free1}&\cdots&a_{M\free M\free}
+\end{bmatrix}
 \quad\text{and}\quad
-\boldsymbol{U}''=[U_{M+k}]_{k=1}^R,
+\boldsymbol{A}\fix=\begin{bmatrix}
+a_{1,M\free+1}&\cdots&a_{1M}\\
+\vdots&\ddots&\vdots\\
+a_{M\free,M\free+1}&\cdots&a_{M\free,M}
+\end{bmatrix}.
 \]
-and let $a'_{jk}=a_{jk}$~and $a''_{jk}=a_{j,M+k}$ so that
+Similarly, $\boldsymbol{C}=[\boldsymbol{C}\free\quad\boldsymbol{C}\fix]$, and 
+we can write the linear system~\eqref{eq: FEM 2D linear system} as
 \[
-\boldsymbol{A}=[\,\boldsymbol{A}'\quad\boldsymbol{A}''\,]
-\quad\text{where}\quad
-\boldsymbol{A}'=[a'_{jk}]_{j,k=1}^M
-\quad\text{and}\quad
-\boldsymbol{A}''=[a''_{jk}]_{1\le j\le M,1\le k\le R}.
-\]
-Similarly, $c_{jk}'=c_{jk}$ and $c_{jk}''=c_{j,M+k}$ with
-\[
-\boldsymbol{C}=[\,\boldsymbol{C}'\quad\boldsymbol{C}''\,]
-\quad\text{where}\quad
-\boldsymbol{C}'=[c'_{jk}]_{j,k=1}^M
-\quad\text{and}\quad
-\boldsymbol{C}''=[c''_{jk}]_{1\le j\le M,1\le k\le R}.
-\]
-Then, 
-\[
-\bigl(\boldsymbol{A}'+\boldsymbol{C}'\bigr)\boldsymbol{U}'
+\bigl(\boldsymbol{A}\free+\boldsymbol{C}\free\bigr)\boldsymbol{U}\free
     =\boldsymbol{f}+\boldsymbol{g}_{\mathrm{N}}
-    -\bigl(\boldsymbol{A}''+\boldsymbol{C}''\bigr)\boldsymbol{g}_{\mathrm{D}}
+-\bigl(\boldsymbol{A}\fix+\boldsymbol{C}\fix\bigr)\boldsymbol{g}_{\mathrm{D}}
 \quad\text{and}\quad
-\boldsymbol{U}''=\boldsymbol{g}_{\mathrm{D}},
+\boldsymbol{U}\fix=\boldsymbol{g}_{\mathrm{D}},
 \]
-where $\boldsymbol{A}=[a_{jk}]_{j,k=1}^M$ is the stiffness matrix, 
-$\boldsymbol{C}=[c_{jk}]_{j,k=1}^M$ is the mass matrix, 
-$\boldsymbol{f}=[f_j]_{j=1}^M$ is the load vector, and
-$\boldsymbol{g}_{\mathrm{D}}=[g_{\mathrm{D},M+k}]_{k=1}^R$~and
-$\boldsymbol{g}_{\mathrm{N}}=[g_{\mathrm{N},j}]_{j=1}^M$ provide the Dirichlet 
-and Neumann boundary data, respectively.
+with
+\[
+\boldsymbol{f}=\begin{bmatrix}f_1\\ f_2\\ \vdots\\ f_{M\free}\end{bmatrix},
+\qquad
+\boldsymbol{g}_{\mathrm{N}}=\begin{bmatrix}
+g_{\mathrm{N},1}\\ g_{\mathrm{N},2}\\ \vdots\\ 
+g_{\mathrm{N},M\free}\end{bmatrix},
+\qquad
+\boldsymbol{g}_{\mathrm{D}}=\begin{bmatrix}
+g_{\mathrm{D},M\free+1}]\\ g_{\mathrm{D},M\free+2}]\\ \vdots\\
+g_{\mathrm{D},M}] 
+\end{bmatrix}.
+\]
 
 \section{Barycentric coordinates and element matrices}\label{sec: barycentric}
 
