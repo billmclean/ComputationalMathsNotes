@@ -45,14 +45,19 @@ v_p(x_p)=v_{p+1}(x_p)\quad\text{for $1\le p\le P-1$.}
 \end{equation}
 Exercise~\ref{ex: V_h vector space} shows that the set of all continuous, 
 piecewise-linear functions forms a vector space~$V_h$.  Each $v\in V_h$ is 
-determined by its values at the grid points, 
-since
+determined by its values at the grid points.  To see why, define polynomials
+of degree at most~$1$,
 \begin{equation}\label{eq: piecewise linear v}
-v(x)=v_p(x)=\frac{1}{h_p}\bigl((x_p-x)v(x_{p-1})+(x-x_{p-1})v(x_p)\bigr)
-    \quad\text{for $x_{p-1}\le x\le x_p$.}
+\tilde v_p(x)=\frac{1}{h_p}\bigl((x_p-x)v(x_{p-1})+(x-x_{p-1})v(x_p)\bigr)
+    \quad\text{for $x_{p-1}\le x\le x_p$,}
 \end{equation}
-In particular, the $q$th \emph{nodal basis function} $\chi_q\in V_h$ is the 
-unique continuous, piecewise-linear function satisfying
+and observe that $\tilde v_p(x_{p-1})=v(x_{p-1})$~and $\tilde v_p(x_p)=v(x_p)$. 
+By uniqueness of polynomial interpolation, it follows 
+from~\eqref{eq: v piecewise} that $\tilde v_p=v_p$ for~$1\le p\le P$.
+
+In particular, we can define the $q$th \emph{nodal basis function} 
+$\chi_q\in V_h$ to be the unique continuous, piecewise-linear function 
+satisfying
 \begin{equation}\label{eq: chi q x p}
 \chi_q(x_p)=\delta_{pq}\quad\text{for $p$, $q\in\{0, 1, 2, \ldots, P\}$,}
 \end{equation}
@@ -62,11 +67,11 @@ where $\delta_{pq}$ is the Kronecker delta, that is,
 1,&\text{if $p=q$,}\\ 0,&\text{if $p\ne q$.} 
 \end{cases}
 \]
-It follows from \eqref{eq: piecewise linear v} that, when $1\le q\le P-1$,
+The formula~\eqref{eq: piecewise linear v} shows that, when $1\le q\le P-1$,
 \begin{equation}\label{eq: chi_q formula}
 \chi_q(x)=\begin{cases}
 	(x-x_{q-1})/h_q,&\text{for $x_{q-1}\le x\le x_q$,}\\
-	(x_q-x)/h_{q+1},&\text{for $x_q\le x\le x_{q+1}$,}\\
+	(x_{q+1}-x)/h_{q+1},&\text{for $x_q\le x\le x_{q+1}$,}\\
 	0,&\text{otherwise,}
 \end{cases}
 \end{equation}
@@ -262,7 +267,8 @@ boundary conditions},
 Here, at the left end of the interval~$[0,L]$ we have imposed a
 \emph{Dirichlet boundary condition} that fixes the value of~$u(0)$, whereas
 at the right end we have imposed a \emph{Neumann boundary condition} that
-fixes the value of~$u'(L)$.
+fixes the value of~$u'(L)$; note that $a(L)\ne0$ due to our 
+assumption~\eqref{eq: ellipticity 1d}.
 
 Integration by parts implies that
 \begin{equation}\label{eq: Lu v by parts}
@@ -361,7 +367,7 @@ satisfies
 \end{equation}
 
 \begin{lemma}\label{lem: v v'}
-If $v\in H^1(0,L)$, then
+If $v$~and $v'$ belong to~$L^2(0,L)$, then
 \[
 \|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr)
 \quad\text{and}\quad
@@ -403,8 +409,8 @@ thus, $v\in H^r(0,L)$ iff $v$, $v'$, \dots, $v^{(r)}$ are square integrable
 on~$[0,L]$.
 
 \begin{theorem}\label{thm: ||u||A}
-Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-
-point boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique weak
+Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-point 
+boundary-value problem~\eqref{eq: self-adjoint mixed} has a unique weak
 solution~$u\in H^1(0,L)$, and there is a constant~$C>0$ (depending only on $L$,
 $a$~and $c$) such that
 \[
@@ -990,7 +996,7 @@ Using such an approximation yields, for the element stiffness matrix,
 \boldsymbol{A}\brak{p}\approx
 	\widetilde{\boldsymbol{A}}\brak{p}=[\tilde a_{jk}\brak{p}]
 \quad\text{where}\quad
-\tilde a\brak{p}_{jk}=\frac{1}{h_p}\sum_{j=1}^Jw_la(x_{p-1}+\xi_lh_p)
+\tilde a\brak{p}_{jk}=\frac{1}{h_p}\sum_{\ell=1}^Jw_la(x_{p-1}+\xi_lh_p)
 	\Psi'_k(\xi_l)\Psi'_j(\xi_l),
 \]
 and for the element mass matrix,
@@ -998,7 +1004,7 @@ and for the element mass matrix,
 \boldsymbol{C}\brak{p}\approx
 	\widetilde{\boldsymbol{C}}\brak{p}=[\tilde c_{jk}\brak{p}]
 \quad\text{where}\quad
-\tilde c\brak{p}_{jk}=h_p\sum_{j=1}^Jw_lc(x_{p-1}+\xi_lh_p)
+\tilde c\brak{p}_{jk}=h_p\sum_{\ell=1}^Jw_lc(x_{p-1}+\xi_lh_p)
 	\Psi_k(\xi_l)\Psi_j(\xi_l).
 \]
 With the help of the connectivity matrix~$\boldsymbol{T}$, the $3\times3$ 
@@ -1624,7 +1630,7 @@ space.
 \exercise
 Show that the trial set~\eqref{eq: Sh 1D} is a \emph{convex subset} of~$V_h$,
 that is, if $v$, $w\in S_h$ then $\lambda v+\mu w\in S_h$ for all $\lambda\ge0$
-and $\mu\ge$ such that $\lambda+\mu=1$.
+and $\mu\ge0$ such that $\lambda+\mu=1$.
 
 \exercise
 Prove that $\{\chi_p\}_{p=0}^P$ is a basis for~$V_h$, and that 
@@ -1644,13 +1650,13 @@ f^{\,\mathrm{e}}_p=\frac{1}{h}\int_{x_{p-1}}^{x_{p+1}}f(x)\chi_p(x)\,dx
 where $\chi_p$ is the $p$th piecewise-linear nodal basis function (that is, the 
 ``hat function'' centred on~$x_p$).  Let
 \[
-\boldsymbol{A}=\frac{1}{h^2}\begin{bmatrix}
- 2&-1&      &      &      &\\
--1& 2&    -1&      &      &\\
-  &  &\ddots&\ddots&\ddots&\\
-  &  &      &    -1&     2&-1\\
-  &  &      &      &    -1& 2
-\end{bmatrix},\quad
+\boldsymbol{A}=\frac{1}{h^2}\left[\begin{array}{rrrrr}
+ 2&    -1&      &      &\\
+-1&     2&    -1&      &\\
+  &\ddots&\ddots&\ddots&\\
+  &      &    -1&     2&-1\\
+  &      &      &    -1& 2
+\end{array}\right],\quad
 \boldsymbol{f}^{\,\mathrm{d}}=\begin{bmatrix}
 f^{\,\mathrm{d}}_1\\                              
 f^{\,\mathrm{d}}_2\\                              
@@ -1724,7 +1730,7 @@ system~\eqref{eq: self-adjoint mixed equations} is now of the form
 \begin{description}
 \item{(i)} Why does the energy inner product no longer make sense.
 \item{(ii)} How are the entries $b_{pq}$ of the matrix~$\boldsymbol{B}$ defined 
-in terms of the nodal basis functions~$\phi_p$?
+in terms of the nodal basis functions~$\chi_p$?
 \item{(iii)} Assume now that $b(x)\equiv1$ and we use piecewise-linear elements.
 \begin{description}
 \item{(a)} Show that 
@@ -1758,6 +1764,7 @@ vice versa.
 \item{(iii)} $\iprod{v,v}_{\mathcal{L}}\ge0$.
 \item{(iv)} If $\iprod{v,v}_{\mathcal{L}}=0$ then $v\equiv0$.
 \end{description}
+Assume throughout that $c(x)\ge0$ for all~$x$.
 
 \exercise\label{ex: quadratic DoF 1d}
 Verify that the quadratic shape functions~\eqref{eq: quadratic psi 1d} on the 
@@ -1771,12 +1778,17 @@ reference element~$[0,1]$.  Assume that $a(x)=1$ and $c(x)=1$.
 \begin{description}
 \item{(i)} Verify that $\Psi_3(1-\xi)=\Psi_1(\xi)$ and 
 $\Psi_2(1-\xi)=\Psi_2(\xi)$.
-\item{(ii)} Deduce that
+\item{(ii)} What can you conclude about the first derivatives $\Psi_j'$?
+\item{(iii)} Deduce that
 $a\brak{p}_{11}=a\brak{p}_{33}$, $a\brak{p}_{12}=a\brak{p}_{32}$,
 $c\brak{p}_{11}=c\brak{p}_{33}$, $c\brak{p}_{12}=c\brak{p}_{32}$.
-\item{(iii)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
+\item{(iv)} Verify the formulae \eqref{eq: element matrices quadratic 1d}
 for the element stiffness and mass matrices.
 \end{description}
+\begin{ans}
+(ii) $\Psi_1'(\xi)=-\Psi_3'(1-\xi)$ and $\Psi_2'(\xi)=-\Psi_2'(1-\xi)$.
+\end{ans}
+
 
 \begin{figure}
 \caption{The Peano kernel $K(y)$ for the quadrature rule of 
@@ -1849,7 +1861,7 @@ where $\mathcal{L}$ is of the form~\eqref{eq: L self-adjoint}, and let
 L=2,\qquad a(x)=1,\qquad c(x)=0,\qquad f(x)=18.
 \]
 \begin{description}
-\item{(i)} Suppose we take a uniform mesh with~$M=6$ subintervals and apply the 
+\item{(i)} Suppose we take a uniform mesh with~$P=6$ subintervals and apply the 
 finite element method using quadratic elements.  Write down the connectivity 
 matrix~$\boldsymbol{T}=[t_{jp}]$, the stiffness matrix~$\boldsymbol{A}$ and 
 the load vector~$\boldsymbol{f}$. Hint: adapt the approach used in 

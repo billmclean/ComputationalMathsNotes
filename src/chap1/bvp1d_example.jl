@@ -17,8 +17,9 @@ U, x = solve_bvp(L, f, γ0, γL, P)
 
 xx = range(0; stop=L, length=201)
 plot(xx, u.(xx), "-", x[0:P], U[0:P], "o")
+xticks(x, [ latexstring("\$x_$p\$") for p = 0:6 ])
 legend(("Exact solution", "Finite difference approx"))
 grid(true)
-xlabel(L"$x$")
+#xlabel(L"$x$")
 savefig("bvp1d_example.pdf")
 ~              

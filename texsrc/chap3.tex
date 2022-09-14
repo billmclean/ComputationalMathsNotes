@@ -257,7 +257,7 @@ is the identity matrix, so
 \[
 e^{t\boldsymbol{A}}\boldsymbol{U}(t)-\boldsymbol{U}(0)
 	=\int_0^te^{s\boldsymbol{A}}\bigl(
-		\boldsymbol{f}(s)+\boldsymbol{g}(s)\bigr)\,ds
+		\boldsymbol{f}(s)+\boldsymbol{g}(s)\bigr)\,ds.
 \]
 Using $e^{-t\boldsymbol{A}}=(e^{t\boldsymbol{A}})^{-1}$~and 
 $e^{-t\boldsymbol{A}}e^{s\boldsymbol{A}}=e^{-(t-s)\boldsymbol{A}}$, we obtain
@@ -574,11 +574,12 @@ and thus
 for $1\le p\le P-1$ and $1\le n\le N$.  Thus, at the $n$th time level we have a 
 system of linear equations for the unknown $U^n_1$, $U^n_2$, \dots, $U^n_{P-1}$,
 with the right-hand sides involving the solution at the previous time level.
-The stencil for the scheme is shown in \cref{fig: implicit Euler stencil}.
+The stencil for this scheme is shown in \cref{fig: implicit Euler stencil}.
 
-\begin{figure}\label{fig: implicit Euler stencil}
+\begin{figure}
 \caption{Computational stencil for the implicit Euler 
 method~\eqref{eq: implicit Euler stencil}.}
+\label{fig: implicit Euler stencil}
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
 \draw[->] (-1,0) -- (17,0);

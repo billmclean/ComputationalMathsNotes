@@ -588,7 +588,7 @@ section~\ref{sec: accuracy of interpolation}.
 \[
 \int_{x_{p-1}}^{x_p}|f(x)|^2\,dx=h_p\int_0^1|\hat f(\xi)|^2\,d\xi
 \quad\text{and}\quad
-\int_{x_{p-1}}^{x_p}|f'(x)|^2\,dx=h_p^{-1}\int_0^1|\hat f(\xi)|^2\,d\xi.
+\int_{x_{p-1}}^{x_p}|f'(x)|^2\,dx=h_p^{-1}\int_0^1|\hat f'(\xi)|^2\,d\xi.
 \]
 \item{(ii)} Deduce that if $f\in\mathbb{P}_r$ then
 \[
@@ -611,15 +611,15 @@ Recall the notation from sections
 Show that for any $v$, $w\in T_h$,
 \[
 \int_0^L\bigl(a(x)v'w'+c(x)vw\bigr)\,dx
-    =\boldsymbol{V}^T(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{W}
+    =\boldsymbol{W}^\top(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{V}
 \quad\text{and}\quad
-\int_0^Lv(x)^2=\boldsymbol{V}^T\boldsymbol{M}\boldsymbol{W},
+\int_0^Lv(x)w(x)\,dx=\boldsymbol{W}^T\boldsymbol{M}\boldsymbol{V},
 \]
 where $V_p=v(x_p)$~and $W_p=w(x_p)$.  
 \item{(ii)}
 Hence prove that
 \[
-\Lambda_P\le C_1h_{\min}^{-2}a_{\max}+c_{\max}\quad\text{where}\quad
+\Lambda_{\max}\le C_1h_{\min}^{-2}a_{\max}+c_{\max}\quad\text{where}\quad
 a_{\max}=\max_{0\le x\le L}a(x)\quad\text{and}\quad
 c_{\max}=\max_{0\le x\le L}c(x).
 \]

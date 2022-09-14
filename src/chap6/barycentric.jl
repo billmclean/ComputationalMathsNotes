@@ -7,18 +7,18 @@ c = (1/3) * sum(a, dims=2)
 
 figure(1)
 
-function level_sets(a, j)
+function level_sets(a, j, ξ)
     prev = [3, 1, 2]
     succ = [2, 3, 1]
-    start = zeros(2, 4)
-    finish = zeros(2, 4)
-    for k = 1:4
-        ξ = (k-1)/3
+    m = length(ξ)
+    start = zeros(2, m)
+    finish = zeros(2, m)
+    for k = 1:m
         η = -0.3
-        start[:,k] = ( a[:,prev[j]] + ξ * ( a[:,j] - a[:,prev[j]] ) 
+        start[:,k] = ( a[:,prev[j]] + ξ[k] * ( a[:,j] - a[:,prev[j]] ) 
                       + η * ( a[:,succ[j]] - a[:,prev[j]] ) )
-        η = 1.1 - ξ 
-        finish[:,k] = ( a[:,prev[j]] + ξ * ( a[:,j] - a[:,prev[j]] ) 
+        η = 1.1 - ξ[k] 
+        finish[:,k] = ( a[:,prev[j]] + ξ[k] * ( a[:,j] - a[:,prev[j]] ) 
                       + η * ( a[:,succ[j]] - a[:,prev[j]] ) )
     end
     return start, finish
@@ -31,7 +31,8 @@ function draw_level_sets(a, j)
     vals = ["0", "1/3", "2/3", "1"]
     ha = ["left", "center", "right"]
     va = ["center", "center", "center"]
-    start, finish = level_sets(a, j)
+    ξ = [0, 1/3, 2/3, 1]
+    start, finish = level_sets(a, j, ξ)
     for k = 1:4
         plot([ start[1,k], finish[1,k] ], [ start[2,k], finish[2,k] ], "b",
             linewidth=0.5)
@@ -102,7 +103,7 @@ savefig("b_vectors.pdf")
 
 figure(3)
 
-function draw_quadratic_triangle(a, c, d)
+function draw_quadratic_triangle(a, c, d, sz=12)
     J = [1, 2, 3, 1]
     plot(a[1,J], a[2,J], "-k")
     m = zeros(2, 3)
@@ -114,12 +115,14 @@ function draw_quadratic_triangle(a, c, d)
         offset = a[:,j] - c
         offset *= d / norm(offset)
         text(a[1,j]+offset[1], a[2,j]+offset[2], s, color="r",
-            horizontalalignment="center", verticalalignment="center")
+            horizontalalignment="center", verticalalignment="center",
+            fontsize=sz)
         s = latexstring("m_", j)
         offset = m[:,j] - c
         offset *= d / norm(offset)
         text(m[1,j]+offset[1], m[2,j]+offset[2], s, color="r",
-            horizontalalignment="center", verticalalignment="center")
+            horizontalalignment="center", verticalalignment="center",
+            fontsize=sz)
     end
     plot(a[1,:], a[2,:], "ro", m[1,:], m[2,:], "ro")
 end
@@ -127,3 +130,4 @@ end
 draw_quadratic_triangle(a, c, 0.15)
 axis("equal")
 axis("off")
+savefig("midpoints.pdf")

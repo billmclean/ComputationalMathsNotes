@@ -1,4 +1,4 @@
-module Triangulations
+module Triangulation_diagrams
 
 using PyPlot
 using ArgCheck

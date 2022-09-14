@@ -1251,7 +1251,7 @@ Prove the following properties of the Kronecker product.
 \item{(i)} $A\otimes(B+C)=A\otimes B+A\otimes C$.
 \item{(ii)} $(A+B)\otimes C=A\otimes C+B\otimes C$.
 \item{(iii)} $A\otimes(B\otimes C)=(A\otimes B)\otimes C$.
-\item{(iv)} $(A\otimes B)^T=A^T\otimes B^T$.
+\item{(iv)} $(A\otimes B)^\top=A^\top\otimes B^\top$.
 \end{description}
 
 \exercise
@@ -1260,8 +1260,112 @@ bandwidth $s_{\boldsymbol{A}}$~and $s_{\boldsymbol{B}}$, respectively, and that
 the number of columns of~$\boldsymbol{A}$ equals the number of rows 
 of~$\boldsymbol{B}$.  Show that the matrix 
 product~$\boldsymbol{A}\boldsymbol{B}$ has upper 
-bandwidth~$\max(s_{\boldsymbol{A}},s_{\boldsymbol{B}})$.  State and prove the 
+bandwidth~$s_{\boldsymbol{A}}+s_{\boldsymbol{B}}$.  State and prove the 
 corresponding result for lower bandwidths.
+
+\exercise
+We wish to solve the Poisson problem,
+\[
+\begin{aligned}
+-(u_{xx}+u_{yy})&=f&&\text{in $\Omega$,}\\
+u&=g&&\text{on $\partial\Omega$,}
+\end{aligned}
+\]
+where $\Omega$ is the triangular region
+\[
+0\le x\le1,\quad 0\le y\le 1-x.
+\]
+We define grid points
+\[
+(x_p,y_q)=(p\,\Delta x,q\,\Delta y)
+        \quad\text{for $0\le p\le P$, $0\le q\le P-p$,}
+\]
+where $\Delta x=\Delta y=1/P$, as illustrated in 
+\cref{fig: finite diff triangle} for the case~$P=5$, and seek
+$U_{pq}\approx u(x_p,y_q)$.
+
+\begin{figure}
+\caption{Finite difference grid for a triangular domain.}
+\label{fig: finite diff triangle}
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+\draw[->] (-1,0)--(6,0);
+\node[right] at (6,0) {$x$};
+\draw[->] (0,-1) -- (0,6);
+\node[right] at (0,6) {$y$};
+\foreach \x in {1, 2, 3, 4}
+    {
+    \draw[thin] (\x,0) -- (\x,5-\x);
+    \draw[fill] (\x,0) circle (0.05cm);
+    \draw[fill] (\x,5-\x) circle (0.05cm);
+    }
+\foreach \y in {1, 2, 3, 4}
+    {
+    \draw[thin] (0,\y) -- (5-\y,\y);
+    \draw[fill] (0,\y) circle (0.05cm);
+    \draw[fill] (5-\y,\y) circle (0.05cm);
+    }
+\draw[fill] (0,0) circle (0.05cm);
+\draw[fill] (5,0) circle (0.05cm);
+\draw[fill] (0,5) circle (0.05cm);
+\foreach \x in {1, 2, 3}
+    \draw[fill=white] (\x,1) circle (0.05cm);
+\foreach \x in {1, 2}
+    \draw[fill=white] (\x,2) circle (0.05cm);
+\draw[fill=white] (1,3) circle (0.05cm);
+\draw[thick] (0,0) -- (5,0) -- (0,5) -- (0,0);
+\node[below] at (5,0) {$1$};
+\node[left]  at (0,5) {$1$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+\begin{description}
+\item{(i)}
+Write down the usual 5-point finite difference approximation for the
+Poisson equation, based on second-order central difference
+approximations to $u_{xx}$~and $u_{yy}$.  Use the
+abbreviation~$f_{pq}=f(x_p,y_q)$
+\item{(ii)}
+Write down the equation at~$(x_1,y_1)$, after the known boundary
+values are moved to the right-hand side.  You can use the
+abbreviation~$g_{pq}=g(x_p,y_q)$.
+\item{(iii)}
+Assume now that $P=5$, and put
+\begin{align*}
+\boldsymbol{U}&=[U_{11}\quad U_{21}\quad U_{31}\quad U_{12} \quad U_{22}
+        \quad U_{13}]^\top,\\
+\boldsymbol{f}&=[f_{11}\quad f_{21}\quad f_{31}\quad f_{12} \quad f_{22}
+        \quad f_{13}]^\top.
+\end{align*}
+Find the matrix~$\boldsymbol{A}$ and vector~$\boldsymbol{g}$ such that, with
+$h=\Delta x=\Delta y=1/5$,
+\[
+\boldsymbol{A}\boldsymbol{U}=h^2\boldsymbol{f}+\boldsymbol{g}.
+\]
+\end{description}
+\begin{ans}
+(ii) $4U_{11}-U_{21}-U_{12}=h^2f_{11}+g_{01}+g_{10}$ \\
+(iii)
+\[
+ \boldsymbol{A}=\kbordermatrix{
+      &U_{11}&U_{21}&U_{31}&U_{12}&U_{22}&U_{13}\\
+(x_1,y_1)& 4&-1&  &-1&  &\\
+(x_2,y_1)&-1& 4&-1&  &-1&\\     
+(x_3,y_1)&  &-1& 4&  &  &\\
+(x_1,y_2)&-1&  &  & 4&-1&-1\\
+(x_2,y_2)&  &-1&  &-1& 4&\\
+(x_1,y_3)&  &  &  &-1&  &4},\qquad
+\boldsymbol{g}=\kbordermatrix{
+&\\
+(x_1,y_1)&g_{10}+g_{10}\\
+(x_2,y_1)&g_{20}\\
+(x_3,y_1)&g_{30}+g_{41}+g_{32}\\
+(x_1,y_2)&g_{02}\\
+(x_2,y_2)&g_{32}+g_{23}\\
+(x_1,y_3)&g_{03}+g_{23}+g_{14}}.
+\]
+\end{ans}
+
 
 \exercise
 Write down $\boldsymbol{A}_{\mathrm{band}}$ given 
@@ -1322,7 +1426,6 @@ $a_{ij}=\rb{\beta+1+i-j,j}$.}
 \end{algorithmic}
 \end{center}
 \end{ans}
-
 
 \exercise
 Write an in-place version of Algorithm~\ref{alg: band Chol solve}.
