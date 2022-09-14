@@ -618,7 +618,7 @@ c\brak{K}_{pq}=\int_Kc\xi_q\xi_p=\int_0^1\int_0^{1-\xi_1}
 remembering that $\xi_3=1-\xi_1-\xi_2$.
 In particular, if $a(\boldsymbol{x})=1$~and $c(\boldsymbol{x})=1$, then
 Theorem~\ref{thm: int xi} shows that 
-\[
+\begin{equation}\label{eq: AK CK}
 \newcommand{\bb}{\boldsymbol{b}}
 \boldsymbol{A}\brak{K}=\mathrm{area}(K)\begin{bmatrix}
 \bb_1\cdot\bb_1&\bb_2\cdot\bb_1&\bb_3\cdot\bb_1\\
@@ -628,7 +628,7 @@ Theorem~\ref{thm: int xi} shows that
 \quad\text{and}\quad
 \boldsymbol{C}\brak{K}=\frac{\mathrm{area}(K)}{12}\begin{bmatrix}
 2&1&1\\ 1&2&1\\ 1&1&2 \end{bmatrix}.
-\]
+\end{equation}
 
 The 3-dimensional element load vector is defined by
 \[
@@ -640,11 +640,171 @@ f\brak{K}_p=\int_K f\psi\brak{K}_p
 \]
 
 
-
-
 \section{Optimality property}
 
 \begin{Exercises}
+
+\exercise
+Derive the weak formulation of the boundary-value 
+problem \eqref{eq: self-adjoint bvp 2d} if we replace the Neumann boundary
+condition with the, more general, Robin boundary condition,
+\[
+a\,\frac{\partial u}{\partial n}+bu=g_{\mathrm{N}}
+\quad\text{on $\Gamma_{\mathrm{N}}$,}
+\]
+for a given coefficient~$b(x)$.
+\begin{ans}
+The weak solution $u$ satisfies
+\[
+\int_\Omega(a\nabla u\cdot\nabla v+cuv)+\int_{\Gamma_{\mathrm{N}}}buv
+=\int_\Omega fv+\int_{\Gamma_{\mathrm{N}}}g_{\mathrm{N}} v 
+\quad\text{whenever $v=0$ on~$\Gamma_{\mathrm{D}}$,}
+\]
+with $u=g_{\mathrm{D}}$ on $\Gamma_{\mathrm{D}}$.
+\end{ans}
+
+\exercise
+Derive the weak formulation for the elliptic eigenproblem
+\[
+\begin{aligned}
+\mathcal{L}\phi&=\lambda b\phi\quad&&\text{in $\Omega$,}\\
+u&=0&&\text{on $\Gamma_{\mathrm{D}}$,}\\
+a\,\frac{\partial u}{\partial n}&=g_{\mathrm{N}}
+&&\text{on $\Gamma_{\mathrm{N}}$.}
+\end{aligned}
+\]
+\begin{ans}
+The eigenpair~$(\phi,\lambda)$ satisfies
+\[
+\int_\Omega(a\nabla\phi\cdot\nabla v+c\phi v)=\lambda\int_\Omega b\phi v
+\quad\text{whenever $v=0$ on $\Gamma_{\mathrm{D}}$,}
+\]
+with $\phi=0$ on~$\Gamma_{\mathrm{D}}$.
+\end{ans}
+
+\exercise\label{ex: triangulation}
+Consider the triangulation~$\mathcal{K}$ that arises if the vertex coordinates 
+are given by the matrix
+\[
+\boldsymbol{N}=\begin{bmatrix}
+1&0&1&0&-1& 0&-1\\
+1&1&0&0& 0&-1&-1\end{bmatrix},
+\]
+and if the triangle connectivity matrix is
+\[
+\boldsymbol{T}^{\mathcal{K}}=\begin{bmatrix}
+1&4&4&3&4&5\\
+2&3&2&4&5&7\\
+3&2&5&6&6&6\end{bmatrix}.
+\]
+\begin{description}
+\item{(i)} Draw $\mathcal{K}$, numbering the vertices and triangles.
+\item{(ii)} Enumerate the outer edges, given the the edge connectivity matrix is
+\[
+\boldsymbol{T}^{\mathcal{E}}=\begin{bmatrix}
+6&3&1&2&5&7\\
+3&1&2&5&7&6\end{bmatrix}
+\]
+\item{(iii)} Given that $M\free=4$, determine $\Gamma_{\mathrm{D}}$~and
+$\Gamma_{\mathrm{N}}$.
+\end{description}
+\begin{ans}
+(i)--(ii) See Figure~\ref{fig: triangulation solution}\quad(iii) 
+$\Gamma_{\mathrm{N}}=\{E_1,E_2,E_3,E_4\}$ and
+$\Gamma_{\mathrm{D}}=\{E_5,E_6\}$.
+\begin{figure}
+\caption{Solution to \ref{ex: triangulation}.}
+\label{fig: triangulation solution}
+\begin{center}
+\includegraphics[scale=0.8]{../src/chap6/ex1_triangulation-crop.pdf}
+\end{center}
+\end{figure}
+\end{ans}
+
+\begin{figure}
+\caption{Triangulation for Exercise~\ref{ex: mesh to matrices}.}
+\label{fig: mesh to matrices}
+\begin{center}
+\includegraphics[scale=0.8]{../src/chap6/ex2_triangulation-crop.pdf}
+\end{center}
+\end{figure}
+
+\exercise\label{ex: mesh to matrices}
+Consider a finite element method for a boundary-value 
+problem~\eqref{eq: self-adjoint bvp 2d} using the triangulation shown in 
+Figure~\ref{fig: mesh to matrices}.  Note that $\Gamma_{\mathrm{D}}$ consists 
+of the bottom and right sides of~$\Omega$ (that is, the thicker line segments).
+\begin{description}
+\item{(i)} What are $M\free$~and $M\fix$, the numbers of free and fixed nodes?
+\item{(ii)} What is $Q_{\mathrm{N}}$, the number of edges along 
+$\Gamma_{\mathrm{N}}$?
+\item{(iii)} Write down the triangle connectivity 
+matrix~$\boldsymbol{T}^{\mathcal{K}}$.
+\item{(vi)} Write down the edge connectivity 
+matrix~$\boldsymbol{T}^{\mathcal{E}}$.
+\item{(v)} 
+What are the dimensions of the global load vector~$\boldsymbol{f}=[f_r]$,
+the global stiffness matrix~$\boldsymbol{A}=[a_{rs}]$, and the
+global Neumann vector~$\boldsymbol{g}_{\mathrm{N}}=[g_{N,r}]$?
+\item{(vi)}
+Express each $f_r$ as a sum of entries~$f\brak{p}_j$ from the element load 
+vectors $\boldsymbol{f}\brak{1}$, $\boldsymbol{f}\brak{2}$, \dots,
+$\boldsymbol{f}\brak{10}$.
+\item{(vii)}
+Express each nonzero $a_{rs}$ as a sum of entries~$a\brak{p}_{ij}$ from the the 
+element stiffness matrices $\boldsymbol{A}\brak{1}$, $\boldsymbol{A}\brak{2}$, 
+\dots, $\boldsymbol{A}\brak{10}$.  (From symmetry, it suffices to consider
+$r\le s$.)
+\item{(viii)}
+Express each $\boldsymbol{g}_{\mathrm{N}}=[g_{N,r}]$ as a sum of 
+entries~$g\brak{p}_{\mathrm{N},i}$ of the edge Neumann vectors 
+$\boldsymbol{g}^{[1]}_{\mathrm{N}}$, $\boldsymbol{g}^{[2]}_{\mathrm{N}}$, 
+\dots, $\boldsymbol{g}^{[5]}_{\mathrm{N}}$.
+\end{description}
+\begin{ans}
+(i) $M\free=6$, $M\fix=4$\quad (ii) $Q_{\mathrm{N}}=5$
+(iii) 
+\[
+\boldsymbol{T}^{\mathcal{K}}=\begin{bmatrix}
+ 3& 5& 4& 7& 6& 1& 5&  6& 10& 8\\
+ 4& 2& 7& 8& 5& 2& 6&  9&  1& 9\\
+ 2& 4& 5& 5& 8& 5& 1& 10&  6& 6\end{bmatrix}
+\]
+(iv)
+\[
+\boldsymbol{T}^{\mathcal{E}}=\begin{bmatrix}
+10& 1& 2& 3& 4& 7& 8&  9\\
+ 1& 2& 3& 4& 7& 8& 9& 10\end{bmatrix}
+\]
+(v) $\boldsymbol{f}$ is $6\times1$, $\boldsymbol{A}$ is $6\times10$, and
+$\boldsymbol{g}_{\mathrm{N}}$ is $6\times1$.\quad 
+(vi) $f_1=f\brak{6}_1+f\brak{7}_3+f\brak{9}_2$,
+$f_2=f\brak{1}_3+f\brak{2}_2+f\brak{6}_2$, $f_3=f\brak{1}_1$,
+$f_4=f\brak{1}_2+f\brak{2}_3+f\brak{3}_1$,
+$f_5=f\brak{2}_1+f\brak{3}_3+f\brak{4}_3+f\brak{5}_2+f\brak{6}_3+f\brak{7}_1$,
+$f_6=f\brak{5}_1+f\brak{7}_2+f\brak{8}_1+f\brak{9}_3+f\brak{10}_3$.\quad
+(vii) $a_{11}=a\brak{6}_{11}+a\brak{7}_{33}+a\brak{9}_{22}$,
+$a_{12}=a\brak{6}_{12}$, $a_{15}=a\brak{6}_{13}+a\brak{7}_{31}$,
+$a_{16}=a\brak{7}_{32}+a\brak{9}_{23}$, $a_{1,10}=a\brak{9}_{21}$,
+$a_{22}=a\brak{1}_{33}+a\brak{2}_{22}+a\brak{6}_{22}$, $a_{23}=a\brak{1}_{31}$,
+$a_{24}=a\brak{1}_{32}+a\brak{2}_{23}$, $a_{25}=a\brak{2}_{21}+a\brak{6}_{23}$,
+$a_{33}=a\brak{1}_{11}$, $a_{34}=a\brak{1}_{12}$,
+$a_{44}=a\brak{1}_{22}+a\brak{2}_{33}+a\brak{3}_{11}$,
+$a_{45}=a\brak{2}_{31}+a\brak{3}_{13}$, $a_{47}=a\brak{3}_{12}$,
+$a_{55}=a\brak{2}_{11}+a\brak{3}_{33}+a\brak{4}_{33}+a\brak{5}_{22}
++a\brak{6}_{33}+a\brak{7}_{11}$, $a_{56}=a\brak{5}_{21}+a\brak{7}_{12}$,
+$a_{57}=a\brak{3}_{32}+a\brak{4}_{31}$, $a_{58}=a\brak{4}_{32}+a\brak{5}_{23}$,
+$a_{66}=a\brak{5}_{11}+a\brak{7}_{22}+a\brak{8}_{11}+a\brak{9}_{33}
++a\brak{10}_{33}$, $a_{68}=a\brak{5}_{13}+a\brak{10}_{31}$,
+$a_{69}=a\brak{8}_{12}+a\brak{10}_{32}$, 
+$a_{6,10}=a\brak{8}_{13}+a\brak{9}_{31}$.\quad(viii) 
+$g_{\mathrm{N},1}=g^{[1]}_2+g^{[2]}_1$,
+$g_{\mathrm{N},2}=g^{[2]}_2+g^{[3]}_1$,
+$g_{\mathrm{N},3}=g^{[3]}_2+g^{[4]}_1$,
+$g_{\mathrm{N},4}=g^{[4]}_2+g^{[5]}_1$,
+$g_{\mathrm{N},5}=g_{\mathrm{N},6}=0$.
+
+\end{ans}
 
 \exercise\label{ex: nodal basis}
 Prove that the functions $\chi_j\in V_h$ satisfying~\eqref{eq: chi 2d} form a 
@@ -684,18 +844,9 @@ rule~\eqref{eq: 3 quad} with $\lambda=1/6$ (left) and $\lambda=1/2$ (right).}
 \end{center}
 \end{figure}
 
-\begin{exercise}
-To achieve higher accuracy, we can consider a six-point quadrature rule
-\[
-\int_K f\approx\frac{\mathrm{area}(K)}{3}\biggl(
-	w\sum_{p=1}^3 f\bigl(\boldsymbol{x}\brak{K}_p(\lambda_1)\bigr)
-	+(1-w)\sum_{p=1}^3 f\bigl(\boldsymbol{x}\brak{K}_p(\lambda_2)\bigr)\biggr),
-\]
-depending on the parameters $w$, $\lambda_1$~and $\lambda_2$, with 
-$\boldsymbol{x}\brak{K}_p=\boldsymbol{x}\brak{K}_p(\lambda)$ defined as 
-in~\eqref{eq: 3 quad points}.
-
-\end{exercise}
+\exercise
+Verify that the element mass matrix~$\boldsymbol{C}\brak{K}$ is as claimed
+in~\eqref{eq: AK CK} if $c(\boldsymbol{x})=1$.
 
 
 \end{Exercises}
