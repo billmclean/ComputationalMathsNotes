@@ -348,7 +348,7 @@ inner product}
 \iprod{v,w}_{\mathcal{L}}=\int_0^L\bigl(a(x)v'(x)w'(x)+c(x)v(x)w(x)\bigr)\,dx,
 \end{equation}
 together with the corresponding norms
-$\|v\|_{\mathcal{L}}=\sqrt{\iprod{v,v}_{\mathcal{A}}}$~and
+$\|v\|_{\mathcal{L}}=\sqrt{\iprod{v,v}_{\mathcal{L}}}$~and
 $\|v\|=\sqrt{\iprod{v,v}}$; thus,
 \[
 \|v\|^2=\int_0^L|v(x)|^2\,dx
@@ -369,9 +369,9 @@ satisfies
 \begin{lemma}\label{lem: v v'}
 If $v$~and $v'$ belong to~$L^2(0,L)$, then
 \[
-\|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr)
+\|v\|_\infty^2\le 2\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr)
 \quad\text{and}\quad
-|v(L)|^2\le 2\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr),
+\|v\|^2\le2L\bigl(|v(0)|^2+\beta\|v\|_{\mathcal{L}}^2\bigr),
 \]
 where the positive constant~$\beta$ is given by
 \[
@@ -386,18 +386,9 @@ Since $v(x)=v(0)+\int_0^xv'(y)\,dy$, the Cauchy--Schwarz inequality implies that
 \biggl(\int_0^xa(y)|v'(y)|^2\,dy\biggr)\\
 	&\le2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2
 \end{align*}
-so
-\begin{align*}
-\|v\|^2&=\int_0^L|v(x)|^2\,dx\le 2L|v(0)|^2+2\beta L\|v\|_{\mathcal{L}}^2.
-\end{align*}
-Similarly, since $v(L)=v(0)+\int_0^Lv'(y)\,dy$ we have
-\begin{align*}
-|v(L)|^2&\le2|v(0)|^2+2\biggl(\int_0^Lv'(y)\,\biggr)^2
-	\le2|v(0)|^2+2\biggl(\int_0^L\frac{dy}{a(y)}\biggr)
-	\biggl(\int_0^La(y)|v'(y)|^2\,dy\biggr)\\
-	&=2|v(0)|^2+2\beta\|v\|_{\mathcal{L}}^2,
-\end{align*}
-as claimed.
+for~$0\le x\le L$, proving the estimate
+for~$\|v\|_\infty=\sup_{0\le x\le L}|v(x)|$.  The bound
+for~$\|v\|^2=\int_0^L|v(x)|^2\,dx\le L\|v\|_\infty^2$ then follows at once.
 \end{proof}
 
 The \emph{Sobolev space} with differentiability index~$r$ is the vector
@@ -406,7 +397,10 @@ space
 H^r(0,L)=\{\,v\in L^2(0,L): \text{$v^{(k)}\in L^2(0,L)$ for $1\le k\le r$}\,\};
 \end{equation}
 thus, $v\in H^r(0,L)$ iff $v$, $v'$, \dots, $v^{(r)}$ are square integrable
-on~$[0,L]$.
+on~$[0,L]$.  We equip this space with the obvious norm:
+\[
+\|v\|_{H^k(0,L)}=\biggl(\sum_{k=0}^r\|v^{(k)}\|^2\biggr)^{1/2}.
+\]
 
 \begin{theorem}\label{thm: ||u||A}
 Assume that $c(x)\ge0$ for~$0\le x\le L$.  Then, the mixed, two-point 
@@ -418,11 +412,16 @@ $a$~and $c$) such that
 \]
 \end{theorem}
 \begin{proof}
+We will prove the estimate for~$\|u\|_{\mathcal{L}}^2$.  Uniqueness then
+follows as in the proof of \cref{thm: perturbed bvp 1d} because if
+$f\equiv0$ and $\gamma_0=0=\gamma_L$ then $u\equiv0$.  We will not prove the
+hard part, namely, the existence of~$u$.
+
 Let $u_0(x)=L^{-1}(L-x)u(0)$ and $v(x)=u(x)-u_0(x)$, so that
 \[
-u_0(0)=u(0),\quad u_0(L)=0,\quad v(0)=0,\quad v(L)=u(L).
+u_0(0)=u(0)=\gamma_0,\quad u_0(L)=0,\quad v(0)=0,\quad v(L)=u(L).
 \]
-By~\eqref{eq: <u,v>A},
+Thus, $u_0\in S_h$ and $v\in T_h$. By~\eqref{eq: <u,v>A},
 \[
 \iprod{u,u-u_0}_{\mathcal{L}}=\gamma_Lu(L)+\iprod{f,u-u_0}
 \]
@@ -432,14 +431,14 @@ and so
 	+\iprod{u,u_0}_{\mathcal{L}}.
 \]
 For any $\epsilon>0$, \cref{lem: v v'} gives
-\[
-|\gamma_L u(L)|=2\bigl(\epsilon^{-1/2}\,|\gamma_L|\bigr)
+\begin{align*}
+|\gamma_L u(L)|&=2\bigl(\epsilon^{-1/2}\,|\gamma_L|\bigr)
 	\bigl(\tfrac12\epsilon^{1/2}\,|u(L)|\bigr)
-\le\epsilon^{-1}\,\gamma_L^2
-	+\tfrac14\epsilon\,|u(L)|^2
-	\le\epsilon^{-1}\gamma_L^2+\tfrac12\epsilon\bigl(|u(0)|^2
+\le\epsilon^{-1}\,|\gamma_L|^2
+	+\tfrac14\epsilon\,|u(L)|^2\\
+	&\le\epsilon^{-1}|\gamma_L|^2+\tfrac12\epsilon\bigl(|u(0)|^2
 	+\beta\|u\|_{\mathcal{L}}^2\bigr),
-\]
+\end{align*}
 and by the Cauchy--Schwarz inequality,
 \begin{align*}
 |\iprod{f,u}|&\le\|f\|\|u\|=2\bigl(\epsilon^{-1/2}\|f\|\bigr)
@@ -450,31 +449,31 @@ and by the Cauchy--Schwarz inequality,
 \end{align*}
 Likewise,
 \[
-|\iprod{f,u_0}|\le\epsilon^{-1}\|f\|^2+\tfrac12\epsilon\|u_0\|^2
+|\iprod{f,u_0}|\le\epsilon^{-1}\|f\|^2+\tfrac14\epsilon\|u_0\|^2
 \quad\text{and}\quad
 |\iprod{u,u_0}_{\mathcal{L}}|\le\epsilon^{-1}\|u_0\|_{\mathcal{L}}^2
-	+\tfrac14\epsilon\|u_0\|_{\mathcal{L}}^2,
+	+\tfrac14\epsilon\|u\|_{\mathcal{L}}^2,
 \]
 and, since $u(0)=\gamma_0$,
 \[
-\|u\|_{\mathcal{L}}^2\le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
-+\tfrac12\epsilon\bigl((1+L)|\gamma_0|^2+\|u_0\|^2
-	+\tfrac12\|u_0\|_{\mathcal{L}}^2+(1+L)\beta\|u\|_{\mathcal{L}}^2\bigr).
+\|u\|_{\mathcal{L}}^2
+    \le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|_{\mathcal{L}}^2\bigr)
++\tfrac12\epsilon\bigl((1+L)|\gamma_0|^2+\|u_0\|^2\bigr)
++\tfrac12\epsilon\bigl(\tfrac12+(1+L)\beta\bigr)\|u\|_{\mathcal{L}}^2.
 \]
-Now choose $\epsilon=(1+L)^{-1}\beta^{-1}$ so that $\epsilon(1+L)\beta=1$ and 
-thus
+Now choose $\epsilon=\bigl(\tfrac12+(1+L)\beta\bigr)^{-1}$ so that
+$\epsilon\bigl(\tfrac12+(1+L)\beta\bigr)=1$ and thus
 \[
-\|u\|_{\mathcal{L}}^2\le(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
-	+\tfrac12\beta^{-1}|\gamma_0|^2+\tfrac12(1+L)^{-1}\beta^{-1}
-	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr)
+\|u\|_{\mathcal{L}}^2
+\le\epsilon^{-1}\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|_{\mathcal{L}}^2\bigr)
++\tfrac12\epsilon\bigl((1+L)|\gamma_0|^2+\|u_0\|^2\bigr)
 	+\tfrac12\|u\|_{\mathcal{L}}^2.
 \]
 After cancelling the term~$\tfrac12\|u\|_{\mathcal{L}}^2$ and multiplying both
 sides by~$2$, we obtain
 \[
-\|u\|_{\mathcal{L}}^2\le2(1+L)\beta\bigl(|\gamma_L|^2+2\|f\|^2+\|u_0\|^2\bigr)
-	+\beta^{-1}|\gamma_0|^2+(1+L)^{-1}\beta^{-1}
-	\bigl(\|u_0\|^2+\tfrac12\|u_0\|_{\mathcal{L}}^2\bigr),
+\|u\|_{\mathcal{L}}^2\le C\bigl(|\gamma_0|^2+|\gamma_L|^2+\|f\|^2+\|u_0\|^2
+	+\|u_0\|_{\mathcal{L}}^2\bigr),
 \]
 with
 \[
@@ -485,9 +484,55 @@ and
 \[
 \|u_0\|_{\mathcal{L}}^2=\frac{|\gamma_0|^2}{L^2}\int_0^L\bigl(
 	a(x)+c(x)(L-x)^2\bigr)\,dx
-	\le\bigl(L^{-1}a_{\max}+\tfrac13L^2c_{\max}\bigr)|\gamma_0|^2,
+	\le\bigl(L^{-1}a_{\max}+\tfrac13Lc_{\max}\bigr)|\gamma_0|^2,
 \]
 implying the desired estimate for~$\|u\|_{\mathcal{L}}^2$.
+\end{proof}
+
+We can also estimate the higher-order derivatives of~$u$.
+
+\begin{theorem}\label{thm: regularity 1d}
+Let $k\ge0$ and assume that the coefficients $a$~and $c$ are $C^{k+1}$ and
+$C^k$ on~$[0,L]$, respectively.  If $f\in H^k(0,L)$, then the weak
+solution $u\in H^{k+2}(0,L)$ with
+\[
+\|u^{(k+2)}\|\le C\bigl(|\gamma_0|+|\gamma_L|+\|f\|_{H^k(0,L)}\bigr).
+\]
+\end{theorem}
+\begin{proof}
+The ODE $-(au')'+cu=f$ implies\footnote{We are cheating here, by implicitly
+assuming that $u''$ exists.  It is possible to prove, by considering difference
+quotients of $u'$, that $u''\in L^2(0,L)$.} that $-au''-a'u'+cu=f$ so
+$u''=(f+a'u'-cu)/a$ and thus, using \cref{thm: ||u||A},
+\[
+\|u''\|\le C\bigl(\|f\|+\|u'\|+\|u\|\bigr)
+    \le C\bigl(\|f\|+\|u\|_{\mathcal{L}}\bigr)
+    \le C\bigl(|\gamma_0|+|\gamma_L|+\|f\|\bigr),
+\]
+which proves the result for~$k=0$. Proceeding by induction on~$k$, let $k\ge1$
+and assume that
+\begin{equation}\label{eq: u k+1 f k-1}
+\|u^{(k+1)}\|\le C\bigl(|\gamma_0|+|\gamma_L|+\|f\|_{H^{k-1}(0,L)}\bigr).
+\end{equation}
+Differentiating the ODE
+$k$~times, we have
+\begin{align*}
+f^{(k)}&=(\mathcal{L}u)^{(k)}=-(au')^{(k+1)}+(cu)^{(k)}\\&
+    =-au^{(k+2)}-\sum_{j=0}^k\binom{k+1}{j}a^{(k+1-j)}(u')^{(j)}
+    +\sum_{j=0}^k\binom{k}{j}c^{(k-j)}u^{(j)},
+\end{align*}
+so
+\[
+u^{(k+2)}=\frac{1}{a}\biggl(f^{(k)}
+    -\sum_{j=0}^k\binom{k+1}{j}a^{(k+1-j)}u^{(j+1)}
+    +\sum_{j=0}^k\binom{k}{j}c^{(k-j)}u^{(j)}\biggr).
+\]
+Hence,
+\[
+\|u^{(k+2)}\|\le C\bigl(\|f^{(k)}\|+\|u\|_{H^{k+1}(0,L)}\bigr),
+\]
+and the desired estimate follows at once from the induction
+hypothesis~\eqref{eq: u k+1 f k-1}.
 \end{proof}
 
 \section{Matrix assembly element-by-element}\label{sec: matrix assembly 1d}
@@ -574,7 +619,7 @@ c\brak{p}_{11}=\int_{x_{p-1}}^{x_p}\biggl(\frac{x_p-x}{h_p}\biggr)^2\,dx
 and similarly
 \[
 c\brak{p}_{22}=\int_{x_{p-1}}^{x_p}\biggl(\frac{x-x_{p-1}}{h_p}\biggr)^2\,dx
-    =\biggl[-\frac{(x-x_{p-1})^3}{3h_p^2}\biggr]_{x_{p-1}}^{x_p}
+    =\biggl[\frac{(x-x_{p-1})^3}{3h_p^2}\biggr]_{x_{p-1}}^{x_p}
     =\frac{(x_p-x_{p-1})^3}{3h_p^2}=\frac{h_p}{3},
 \]
 whereas, integrating by parts,
@@ -590,10 +635,14 @@ c\brak{p}_{12}&=c\brak{p}_{21}=\int_{x_{p-1}}^{x_p}
 \end{align*}
 \end{example}
 
-We enumerate the nodes of the mesh so that the \emph{free nodes precede 
-the fixed nodes}, where the latter are those at which the value of the 
-solution is fixed by a Dirichlet boundary condition.  For our 
-problem~\eqref{eq: self-adjoint mixed}, the only fixed node is~$x_0$, so we put
+A \emph{fixed node} is one at which the value of the finite element 
+solution~$u_h$ is fixed because of a Dirichlet boundary condition.  Thus, for 
+our mixed boundary-value problem~\eqref{eq: self-adjoint mixed}, the only 
+fixed node is $\mathsf{n}_0\brak{1}=x_0$.  A \emph{free node} is one that is
+not fixed.  When choosing a global enumeration of all the nodes in the mesh, we
+will use the convention that the \emph{free nodes precede the fixed nodes}.
+solution is fixed by a Dirichlet boundary condition.  Thus, in the present
+setting we let
 \[
 \mathsf{n}_p=x_p\quad\text{for $1\le p\le P$,}
 \quad\text{and}\quad\mathsf{n}_{P+1}=x_0.
@@ -606,6 +655,7 @@ t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r;
 
 \begin{figure}
 \caption{Node numbering from \cref{example: node numbers 1d} with~$P=4$.}
+\label{fig: node numbers 1d}
 \begin{center}
 \begin{tikzpicture}[scale=3.0]
 \draw[-,thick](-0.5,0) -- (4.5,0);
@@ -627,7 +677,7 @@ t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r;
 \end{figure}
 
 \begin{example}\label{example: node numbers 1d}
-If $P=4$ then
+\cref{fig: node numbers 1d} illustrates the case~$P=4$, for which
 \[
 \boldsymbol{T}=\begin{bmatrix}
 5&1&2&3\\
@@ -653,7 +703,7 @@ and
 \begin{align*}
 \int_0^La(x)u_h'(x)v'(x)\,dx
     &=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}a(x)
-    \biggl(\sum_{k=1}^2 U\brak{p}_k(\psi_k\brak{p})'(s)\biggr)
+    \biggl(\sum_{k=1}^2 U\brak{p}_k(\psi_k\brak{p})'(x)\biggr)
     \biggl(\sum_{j=1}^2 V\brak{p}_j(\psi_j\brak{p})'(x)\biggr)\,dx\\
     &=\sum_{p=1}^P\sum_{k=1}^2\sum_{j=1}^2
     U\brak{p}_ka\brak{p}_{jk}V\brak{p}_j;
@@ -675,7 +725,7 @@ Therefore, \eqref{eq: self-adjoint mixed bc FEM} holds iff
 
 For~$v\in V_h$, put
 \[
-V_r=v(\mathsf{n}\brak{p}_r)\quad\text{for $1\le r\le P+1$,}
+V_r=v(\mathsf{n}_r)\quad\text{for $1\le r\le P+1$,}
 \]
 so that $V_r=V\brak{p}_j$ iff $r=t_{jp}$, and hence
 \[
@@ -700,7 +750,7 @@ a_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}}a\brak{p}_{jk}
 \qquad\text{and}\qquad
 c_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}} c\brak{p}_{jk},
 \]
-with
+for the index set
 \[
 \mathcal{I}_{rs}=\{\,(p,j,k):\text{$t_{jp}=r$ and $t_{kp}=s$}\,\}.
 \]
@@ -710,9 +760,9 @@ In this way, \eqref{eq: self-adjoint mixed bc FEM} holds iff
 	+\sum_{r=1}^PV_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s,
 \]
 remembering that $V_{P+1}=v(\mathsf{n}_{P+1})=v(0)=0$.  Forming the 
-$P\times(P+1)$ matrices $\boldsymbol{A}=[a_{pq}]$~and 
-$\boldsymbol{C}=[c_{pq}]$, and the $P$-dimensional vector~$\boldsymbol{f}$,
-we see that
+$P\times(P+1)$ matrices $\boldsymbol{A}=[a_{rs}]$~and
+$\boldsymbol{C}=[c_{rs}]$, and the $P$-dimensional
+vector~$\boldsymbol{f}=[f_r]$, we see that
 \begin{equation}\label{eq: VT(A+C)U}
 \boldsymbol{V}^T\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
     =\gamma_LV_P+\boldsymbol{V}^T\boldsymbol{f}
@@ -743,8 +793,8 @@ scalar.  Since $U\fix=U_{P+1}=u_h(\mathsf{n}_{P+1})=u_h(0)=\gamma_0$,
 yielding the $P\times P$ linear system
 \begin{equation}\label{eq: FEM 1d mixed linear system}
 \bigl(\boldsymbol{A}\free+\boldsymbol{C}\free\bigr)\boldsymbol{U}\free
-=\boldsymbol{f}-\gamma_0(\boldsymbol{A}\fix+\boldsymbol{C}\fix)
-    +\gamma_L\boldsymbol{e}_P.
+=\boldsymbol{f}+\gamma_L\boldsymbol{e}_P
+    -\gamma_0(\boldsymbol{A}\fix+\boldsymbol{C}\fix).
 \end{equation}
 Algorithm~\ref{alg: assemble f piecewise linear} shows how, using the 
 connectivity matrix~$\boldsymbol{T}=[t_{pm}]$, the global load 
@@ -754,22 +804,22 @@ algorithm~\ref{alg: assemble A piecewise linear} shows how the global
 stiffness matrix~$\boldsymbol{A}$ can be assembled from the element stiffness 
 matrices~$\boldsymbol{A}\brak{p}$.  The global mass matrix~$\boldsymbol{C}$ is 
 assembled in the same way. In practice, $\boldsymbol{A}$~and $\boldsymbol{C}$ 
-are constructed an appropriate \emph{sparse matrix} data structure.
+are constructed using an appropriate \emph{sparse matrix} data structure.
 
 \begin{algorithm}
 \caption{Assemble the load vector $\boldsymbol{f}$
 from~\eqref{eq: A C f example}.}
 \label{alg: assemble f piecewise linear}
 \begin{algorithmic}
-\State Allocate storage for $\boldsymbol{f}=[f_p]\in\mathbb{R}^P$.
-\For{$p=1:P$}
-    \State $f_p=0$
+\State Allocate storage for $\boldsymbol{f}=[f_r]\in\mathbb{R}^P$.
+\For{$r=1:P$}
+    \State $f_r=0$
 \EndFor
 \For{$p=1:P$}
-    \State Compute $\boldsymbol{f}\brak{p}$
+    \State Compute $\boldsymbol{f}\brak{r}$
     \For{$j=1:2$}
         \State $r=t_{pj}$\Comment{$\mathsf{n}_r=\mathsf{n}\brak{p}_j$}
-        \If{$r\le M$}
+        \If{$r\le P$}
             \State $f_r\gets f_r+f\brak{p}_j$
         \EndIf
     \EndFor
@@ -784,9 +834,9 @@ from~\eqref{eq: A C f example}.}
 \begin{algorithmic}
 \State Allocate storage for
 $\boldsymbol{A}=[a_{pq}]\in\mathbb{R}^{P\times(P+1)}$
-\For{$p=1:P$}
-    \For{$q=1:P+1$}
-        \State $a_{pq}=0$
+\For{$s=1:P+1$}
+    \For{$r=1:P$}
+        \State $a_{rs}=0$
     \EndFor
 \EndFor
 \For{$p=1:P$}
@@ -1070,15 +1120,10 @@ $g\in\mathbb{P}_r$ satisfies \eqref{eq: g interpolates f} then the difference
 $g-\mathcal{Q}_rf$ is a polynomial satisfying
 \[
 (g-\mathcal{Q}_rf)(x_j)=g(x_j)-(\mathcal{Q}_rf)(x_j)=f(x_j)-f(x_j)=0
-	\quad\text{for $1\le j\le r+1$,}
+	\quad\text{for $1\le j\le r+1$.}
 \]
-so, for some constant~$C$,
-\[
-g(x)-(\mathcal{Q}_rf)(x)=C(x-x_1)(x-x_2)\cdots(x-x_{r+1}) 
-	=Cx^{r+1}+\text{lower degree terms}.
-\]
-But $g-\mathcal{Q}_rf$ has degree at most~$r$, so $C=0$ and hence
-$g(x)=(\mathcal{Q}_rf)(x)$ for all~$x$. In particular, since any element 
+Since $g-\mathcal{Q}_rf$ has degree at most~$r$, it must vanish identically and
+so $g(x)=(\mathcal{Q}_rf)(x)$ for all~$x$. In particular, since any element
 of~$\mathbb{P}_r$ interpolates itself, it follows that
 \[
 \mathcal{Q}_rf=f\quad\text{for every $f\in\mathbb{P}_r$,}
@@ -1115,6 +1160,17 @@ where the \emph{Peano kernel} is defined by
 K_r(x,y)=(\mathcal{Q}_r\pi_{r,y})(x)-\pi_{r,y}(x)
 	\quad\text{for $x$, $y\in[a,b]$.}
 \]
+Since the $j$th derivative~$\pi_{r,y}^{(j)}(x)=\pi_{r-j,y}(x)$, we see that
+\[
+\partial_x^jK_r(x,y)=(\mathcal{Q}_r\pi_{r,y})^{(j)}(x)-\pi_{r-j,y}(x)
+\quad\text{for $0\le j\le r$,}
+\]
+and that the $j$th derivative of the interpolation error has the representation
+\begin{equation}\label{eq: Qr f error deriv}
+(\mathcal{Q}_rf-f)^{(j)}(x)=\int_a^b\partial_x^j K_r(x,y)f^{(r+1)}(y)\,dy
+\quad\text{for $a\le x\le b$.}
+\end{equation}
+
 
 \begin{figure}
 \caption{Peano kernel for linear interpolation at $0$~and $1$
@@ -1150,9 +1206,10 @@ K_1(x,y)=\frac{(b-y)(x-a)}{b-a}-(x-y)\quad\text{for $a\le y\le x\le b$,}
 \]
 and
 \[
-K_1(x,y)=\frac{(b-y)(x-a)}{b-a}\quad\text{for $a\le x\le y\le b$.}
+K_1(x,y)=\frac{(b-y)(x-a)}{b-a}\quad\text{for $a\le x\le y\le b$;}
 \]
-Thus, $K_1(x,y)$ is piecewise linear in~$x$ for fixed~$y$, and vice versa, with
+see \cref{fig: linear Peano}. Thus, $K_1(x,y)$ is piecewise linear in~$x$ for
+fixed~$y$, and vice versa, with
 \[
 K_1(a,y)=0=K_1(b,y),\qquad K_1(x,a)=0=K_1(x,b),\qquad
 K_1(x,x)=\frac{(b-x)(x-a)}{b-a}.
@@ -1211,24 +1268,13 @@ K_2(-x,-y)=-K_2(x,y)\quad\text{for $x$, $y\in[-1,1]$.}
 \end{equation}
 \end{example}
 
-Since the $j$th derivative~$\pi_{r,y}^{(j)}(x)=\pi_{r-j,y}(x)$, we see that
-\[
-\partial_x^jK_r(x,y)=(\mathcal{Q}_r\pi_{r,y})^{(j)}(x)-\pi_{r-j,y}(x)
-\quad\text{for $0\le j\le r$,}
-\]
-and that the $j$th derivative of the interpolation error has the representation
-\begin{equation}\label{eq: Qr f error deriv}
-(\mathcal{Q}_rf-f)^{(j)}(x)=\int_a^b\partial_x^j K_r(x,y)f^{(r+1)}(y)\,dy
-\quad\text{for $a\le x\le b$.}
-\end{equation}
-
 
 \section{Accuracy of piecewise-polynomial approximation}
 \label{sec: accuracy of interpolation}
 
 Fix $r+1$~nodes in the reference element~$[0,1]$,
 \begin{equation}\label{eq: ref nodes 1d}
-0=\mathsf{n}_1<\mathsf{n}_2<\cdots<\mathsf{n}_{r+1}=1,
+0=\hat{\mathsf{n}}_1<\hat{\mathsf{n}}_2<\cdots<\hat{\mathsf{n}}_{r+1}=1,
 \end{equation}
 and consider an element~$[x_{p-1},x_p]$ with length~$h_p=x_p-x_{p-1}$.  The 
 change of variable,
@@ -1239,7 +1285,8 @@ defines an affine bijection~$\xi\mapsto x$ from the reference element~$[0,1]$
 onto~$[x_{p-1},x_p]$.  We assume that the nodes in~$[x_{p-1},x_p]$ correspond 
 to the reference nodes under this affine bijection, that is,
 \[
-\mathsf{n}_j\brak{p}=x_{p-1}+\mathsf{n}_jh_p\quad\text{for $1\le j\le r+1$.}
+\mathsf{n}_j\brak{p}=x_{p-1}+\hat{\mathsf{n}}_jh_p
+    \quad\text{for $1\le j\le r+1$.}
 \]
 Given a function $f(x)$, we define $\hat f$ on the reference element by
 \[
@@ -1256,15 +1303,15 @@ respectively, so that
 whereas
 \[
 \widehat{\mathcal{Q}}_r\hat f\in\mathbb{P}_{r+1}\quad\text{and}\quad
-\bigl(\widehat{\mathcal{Q}}_r\hat f\bigr)(\mathsf{n}_j)=\hat f(\mathsf{n}_j)
-\quad\text{for $1\le j\le r+1$.}
+\bigl(\widehat{\mathcal{Q}}_r\hat f\bigr)(\hat{\mathsf{n}}_j)
+    =\hat f(\hat{\mathsf{n}}_j)\quad\text{for $1\le j\le r+1$.}
 \]
 Notice that if we let $g(x)=(\mathcal{Q}_r\brak{p}f)(x)$, then 
 $\hat g(\xi)=\widehat{\mathcal{Q}}_r\hat f(\xi)$ because 
 $\hat g\in\mathbb{P}_r$~and 
 \[
-\hat g(\mathsf{n}_j)=g(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
-    =\hat f(\mathsf{n}_j)\quad\text{for $1\le j\le r+1$.}
+\hat g(\hat{\mathsf{n}}_j)=g(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
+    =\hat f(\hat{\mathsf{n}}_j)\quad\text{for $1\le j\le r+1$.}
 \]
 In other words, 
 $\widehat{\mathcal{Q}_r\brak{p}f}=\widehat{\mathcal{Q}}_r\hat f$.
@@ -1292,7 +1339,7 @@ Since $dx/d\xi=h_p$ we see that
 so using \eqref{eq: Qr f error deriv} and the Cauchy--Schwarz inequality,
 \begin{align*}
 \bigl|(f-\mathcal{Q}_r\brak{p}f)^{(k)}(x)\bigr|^2
-    &=h_p^{-2k}\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2
+    &=h_p^{-2k}\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)^{(k)}(\xi)\bigr|^2
     =h_p^{-2k}\biggl|\int_0^1\partial_\xi^k K_r(\xi,\eta)
         \hat f^{(r+1)}(\eta)\, d\eta\biggr|^2\\
     &\le h_p^{-2k}\biggl(\int_0^1|\partial_\xi^kK_r(\xi,\eta)|^2\,d\eta\biggr)
@@ -1309,8 +1356,9 @@ $dx=h_p\,d\xi$, we have
 \end{align*}
 and 
 \[
-\int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta=\int_{x_{p-1}}^{x_p}
-    |h_p^{r+1}f^{(r+1)}(y)|^2h_p^{-1}\,dy,
+\int_0^1|\hat f^{(r+1)}(\eta)|^2\,d\eta
+    =\int_{x_{p-1}}^{x_p}|h_p^{r+1}f^{(r+1)}(y)|^2h_p^{-1}\,dy
+    =h_p^{1+2r}\int_{x_{p-1}}^{x_p}|f^{(r+1)}(x)|^2\,dx,
 \]
 which implies the desired estimate.
 \end{proof}
@@ -1370,25 +1418,25 @@ the energy norm.
 \begin{theorem}\label{thm: optimality}
 The finite element solution~$u_h\in S_h$ satisfies
 \[
-\|u_h-u\|_{\mathcal{L}}\le\|w-u\|_{\mathcal{A}}
+\|u_h-u\|_{\mathcal{L}}\le\|w-u\|_{\mathcal{L}}
 	\quad\text{for all $w\in S_h$.}
 \]
 \end{theorem}
 \begin{proof}
 Let $w\in S_h$ and observe that the error~$e_h=u_h-u$ satisfies
 \begin{align*}
-\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,e_h}_{\mathcal{A}}
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,e_h}_{\mathcal{L}}
 	&=\iprod{e_h,u_h-u}_{\mathcal{L}}
 	=\iprod{e_h,u_h-w+w-u}_{\mathcal{L}}\\
-	&=\iprod{e_h,u_h-w}_{\mathcal{L}}+\iprod{e_h,w-u}_{\mathcal{A}}.
+	&=\iprod{e_h,u_h-w}_{\mathcal{L}}+\iprod{e_h,w-u}_{\mathcal{L}}.
 \end{align*}
 Since $(u_h-w)(0)=u_h(0)-w(0)=\gamma_0-\gamma_0=0$ we see that $u_h-w\in T_h$
 and so the energy-orthogonality property~\eqref{eq: energy orthog} implies
 that $\iprod{e_h,u_h-w}_{\mathcal{L}}=0$.  Hence, by the Cauchy--Schwarz
 inequality,
 \[
-\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,w-u}_{\mathcal{A}}
-	\le\|e_h\|_{\mathcal{L}}\|w-u\|_{\mathcal{A}},
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,w-u}_{\mathcal{L}}
+	\le\|e_h\|_{\mathcal{L}}\|w-u\|_{\mathcal{L}},
 \]
 which implies the desired inequality.
 \end{proof}
@@ -1409,7 +1457,7 @@ there is a constant~$C>0$, independent of~$h$, such that
 Let $w=\mathcal{Q}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
 so we may apply \cref{thm: optimality} and deduce that
 \begin{align*}
-\|u_h-u\|_{\mathcal{L}}^2\le\|w-u\|_{\mathcal{A}}^2
+\|u_h-u\|_{\mathcal{L}}^2\le\|w-u\|_{\mathcal{L}}^2
 	&\le a_{\max}\|w'-u'\|^2+c_{\max}\|w-u\|^2\\
 	&\le\bigl(a_{\max}C_{r,1}h^{2r}+c_{\max}C_{r,0}h^{2r+2}\bigr)
 	\|u^{(r+1)}\|^2\\
@@ -1422,13 +1470,14 @@ which implies the result since $h$ is bounded.
 $\|u_h'-u'\|\le Ch^r\|u^{(r+1)}\|$.
 \end{corollary}
 \begin{proof}
-Observe that since $a(x)/a_{\min}\ge1$,
+Observe that since $a(x)/a_{\min}\ge1$ and for any function~$v$,
 \[
 \|v'\|^2=\int_0^L|v'(x)|^2\,dx\le\int_0^L\frac{a(x)}{a_{min}}\,|v'(x)|^2\,dx
 	=\frac{1}{a_{\min}}\int_0^La(x)|v'(x)|^2\,dx
 	\le\frac{\|v\|_{\mathcal{L}}^2}{a_{\min}},
 \]
-and in particular $\|u_h'-u'\|^2\le\|u_h-u\|^2_{\mathcal{L}}/a_{min}$.
+so $\|v'\|\le C\|v\|_{\mathcal{L}}$.
+In particular, $\|u_h'-u'\|\le C\|u_h-u\|_{\mathcal{L}}\le Ch^r\|u^{(r+1)}\|$.
 \end{proof}
 
 In some applications, an integral of the form
@@ -1440,6 +1489,8 @@ $u\in H^{r+1}(0,L)$, then
 \[
 \iprod{\phi,u_h}=\iprod{\phi,u}+O(h^{2r+1}).
 \]
+Thus, the approximation~$\iprod{\phi,u_h}\approx\iprod{\phi,u}$ is much more
+than $u_h'\approx u'$.
 
 \begin{theorem}
 If $0\le k\le r$, then
@@ -1470,49 +1521,17 @@ inequality,
 	\|u_h-u\|_{\mathcal{L}}.
 \]
 Since
-\[
+\begin{align*}
 \|\theta-\mathcal{Q}_{k+1,h}\theta\|_{\mathcal{L}}^2
-	\le a_{\max}\|\theta'-(\mathcal{Q}_{k+1,h}\theta)'\|
-	+c_{\max}\|\theta-\mathcal{Q}_{k+1,h}\theta\|
-	\le C\bigl(h^{k+1}+h^{k+2})\|\theta^{(k+2)}\|
-\]
-it suffices to show, using induction on~$k$, that 
+	&\le a_{\max}\|\theta'-(\mathcal{Q}_{k+1,h}\theta)'\|^2
+	+c_{\max}\|\theta-\mathcal{Q}_{k+1,h}\theta\|^2\\
+	&\le C\bigl(h^{2(k+1)}+h^{2(k+2)})\|\theta^{(k+2)}\|^2,
+\end{align*}
+it suffices to note that, by \cref{thm: regularity 1d}, we have
 $\|\theta^{(k+2)}\|\le C\|\phi\|_{H^k(0,L)}$.  
-Rearranging the ODE $a\theta''+c\theta=\phi$,  and using \cref{lem: v v'} 
-followed by~\cref{thm: ||u||A},
-\[
-\|\theta''\|=\|(\phi-c\theta)/a\|
-	\le\frac{\|\phi\|+c_{\max}\|\theta\|}{a_{\min}}\le C\|\phi\|
-	\le C(\|\phi\|+\|\theta\|_{\mathcal{L}})\le C\|\phi\|,
-\]
-which proves the claim for~$k=0$.  For the inductive step, we let~$k\ge1$ and
-assume that 
-\[
-\|\theta^{(j+2)}\|\le C\sum_{l=0}^j\|\phi^{(l)}\|
-	\quad\text{for~$0\le j\le k-1$.}
-\]
-By $k$-fold differentiation of $a\theta''+c\theta=\phi$, 
-\[
-a\theta^{(k+2)}+c\theta^{(k)}+\sum_{j=0}^{k-1}\binom{k}{j}\bigl(
-	a^{(k-j)}\theta^{(j+2)}+c^{(k-j)}\theta^{(j)}\bigr)=\phi^{(k)}
-\]
-so
-\[
-\theta^{(k)}=\frac{1}{a}\bigg(\phi^{(k)}-c\theta^{(k)}
-	-\sum_{j=0}^{k-1}\binom{k}{j}\bigl(
-	a^{(k-j)}\theta^{(j+2)}+c^{(k-j)}\theta^{(j)}\bigr)\biggr)
-\]
-and
-\[
-\|\theta^{(k)}\|\le C\biggl(\|\phi^{(k)}\|+\|\theta\|+\|\theta'\|
-	+\sum_{j=2}^{k+1}\|\theta^{(j)}\|\biggr)
-\le C\biggl(\|\phi^{(k)}\|+\|\theta\|_{\mathcal{L}}
-	+\sum_{j=0}^{k-1}\|\theta^{(j+2)}\|\biggr),
-\]
-implying that the induction goes through.
 \end{proof}
 
-\begin{corollary}
+\begin{corollary}\label{cor: uh L2 error}
 $\|u_h-u\|\le Ch^{r+1}\|u^{(r+1)}\|$.
 \end{corollary}
 \begin{proof}
@@ -1523,6 +1542,9 @@ Apply \cref{thm: uh-u L} with $\phi=u_h-u$~and $k=0$ to obtain
 \]
 which implies the result.
 \end{proof}
+
+Thus, measured in the norm of~$L^2(0,L)$, the errors in both the finite element
+solution~$u_h$ and the interpolant~$\mathcal{Q}_{r,h}u$ are $O(h^{r+1})$.
 
 \section{Sturm--Liouville problems}\label{sec: Sturm-Liouville}
 
@@ -1541,7 +1563,9 @@ satisfies~\eqref{eq: ellipticity 1d}, we require that
 b(x)>0\quad\text{for $0<x<L$.}
 \end{equation}
 A non-trivial solution~$\phi=\phi(x)$ is said to an \emph{eigenfunction} and 
-$\lambda$ is then the corresponding \emph{eigenvalue}.  
+$\lambda$ is then the corresponding \emph{eigenvalue}.  The
+\emph{Sturm--Liouville problem} is to find the \emph{eigenpair} $(\phi,\lambda)$
+given the coefficients $a$, $b$, $c$ and the interval~$[0,L]$.
 
 The ODE~\eqref{eq: Sturm Liouville ODE} can be written as
 \[
@@ -1549,8 +1573,8 @@ The ODE~\eqref{eq: Sturm Liouville ODE} can be written as
 \]
 where the self-adjoint differential operator~$\mathcal{L}$ is again given 
 by~\eqref{eq: L self-adjoint}.  Recalling the 
-identity~\eqref{eq: Lu v by parts}, we see that any \emph{eigenpair} 
-$(\phi,\lambda)$ satisfies, for any test function~$v$,
+identity~\eqref{eq: Lu v by parts}, we see that any eigenpair $(\phi,\lambda)$
+satisfies, for any test function~$v$,
 \[
 \int_0^L\bigl(a(x)\phi'(x)v(x)+c(x)\phi(x)v(x)\bigr)\,dx
 	=\lambda\int_0^Lb(x)\phi(x)v(x)\,dx
@@ -1562,13 +1586,14 @@ discussed in Section~\ref{sec: quadratic elements}, and put
 \[
 S_h=T_h=\{\,v\in V_h:v(0)=0\,\}.
 \]
-We seek an approximate eigenfunction~$\phi_h\in S_h$ and corresponding 
-approximate eigenvalue~$\lambda_h$ such that
+It is therefore natural to seek an approximate eigenfunction~$\phi_h\in S_h$
+and corresponding approximate eigenvalue~$\lambda_h$ such that
 \[
 \int_0^L\bigl(a(x)\phi_h'(x)v(x)+c(x)\phi_h(x)v(x)\bigr)\,dx
-	=\lambda\int_0^Lb(x)\phi_h(x)v(x)\,dx
+	=\lambda_h\int_0^Lb(x)\phi_h(x)v(x)\,dx
 \quad\text{for all $v\in T_h$.}
 \]
+We call $(\phi_h,\lambda_h)$ a \emph{finite element eigenpair}.
 Let $\chi_1$, $\chi_2$, \dots, $\chi_{2P+1}$ be the nodal basis for~$V_h$, so 
 that
 \[
@@ -1633,8 +1658,9 @@ that is, if $v$, $w\in S_h$ then $\lambda v+\mu w\in S_h$ for all $\lambda\ge0$
 and $\mu\ge0$ such that $\lambda+\mu=1$.
 
 \exercise
-Prove that $\{\chi_p\}_{p=0}^P$ is a basis for~$V_h$, and that 
-$\{\chi_p\}_{p=1}^{P-1}$ is a basis for~$T_h$.
+Prove that $\{\chi_p\}_{p=0}^P$ is a basis for the continuous piecewise-linear
+finite element space~$V_h$, and that $\{\chi_p\}_{p=1}^{P-1}$ is a basis
+for~$T_h$.
 
 \exercise
 Consider the model problem~\eqref{eq: model 1d chap 2}.  Define a uniform 
@@ -1719,9 +1745,9 @@ identically zero), and the weak formulation of the mixed boundary-value
 problem~\eqref{eq: self-adjoint mixed} changes from~\eqref{eq: Lu=f weak 1d} to
 \[
 \int_0^L\bigl(au'v'+bu'v+cuv\bigr)\,dx
-    =\gamma_Lv(L)+\int_0^Lfv\,dx\quad\text{provided $v(0)=0$,}
+    =\gamma_Lv(L)+\int_0^Lfv\,dx\quad\text{provided $v(0)=0$.}
 \]
-with $u(0)=\gamma_0$, and the linear 
+with $u(0)=\gamma_0$. Consequently, the linear
 system~\eqref{eq: self-adjoint mixed equations} is now of the form
 \[
 \bigl(\boldsymbol{A}+\boldsymbol{B}+\boldsymbol{C}\bigr)\boldsymbol{U}
@@ -1756,7 +1782,7 @@ $b_{p,p-1}=-1/2$ and $b_{p-1,p}=1/2$ for $1\le p\le P$
 \exercise
 Check that the energy inner product~\eqref{eq: energy iprod} is in fact an 
 inner product on the vector space of $C^1$ functions $v:[0,L]\to\mathbb{R}$ 
-satisfying $v(0)=0$, by checking that for all such functions
+satisfying $v(0)=0$, by verifying the following properties.
 \begin{description}
 \item{(i)} $\iprod{v,w}_{\mathcal{L}}$ is linear in~$v$ for fixed $w$, and
 vice versa.
@@ -1862,10 +1888,11 @@ L=2,\qquad a(x)=1,\qquad c(x)=0,\qquad f(x)=18.
 \]
 \begin{description}
 \item{(i)} Suppose we take a uniform mesh with~$P=6$ subintervals and apply the 
-finite element method using quadratic elements.  Write down the connectivity 
-matrix~$\boldsymbol{T}=[t_{jp}]$, the stiffness matrix~$\boldsymbol{A}$ and 
-the load vector~$\boldsymbol{f}$. Hint: adapt the approach used in 
-Example~\ref{example: assemble A} for piecewise-linear elements.
+finite element method using \emph{quadratic} elements.  Write down the
+connectivity matrix~$\boldsymbol{T}=[t_{jp}]$, the stiffness
+matrix~$\boldsymbol{A}$ and the load vector~$\boldsymbol{f}$. Hint: adapt the
+approach used in Example~\ref{example: assemble A} for piecewise-linear
+elements.
 \item{(ii)} How do the boundary data $\gamma_0$~and $\gamma_L$ enter into the 
 linear system for the nodal vector?
 \item{(iii)} Formulate an algorithm to assemble the stiffness matrix for a 

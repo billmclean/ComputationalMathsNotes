@@ -25,9 +25,9 @@ this 1D model, the temperature does not vary in the $y$~and $z$ directions.
 \section{Separation of variables}\label{sec: separation}
 
 Let
-\[
+\begin{equation}\label{eq: gamma(x,t)}
 \gamma(x,t)=\frac{1}{L}\bigl((L-x)\gamma_0(t)+x\gamma_L(t)\bigr),
-\]
+\end{equation}
 so that
 \[
 \gamma(0,t)=\gamma_0(t)\quad\text{and}\quad\gamma(L,t)=\gamma_L(t),
@@ -239,21 +239,20 @@ e^{\boldsymbol{A}}=\sum_{k=0}^\infty\frac{\boldsymbol{A}^n}{n!}
 \]
 Furthermore,
 \[
-\frac{d}{dt}\,e^{t\boldsymbol{A}}=\boldsymbol{A}e^{t\boldsymbol{A}},
+\frac{d}{dt}\,e^{t\boldsymbol{A}}=\boldsymbol{A}e^{t\boldsymbol{A}}
+	=e^{t\boldsymbol{A}}\boldsymbol{A},
 \]
 so $e^{t\boldsymbol{A}}$ provides an integrating factor 
 for~\eqref{eq: ODE system}:
 \[
 \frac{d}{dt}\bigl(e^{t\boldsymbol{A}}\boldsymbol{U}\bigr)
-	=\boldsymbol{A}e^{t\boldsymbol{A}}\boldsymbol{U}
+	=e^{t\boldsymbol{A}}\boldsymbol{A}\boldsymbol{U}
 	+e^{t\boldsymbol{A}}\,\frac{d\boldsymbol{U}}{dt}
 	=e^{t\boldsymbol{A}}\biggl(\frac{d\boldsymbol{U}}{dt}
 	+\boldsymbol{A}\boldsymbol{U}\biggr)
-	=e^{t\boldsymbol{A}}\bigl(\boldsymbol{f}(t)+\boldsymbol{g}(t)\bigr),
+	=e^{t\boldsymbol{A}}\bigl(\boldsymbol{f}(t)+\boldsymbol{g}(t)\bigr).
 \]
-where we used the fact that $\boldsymbol{A}$ commutes 
-with~$e^{t\boldsymbol{A}}$.  If $t=0$ then $e^{t\boldsymbol{A}}=\boldsymbol{I}$
-is the identity matrix, so
+If $t=0$ then $e^{t\boldsymbol{A}}=\boldsymbol{I}$ is the identity matrix, so
 \[
 e^{t\boldsymbol{A}}\boldsymbol{U}(t)-\boldsymbol{U}(0)
 	=\int_0^te^{s\boldsymbol{A}}\bigl(
@@ -287,13 +286,15 @@ u_{0p}=u_0(x_p).
 The \emph{forward difference} approximation in time,
 \[
 u_t(x_p,t_n)\approx\frac{u(x_p,t_n+\Delta t)-u(x_p,t_n)}{\Delta t}
-	=\frac{u(x_p,t_{n+1})-u(x_p,t_n)}{\Delta t},
+	=\frac{u(x_p,t_{n+1})-u(x_p,t_n)}{\Delta t}
+		\approx\frac{U^{n+1}_p-U^n_p}{\Delta t},
 \]
 and the second-order central difference approximation in space,
 \begin{align*}
 u_{xx}(x_p,t_n)
 &\approx\frac{u(x_p+\Delta x,t_n)-2u(x_p,t_n)+u(x_p-\Delta x,t_n)}{\Delta x^2}\\
-&=\frac{u(x_{p+1},t_n)-2u(x_p,t_n)+u(x_{p-1},t_n)}{\Delta x^2},
+&=\frac{u(x_{p+1},t_n)-2u(x_p,t_n)+u(x_{p-1},t_n)}{\Delta x^2}
+\approx\frac{U^n_{p+1}-2U^n_p+U^n_{p-1}}{\Delta x^2},
 \end{align*}
 lead to the \emph{explicit Euler method} for~\eqref{eq: heat ivp 1d}:
 \begin{equation}\label{eq: explicit Euler 1d}
@@ -395,13 +396,13 @@ If $\Delta x$ and $\Delta t$ satisfy
 or equivalently if the ratio~\eqref{eq: rho explicit Euler} satisfies 
 $\rho\le1/2$, then the explicit Euler method~\eqref{eq: explicit Euler 1d} is 
 stable:
-\[
+\begin{equation}\label{eq: explicit Euler stability}
 \|\boldsymbol{U}^n_{0:P}\|_\infty
 	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
 		\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
 	+\sum_{j=0}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
-\quad\text{for $0\le n\le N$.}
-\]
+\end{equation}
+for $0\le n\le N$.
 \end{theorem}
 \begin{proof}
 We use finite induction on~$n$.  When~$n=0$, we have
@@ -412,8 +413,9 @@ $U^0_P=\gamma_L^0$, so
 \max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,|\gamma_0|,|\gamma_L|\bigr\},
 \]
 which agrees with the formula since the empty sum vanishes. Now let 
-$0\le n\le N-1$ and make the induction hypothesis.  We see 
-from~\eqref{eq: explicit Euler stencil} that
+$0\le n\le N-1$ and make the induction
+hypothesis~\eqref{eq: explicit Euler stability}.  We see
+from~\eqref{eq: explicit Euler stencil} that, for $1\le p\le P-1$,
 \[
 |U^{n+1}_p|\le|f^n_p|\,\Delta t+\rho|U^n_{p-1}|+|1-2\rho|\,|U^n_p|
     +\rho|U^n_{p+1}|
@@ -480,8 +482,8 @@ and, so by Exercise~\ref{ex: forward diff}~and \cref{thm: 2nd central diff},
 which implies the stated estimate for~$\tau^n_p$. 
 \end{proof}
 
-The next theorem shows that, provided the 
-restriction~\eqref{eq: explicit Euler timestep} on the step sizes is satisfied, 
+We can now deduce that, provided the
+restriction~\eqref{eq: explicit Euler timestep} on the step sizes is satisfied,
 the explicit Euler method is first-order accurate in time and second-order 
 accurate in space.
 
@@ -509,7 +511,7 @@ By the definition~\eqref{eq: tau explicit Euler} of the local truncation error,
 \]
 Subtracting this equation from the finite difference equation 
 in~\eqref{eq: explicit Euler 1d}, we obtain a finite difference equation for
-the error ~$E^n_p=U^n_p-u(x_p,t_n)$ in the finite difference solution, namely
+the error ~$E^n_p=U^n_p-u(x_p,t_n)$,
 \[
 \frac{E^{n+1}_p-E^n_p}{\Delta t}
 	-a\,\frac{E^n_{p+1}-2E^n_p+E^n_{p-1}}{\Delta x^2}=\tau^n_p
@@ -549,7 +551,8 @@ Instead of using a forward difference, we can approximate $u_t$ by a
 \emph{backward difference},
 \[
 u_t(x_p,t_n)\approx\frac{u(x_p,t_n)-u(x_p,t_n-\Delta t)}{\Delta t}
-	=\frac{u(x_p,t_n)-u(x_p,t_{n-1})}{\Delta t},
+	=\frac{u(x_p,t_n)-u(x_p,t_{n-1})}{\Delta t}
+	\approx\frac{U^n_p-U^{n-1}_p}{\Delta t},
 \]
 which leads to the \emph{im}plicit Euler method,
 \begin{equation}\label{eq: implicit Euler 1d}
@@ -602,7 +605,7 @@ method~\eqref{eq: implicit Euler stencil}.}
 \end{center}
 \end{figure}
 
-Alternatively, we can start from the matrix form of the semidiscrete 
+Equivalently, we can start from the matrix form of the semidiscrete
 method~\eqref{eq: ODE system}, and approximate $d\boldsymbol{U}/dt$ with a 
 backward difference to obtain
 \begin{equation}\label{eq: implicit Euler 1d vector}
@@ -690,77 +693,102 @@ for $\boldsymbol{U}^n_{1:P-1}$ in place.
 
 \begin{theorem}
 The implicit Euler method is unconditionally stable: for any choice of 
-$\Delta x$~and $\Delta t$,
+$\Delta x$~and $\Delta t$, and for $0\le n\le N$,
 \[
 \|\boldsymbol{U}^n_{0:P}\|_\infty
-	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
-		\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
+	\le\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty
+		+\max\bigl\{|\gamma^n_0|,|\gamma^n_L|\bigr\}
 	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
-\quad\text{for $0\le n\le N$.}
++\sum_{j=1}^n\max\bigl\{|\Delta\gamma^{n-1}_0|,|\Delta\gamma^{n-1}_L|\bigr\},
 \]
+where $\Delta\gamma_0^{n-1}=\gamma_0^n-\gamma_0^{n-1}$ and
+$\Delta\gamma_L^{n-1}=\gamma^n_L-\gamma^{n-1}_L$.
 \end{theorem}
 \begin{proof}
-We use finite induction on~$n$.  When~$n=0$, we have
-$U^0_p=u_{0p}$ for~$1\le p\le P-1$, with $U^0_0=\gamma_0^0$~and 
-$U^0_P=\gamma_L^0$,
-so 
+Let $V^n_p=U^n_p-\gamma^n_p$ where, for $\gamma(x,t)$ as
+in~\eqref{eq: gamma(x,t)},
 \[
-\|\boldsymbol{U}^0_{0:P}\|_\infty=
-\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
-	|\gamma_0^0|,|\gamma_L^0|\bigr\},
+\gamma^n_p=\gamma(x_p,t_n)
+	=\frac{1}{L}\bigl((L-x_p)\gamma_0^n+x_p\gamma_L^n\bigr).
 \]
-which agrees with the formula since the empty sum vanishes. Now let 
+Notice that $\gamma^n_0$ is well-defined and $\gamma^n_P=\gamma^n_L$.  Since
+$\gamma(x,t)$ is linear in~$x$, it follows that
+$\gamma^n_{p+1}-2\gamma^n_p+\gamma^n_{p-1}=0$ and so
+\[
+\frac{V^n_p-V^{n-1}_p}{\Delta t}
+	-a\,\frac{V^n_{p+1}-2V^n_p+V^n_{p-1}}{\Delta x^2}=g^n_p
+	\quad\text{where}\quad
+	g^n_p=f^n_p-\frac{\gamma^n_p-\gamma^{n-1}_p}{\Delta t},
+\]
+for $1\le p\le P-1$ and $1\le n\le N$, with
+\[
+\text{$V^n_0=0=V^n_P$ for $0\le n\le N$,}\quad\text{and}\quad
+\text{$V^0_p=u_{0p}-\gamma^0_p$ for $1\le p\le P-1$.}
+\]
+
+We use finite induction on~$n$ to show that
+\[
+\|\boldsymbol{V}^n_{1:P-1}\|_\infty\le\|\boldsymbol{V}^0_{1:P-1}\|_\infty
+	+\sum_{j=1}^n\|\boldsymbol{g}^j_{1:P-1}\|_\infty\,\Delta t
+		\quad\text{for $0\le n\le N$.}
+\]
+The case~$n=0$ is trivial since the empty sum vanishes.  Thus, let
 $1\le n\le N$ and make the induction hypothesis that
 \[
-\|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
-	\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty, 
-		\|\gamma_0^{0:n-1}\|_\infty,\|\gamma_L^{0:n-1}\|_\infty\bigr\}
-	+\sum_{j=1}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t.
+\|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty\le\|\boldsymbol{V}^0_{1:P-1}\|_\infty
+	+\sum_{j=1}^{n-1}\|\boldsymbol{g}^j_{1:P-1}\|_\infty\,\Delta t.
 \]
-We see from~\eqref{eq: implicit Euler stencil} that, for $1\le p\le P-1$,
+As in~\eqref{eq: implicit Euler stencil}, we find that
+$-\rho V^n_{p-1}+(1+2\rho)V^n_p-\rho V^n_{p+1}=V^{n-1}_p+g^n_p\,\Delta t$ so
 \[
-(1+2\rho)U^n_p=\rho U^n_{p-1}+\rho U^n_{p+1}+U^{n-1}_p+f^n_p\,\Delta t
+(1+2\rho)V^n_p=\rho V^n_{p-1}+\rho V^n_{p+1}+V^{n-1}_p+g^n_p\,\Delta t
+\quad\text{for $1\le p\le P-1$.}
 \]
-and so
+Therefore,
 \[
-(1+2\rho)|U^n_p|\le2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty
-	+\|\boldsymbol{U}^{n-1}_{1:P-1}\|_\infty
-	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t.
+(1+2\rho)|V^n_p|\le\rho\|\boldsymbol{V}^n_{0:P-1}\|_\infty
+	+\rho\|\boldsymbol{V}^n_{1:P}\|_\infty
+	+\|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty
+	+\|\boldsymbol{g}^n_{1:P-1}\|_\infty\,\Delta t
 \]
-Thus,
+which implies, because $V^n_0=0=V^n_P$,
 \[
-(1+2\rho)\|\boldsymbol{U}^n_{1:P-1}\|_\infty
-	\le2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty
-	+\|\boldsymbol{U}^{n-1}_{1:P-1}\|_\infty
-	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t,
+(1+2\rho)\|\boldsymbol{V}^n_{1:P-1}\|_\infty
+	\le2\rho\|\boldsymbol{V}^n_{1:P-1}\|_\infty
+	+\|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty
+	+\|\boldsymbol{g}^n_{1:P-1}\|_\infty\,\Delta t.
 \]
-and since $U^n_0=\gamma_0=U^{n-1}_0$~and $U^n_P=\gamma_L=U^{n-1}_P$, 
+After canceling $2\rho\|\boldsymbol{V}^n_{0:P}\|_\infty$ from both sides, and
+using the induction hypothesis, we have
 \[
-(1+2\rho)\|\boldsymbol{U}^n_{0:P}\|_\infty
-	\le2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty
-	+\|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
-	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t.
+\|\boldsymbol{V}^n_{1:P-1}\|_\infty\le\|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty
+	+\|\boldsymbol{g}^n_{1:P-1}\|_\infty\,\Delta t
+	=\|\boldsymbol{V}^0_{1:P-1}\|_\infty
+	+\sum_{j=1}^n\|\boldsymbol{g}^j_{1:P-1}\|_\infty\,\Delta t,
 \]
-After canceling $2\rho\|\boldsymbol{U}^n_{0:P}\|_\infty$, it follows that
-\begin{align*}
-\|\boldsymbol{U}^n_{1:P-1}\|_\infty&\le\|\boldsymbol{U}^{n-1}_{0:P}\|_\infty
-	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
-	&\le\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
-	\|\gamma_0^{0:n-1}\|_\infty,\|\gamma_L^{0:n-1}\|_\infty\bigr\}
-	+\sum_{j=1}^{n-1}\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t
-	+\|\boldsymbol{f}^n_{1:P-1}\|_\infty\,\Delta t\\
-	&=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
-	\|\gamma_0^{0:n-1}\|_\infty,\|\gamma_L^{0:n-1}\|_\infty\bigr\}
-	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
-\end{align*}
-and so, since $U^n_0=\gamma_0^n$~and $U^n_P=\gamma_L^n$,
+completing the induction.
+
+Since
 \[
-\|\boldsymbol{U}^n_{0:P}\|_\infty
-	=\max\bigl\{\|(\boldsymbol{u}_0)_{1:P-1}\|_\infty,
-	\|\gamma_0^{0:n}\|_\infty,\|\gamma_L^{0:n}\|_\infty\bigr\}
-	+\sum_{j=1}^n\|\boldsymbol{f}^j_{1:P-1}\|_\infty\,\Delta t,
+g^n_p\,\Delta t=f^n_p\,\Delta t
+-\frac{1}{L}\Bigl((L-x_p)(\gamma_0^n-\gamma_0^{n-1})
+	+x_p(\gamma_L^n-\gamma_L^{n-1})\Bigr),
 \]
-as required.
+it follows that
+\[
+|g^n_p|\,\Delta t\le|f^n_p|\,\Delta t
++\max\bigl\{|\Delta\gamma_0^{n-1}|,|\Delta\gamma_L^{n-1}|\bigr\}.
+\]
+Moreover, since $U^n_p=V^n_p+\gamma^n_p$ and $V^n_0=0=V^n_P$,
+\[
+\|\boldsymbol{U}^n_{0:P}\|_\infty\le\|\boldsymbol{V}^n_{1:P-1}\|_\infty
+	+\|\boldsymbol{\gamma}^n_{0:P}\|_\infty
+\quad\text{with}\quad
+\|\boldsymbol{\gamma}^n_{0:P}\|_\infty
+	=\max\bigl\{|\gamma^n_0|,|\gamma^n_L|\bigr\},
+\]
+so the desired estimate for~$\|\boldsymbol{U}^n_{0:P}\|_\infty$ follows from
+our estimate for~$\|\boldsymbol{V}^n_{1:P-1}\|_\infty$ above.
 \end{proof}
 
 The local truncation error for the \emph{im}plicit Euler method is defined by
