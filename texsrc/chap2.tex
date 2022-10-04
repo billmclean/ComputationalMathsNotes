@@ -1099,9 +1099,9 @@ interpolation polynomials} $\ell_1$, $\ell_2$, \dots, $\ell_{r+1}$ by
 \ell_j(x)=\prod_{1\le k\le r+1, k\ne j}
 	\frac{x-x_k}{x_j-x_k}\quad\text{for $1\le j\le r+1$,}
 \end{equation}
-and then define the \emph{linear interpolation operator}~$\mathcal{Q}_r$ by
+and then define the \emph{linear interpolation operator}~$\mathcal{I}_r$ by
 \[
-(\mathcal{Q}_rf)(x)=\sum_{j=1}^{r+1}f(x_j)\ell_j(x).
+(\mathcal{I}_rf)(x)=\sum_{j=1}^{r+1}f(x_j)\ell_j(x).
 \]
 Observe that $\ell_j\in\mathbb{P}_r$ because it is the product of~$r$ linear 
 factors.  Moreover, if $x=x_j$ then each factor in the 
@@ -1111,24 +1111,24 @@ In other words,
 \[
 \ell_j(x_k)=\delta_{jk}\quad\text{for $j$, $k\in\{1,2,\ldots,r+1\}$.}
 \]
-It follows that $\mathcal{Q}_rf\in\mathbb{P}_r$ interpolates~$f$, that is,
+It follows that $\mathcal{I}_rf\in\mathbb{P}_r$ interpolates~$f$, that is,
 \[
-(\mathcal{Q}_rf)(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
+(\mathcal{I}_rf)(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
 \]
-Furthermore, $\mathcal{Q}_rf$ is the only such interpolant, because if 
+Furthermore, $\mathcal{I}_rf$ is the only such interpolant, because if 
 $g\in\mathbb{P}_r$ satisfies \eqref{eq: g interpolates f} then the difference
-$g-\mathcal{Q}_rf$ is a polynomial satisfying
+$g-\mathcal{I}_rf$ is a polynomial satisfying
 \[
-(g-\mathcal{Q}_rf)(x_j)=g(x_j)-(\mathcal{Q}_rf)(x_j)=f(x_j)-f(x_j)=0
+(g-\mathcal{I}_rf)(x_j)=g(x_j)-(\mathcal{I}_rf)(x_j)=f(x_j)-f(x_j)=0
 	\quad\text{for $1\le j\le r+1$.}
 \]
-Since $g-\mathcal{Q}_rf$ has degree at most~$r$, it must vanish identically and
-so $g(x)=(\mathcal{Q}_rf)(x)$ for all~$x$. In particular, since any element
+Since $g-\mathcal{I}_rf$ has degree at most~$r$, it must vanish identically and
+so $g(x)=(\mathcal{I}_rf)(x)$ for all~$x$. In particular, since any element
 of~$\mathbb{P}_r$ interpolates itself, it follows that
 \[
-\mathcal{Q}_rf=f\quad\text{for every $f\in\mathbb{P}_r$,}
+\mathcal{I}_rf=f\quad\text{for every $f\in\mathbb{P}_r$,}
 \]
-and thus $\mathcal{Q}_r^2=\mathcal{Q}_r$.  Hence, $\mathcal{Q}_r$ is a 
+and thus $\mathcal{I}_r^2=\mathcal{I}_r$.  Hence, $\mathcal{I}_r$ is a 
 \emph{projection} onto~$\mathbb{P}_r$.
 
 Let 
@@ -1144,30 +1144,30 @@ f(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
 	+\int_a^b\pi_{r,y}(x)f^{(r+1)}(y)\,dy\quad\text{for $a\le x\le b$.}
 \]
 Since the sum on the right defines a function in~$\mathbb{P}_r$,
-applying $\mathcal{Q}_r$ to both sides gives
+applying $\mathcal{I}_r$ to both sides gives
 \[
-(\mathcal{Q}_rf)(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
-	+\int_a^b(\mathcal{Q}_r\pi_{r,y})(x)f^{(r+1)}(y)\,dy
+(\mathcal{I}_rf)(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
+	+\int_a^b(\mathcal{I}_r\pi_{r,y})(x)f^{(r+1)}(y)\,dy
 \quad\text{for $a\le x\le b$.}
 \]
 Hence, the \emph{interpolation error} has the integral representation
 \begin{equation}\label{eq: Qr f error}
-(\mathcal{Q}_rf)(x)-f(x)=\int_a^b K_r(x,y)f^{(r+1)}(y)\,dy
+(\mathcal{I}_rf)(x)-f(x)=\int_a^b K_r(x,y)f^{(r+1)}(y)\,dy
 \quad\text{for $a\le x\le b$,}
 \end{equation}
 where the \emph{Peano kernel} is defined by
 \[
-K_r(x,y)=(\mathcal{Q}_r\pi_{r,y})(x)-\pi_{r,y}(x)
+K_r(x,y)=(\mathcal{I}_r\pi_{r,y})(x)-\pi_{r,y}(x)
 	\quad\text{for $x$, $y\in[a,b]$.}
 \]
 Since the $j$th derivative~$\pi_{r,y}^{(j)}(x)=\pi_{r-j,y}(x)$, we see that
 \[
-\partial_x^jK_r(x,y)=(\mathcal{Q}_r\pi_{r,y})^{(j)}(x)-\pi_{r-j,y}(x)
+\partial_x^jK_r(x,y)=(\mathcal{I}_r\pi_{r,y})^{(j)}(x)-\pi_{r-j,y}(x)
 \quad\text{for $0\le j\le r$,}
 \]
 and that the $j$th derivative of the interpolation error has the representation
 \begin{equation}\label{eq: Qr f error deriv}
-(\mathcal{Q}_rf-f)^{(j)}(x)=\int_a^b\partial_x^j K_r(x,y)f^{(r+1)}(y)\,dy
+(\mathcal{I}_rf-f)^{(j)}(x)=\int_a^b\partial_x^j K_r(x,y)f^{(r+1)}(y)\,dy
 \quad\text{for $a\le x\le b$.}
 \end{equation}
 
@@ -1192,12 +1192,12 @@ $x_1=a$~and $x_2=b$.  In this case, the Lagrange polynomials are
 \]
 and
 \[
-(\mathcal{Q}_1f)(x)=f(a)\ell_1(x)+f(b)\ell_2(x)
+(\mathcal{I}_1f)(x)=f(a)\ell_1(x)+f(b)\ell_2(x)
 	=f(a)\,\frac{b-x}{b-a}+f(b)\,\frac{x-a}{b-a}.
 \]
 In particular, since $\pi_{1,y}(a)=0$~and $\pi_{1,y}(b)=b-y$ for~$a\le y\le b$,
 \[
-(\mathcal{Q}_1\pi_{1,y})(x)=\pi_{1,y}(a)\ell_1(x)+\pi_{1,y}(b)\ell_2(x)
+(\mathcal{I}_1\pi_{1,y})(x)=\pi_{1,y}(a)\ell_1(x)+\pi_{1,y}(b)\ell_2(x)
 	=\frac{(b-y)(x-a)}{b-a}\quad\text{for $x$, $y\in[a,b]$,}
 \]
 so
@@ -1252,7 +1252,7 @@ and thus
 K_2(x,y)+K_2(-x,-y)=\tfrac12y^2\ell_2(x)+\tfrac12(1-y)^2\ell_3(x)
 	+\tfrac12(1+y)^2\ell_1(x)-\tfrac12(x-y)^2.
 \]
-We use the identity $\ell_1(x)+\ell_2(x)+\ell_3(x)=(\mathcal{Q}_21)(x)=1$ to
+We use the identity $\ell_1(x)+\ell_2(x)+\ell_3(x)=(\mathcal{I}_21)(x)=1$ to
 replace $\ell_2(x)$ with~$1-\ell_1(x)-\ell_3(x)$ and deduce that
 \begin{align*}
 K_2(x,y)+K_2(-x,-y)&=\tfrac12\bigl[y^2-(x-y)^2\bigr]
@@ -1292,36 +1292,36 @@ Given a function $f(x)$, we define $\hat f$ on the reference element by
 \[
 \hat f(\xi)=f(x)\quad\text{where $x=x_{p-1}+\xi h_p$,}
 \]
-and let $\mathcal{Q}_r\brak{p}$~and $\widehat{\mathcal{Q}}_r$ denote 
+and let $\mathcal{I}_r\brak{p}$~and $\widehat{\mathcal{I}}_r$ denote 
 polynomial interpolation operators for $[x_{p-1},x_p]$~and $[0,1]$, 
 respectively, so that
 \[
-\mathcal{Q}_r\brak{p}f\in\mathbb{P}_{r+1}\quad\text{and}\quad
-(\mathcal{Q}_r\brak{p}f)(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
+\mathcal{I}_r\brak{p}f\in\mathbb{P}_{r+1}\quad\text{and}\quad
+(\mathcal{I}_r\brak{p}f)(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
 \quad\text{for $1\le j\le r+1$,}
 \]
 whereas
 \[
-\widehat{\mathcal{Q}}_r\hat f\in\mathbb{P}_{r+1}\quad\text{and}\quad
-\bigl(\widehat{\mathcal{Q}}_r\hat f\bigr)(\hat{\mathsf{n}}_j)
+\widehat{\mathcal{I}}_r\hat f\in\mathbb{P}_{r+1}\quad\text{and}\quad
+\bigl(\widehat{\mathcal{I}}_r\hat f\bigr)(\hat{\mathsf{n}}_j)
     =\hat f(\hat{\mathsf{n}}_j)\quad\text{for $1\le j\le r+1$.}
 \]
-Notice that if we let $g(x)=(\mathcal{Q}_r\brak{p}f)(x)$, then 
-$\hat g(\xi)=\widehat{\mathcal{Q}}_r\hat f(\xi)$ because 
+Notice that if we let $g(x)=(\mathcal{I}_r\brak{p}f)(x)$, then 
+$\hat g(\xi)=\widehat{\mathcal{I}}_r\hat f(\xi)$ because 
 $\hat g\in\mathbb{P}_r$~and 
 \[
 \hat g(\hat{\mathsf{n}}_j)=g(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
     =\hat f(\hat{\mathsf{n}}_j)\quad\text{for $1\le j\le r+1$.}
 \]
 In other words, 
-$\widehat{\mathcal{Q}_r\brak{p}f}=\widehat{\mathcal{Q}}_r\hat f$.
+$\widehat{\mathcal{I}_r\brak{p}f}=\widehat{\mathcal{I}}_r\hat f$.
 
 \begin{theorem}
 Assume that $f$ is $C^{r+1}$ on~$[x_{p-1},x_p]$, and let $K_r$ denote the Peano 
 kernel for polynomial interpolation at the $r+1$~nodes of the reference 
 element~$[0,1]$.  Then,
 \[
-\int_{x_{p-1}}^{x_p}|(f-\mathcal{Q}_r\brak{p}f)^{(k)}(x)|^2\,dx
+\int_{x_{p-1}}^{x_p}|(f-\mathcal{I}_r\brak{p}f)^{(k)}(x)|^2\,dx
     \le C_{r,k}h_p^{2(r+1-k)}\int_{x_{p-1}}^{x_p}|\hat f^{(r+1)}(x)|^2\,dx
     \quad\text{for $0\le k\le r$,}
 \]
@@ -1338,7 +1338,7 @@ Since $dx/d\xi=h_p$ we see that
 \]
 so using \eqref{eq: Qr f error deriv} and the Cauchy--Schwarz inequality,
 \begin{align*}
-\bigl|(f-\mathcal{Q}_r\brak{p}f)^{(k)}(x)\bigr|^2
+\bigl|(f-\mathcal{I}_r\brak{p}f)^{(k)}(x)\bigr|^2
     &=h_p^{-2k}\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)^{(k)}(\xi)\bigr|^2
     =h_p^{-2k}\biggl|\int_0^1\partial_\xi^k K_r(\xi,\eta)
         \hat f^{(r+1)}(\eta)\, d\eta\biggr|^2\\
@@ -1348,7 +1348,7 @@ so using \eqref{eq: Qr f error deriv} and the Cauchy--Schwarz inequality,
 for $0\le\xi\le1$.  Integrating with respect to~$x$, and noting that 
 $dx=h_p\,d\xi$, we have
 \begin{align*}
-\int_{x_{p-1}}^{x_p}\bigl|(f-\mathcal{Q}_rf)^{(k)}(x)\bigr|^2\,dx
+\int_{x_{p-1}}^{x_p}\bigl|(f-\mathcal{I}_rf)^{(k)}(x)\bigr|^2\,dx
 &=h_p^{1-2k}\int_0^1\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2\,d\xi\\
 &\le h_p^{1-2k}\biggl(
     \int_0^1\int_0^1|\partial_\xi^kK_r(\xi,\eta)|^2\,d\eta\,d\xi\biggr)
@@ -1363,38 +1363,38 @@ and
 which implies the desired estimate.
 \end{proof}
 
-For any continuous~$v:[0,L]\to\mathbb{R}$ we define $\mathcal{Q}_{r,h}v$, the 
+For any continuous~$v:[0,L]\to\mathbb{R}$ we define $\mathcal{I}_{r,h}v$, the 
 \emph{piecewise-polynomial interpolant} of degree at most~$r$, by
 \[
-(\mathcal{Q}_{r,h}v)(x)
-    =(\mathcal{Q}_r\brak{p}v)(x)\quad\text{for $x\in[x_{p-1},x_p]$;}
+(\mathcal{I}_{r,h}v)(x)
+    =(\mathcal{I}_r\brak{p}v)(x)\quad\text{for $x\in[x_{p-1},x_p]$;}
 \]
 since $\mathsf{n}\brak{p-1}_{r+1}=x_{p-1}=\mathsf{n}\brak{p}_1$ we see 
 that
 \[
-(\mathcal{Q}_r\brak{p-1}v)(x_{p-1})=v(x_{p-1})
-    =(\mathcal{Q}_r\brak{p}v)(x_{p-1})\quad\text{for~$2\le p\le P-1$,}
+(\mathcal{I}_r\brak{p-1}v)(x_{p-1})=v(x_{p-1})
+    =(\mathcal{I}_r\brak{p}v)(x_{p-1})\quad\text{for~$2\le p\le P-1$,}
 \]
-and hence the function~$\mathcal{Q}_{r,h}v$ is continuous on~$[0,L]$.
+and hence the function~$\mathcal{I}_{r,h}v$ is continuous on~$[0,L]$.
 
 \begin{theorem}\label{thm: Q r h}
 If $v$ is $C^{r+1}$ on~$[0,L]$, then
 \[
-\|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}
+\|v-\mathcal{I}_{r,h}v\|_{L_2(0,L)}
     \le\sqrt{C_{r,0}}\,h^{r+1}\|v^{(r+1)}\|_{L_2(0,L)}
 \]
 and
 \[
-\|v'-(\mathcal{Q}_{r,h}v)'\|_{L_2(0,L)}
+\|v'-(\mathcal{I}_{r,h}v)'\|_{L_2(0,L)}
     \le\sqrt{C_{r,1}}\,h^r\|v^{(r+1)}\|_{L_2(0,L)}.
 \]
 \end{theorem}
 \begin{proof}
 We have
 \begin{align*}
-\|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}^2
-    &=\int_0^L|(v-\mathcal{Q}_{r,h}v)(x)|^2\,dx=\sum_{p=1}^P
-    \int_{x_{p-1}}^{x_p}|(v-\mathcal{Q}_r\brak{p}v)(x)|^2\,dx\\
+\|v-\mathcal{I}_{r,h}v\|_{L_2(0,L)}^2
+    &=\int_0^L|(v-\mathcal{I}_{r,h}v)(x)|^2\,dx=\sum_{p=1}^P
+    \int_{x_{p-1}}^{x_p}|(v-\mathcal{I}_r\brak{p}v)(x)|^2\,dx\\
     &\le\sum_{p=1}^P C_{r,0}h_p^{2(r+1)}\int_{x_{p-1}}^{x_p}
         |\hat v^{(r+1)}(x)|^2\,dx\\
     &\le C_{r,0}h^{2(r+1)}\sum_{p=1}^M\int_{x_{p-1}}^{x_p} 
@@ -1442,7 +1442,7 @@ which implies the desired inequality.
 \end{proof}
 
 By combining \cref{thm: optimality} with the approximation property of the 
-interpolant~$\mathcal{Q}_{r,h}u$ proved in \cref{thm: Q r h}, we can show
+interpolant~$\mathcal{I}_{r,h}u$ proved in \cref{thm: Q r h}, we can show
 that the finite element error, measured in the energy norm, is $O(h^r)$.
 
 \begin{theorem}\label{thm: uh-u L}
@@ -1454,7 +1454,7 @@ there is a constant~$C>0$, independent of~$h$, such that
 \]
 \end{theorem}
 \begin{proof}
-Let $w=\mathcal{Q}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
+Let $w=\mathcal{I}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
 so we may apply \cref{thm: optimality} and deduce that
 \begin{align*}
 \|u_h-u\|_{\mathcal{L}}^2\le\|w-u\|_{\mathcal{L}}^2
@@ -1522,9 +1522,9 @@ inequality,
 \]
 Since
 \begin{align*}
-\|\theta-\mathcal{Q}_{k+1,h}\theta\|_{\mathcal{L}}^2
-	&\le a_{\max}\|\theta'-(\mathcal{Q}_{k+1,h}\theta)'\|^2
-	+c_{\max}\|\theta-\mathcal{Q}_{k+1,h}\theta\|^2\\
+\|\theta-\mathcal{I}_{k+1,h}\theta\|_{\mathcal{L}}^2
+	&\le a_{\max}\|\theta'-(\mathcal{I}_{k+1,h}\theta)'\|^2
+	+c_{\max}\|\theta-\mathcal{I}_{k+1,h}\theta\|^2\\
 	&\le C\bigl(h^{2(k+1)}+h^{2(k+2)})\|\theta^{(k+2)}\|^2,
 \end{align*}
 it suffices to note that, by \cref{thm: regularity 1d}, we have
@@ -1544,7 +1544,7 @@ which implies the result.
 \end{proof}
 
 Thus, measured in the norm of~$L^2(0,L)$, the errors in both the finite element
-solution~$u_h$ and the interpolant~$\mathcal{Q}_{r,h}u$ are $O(h^{r+1})$.
+solution~$u_h$ and the interpolant~$\mathcal{I}_{r,h}u$ are $O(h^{r+1})$.
 
 \section{Sturm--Liouville problems}\label{sec: Sturm-Liouville}
 
@@ -1959,7 +1959,7 @@ Example~\ref{example: linear interp}, satisfies
 Hence use the integral mean value theorem to show that if~$f$ is $C^2$ 
 on~$[a,b]$, then 
 \[
-(\mathcal{Q}_1f)(x)-f(x)=\frac{f''(\xi)}{2}\,(x-a)(b-x)
+(\mathcal{I}_1f)(x)-f(x)=\frac{f''(\xi)}{2}\,(x-a)(b-x)
 \]
 for some~$\xi\in[a,b]$ (depending on~$x$).
 
@@ -1968,7 +1968,7 @@ Let $x_1=-1$, $x_2=0$~and $x_3=+1$ as in
 Example~\ref{example: quadratic interp}.  
 \begin{description}
 \item{(i)} Show that if $g(x)=f(-x)$, then 
-$(\mathcal{Q}_2g)(x)=(\mathcal{Q}_2f)(-x)$.
+$(\mathcal{I}_2g)(x)=(\mathcal{I}_2f)(-x)$.
 \item{(ii)} Deduce that if $f$ is $C^3$ on~$[-1,1]$, then
 \[
 \int_{-1}^1K_2(-x,y)f'''(y)\,dy=\int_{-1}^1K_2(x,y)g'''(y)\,dy
