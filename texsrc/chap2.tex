@@ -303,10 +303,10 @@ Equivalently, since $\{\chi_p\}_{p=1}^P$ is a basis for~$T_h$, we require
 \]
 Inserting the representation~\eqref{eq: uh U 1d} yields the system of linear 
 equations
-\[
+\begin{equation}\label{eq: self-adjoint 1D linear system}
 \sum_{q=0}^P\bigl(a_{pq}U_q+c_{pq}U_q\bigr)=\gamma_L\chi_p(L)+f_p
     \quad\text{for $1\le p\le P$,}
-\]
+\end{equation}
 where
 \[
 a_{pq}=\int_0^La(x)\chi_q'(x)\chi_p'(x)\,dx,\quad
@@ -641,8 +641,7 @@ our mixed boundary-value problem~\eqref{eq: self-adjoint mixed}, the only
 fixed node is $\mathsf{n}_0\brak{1}=x_0$.  A \emph{free node} is one that is
 not fixed.  When choosing a global enumeration of all the nodes in the mesh, we
 will use the convention that the \emph{free nodes precede the fixed nodes}.
-solution is fixed by a Dirichlet boundary condition.  Thus, in the present
-setting we let
+Thus, in the present setting we let
 \[
 \mathsf{n}_p=x_p\quad\text{for $1\le p\le P$,}
 \quad\text{and}\quad\mathsf{n}_{P+1}=x_0.
@@ -650,8 +649,13 @@ setting we let
 The $2\times(P+1)$ \emph{connectivity matrix} $\boldsymbol{T}=[t_{jp}]$ is 
 defined by
 \begin{equation}\label{eq: e pm def}
-t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r;
+t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r,
 \end{equation}
+and we label the nodal basis functions $\chi_r\in V_h$ according to the global 
+node numbering, so that
+\[
+\chi_r(\mathsf{n}_s)=\delta_{rs}\quad\text{for $r$, $s\in\{1,2,\ldots,P+1\}$.}
+\]
 
 \begin{figure}
 \caption{Node numbering from \cref{example: node numbers 1d} with~$P=4$.}
@@ -685,90 +689,64 @@ t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r;
 \]
 \end{example}
 
-Writing $U\brak{p}_k=u_h(\mathsf{n}\brak{p}_k)$~and
-$V\brak{p}_j=v(\mathsf{n}\brak{p}_j)$, we see that
+\begin{theorem}
+For a given connectivity matrix~$\boldsymbol{T}=[t_{jp}]$, define the index sets
 \[
-u_h(x)=\sum_{k=1}^2U\brak{p}_k\psi\brak{p}_k(x)
+\mathcal{I}_r=\{\,(p,j):t_{jp}=r\,\}
 \quad\text{and}\quad
-v(x)=\sum_{j=1}^2V\brak{p}_j\psi\brak{p}_j(x)
-\quad\text{for $x\in[x_{p-1},x_p]$.}
-\]
-Thus,
-\[
-\int_0^Lf(x)v(x)\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}f(x)\sum_{j=1}^2
-    V\brak{p}_j\psi\brak{p}_j(x)\,dx
-    =\sum_{p=1}^P\sum_{j=1}^2 f\brak{p}_jV_j\brak{p}
-\]
-and
-\begin{align*}
-\int_0^La(x)u_h'(x)v'(x)\,dx
-    &=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}a(x)
-    \biggl(\sum_{k=1}^2 U\brak{p}_k(\psi_k\brak{p})'(x)\biggr)
-    \biggl(\sum_{j=1}^2 V\brak{p}_j(\psi_j\brak{p})'(x)\biggr)\,dx\\
-    &=\sum_{p=1}^P\sum_{k=1}^2\sum_{j=1}^2
-    U\brak{p}_ka\brak{p}_{jk}V\brak{p}_j;
-\end{align*}
-likewise
-\[
-\int_0^Lc(x)u_h(x)v(x)\,dx=\sum_{p=1}^P\sum_{k=1}^2\sum_{j=1}^2
-    U\brak{p}_kc\brak{p}_{jk}V\brak{p}_j
-\quad\text{and}\quad
-v(L)=V\brak{P}_2.
-\]
-Therefore, \eqref{eq: self-adjoint mixed bc FEM} holds iff
-\[
-\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_j
-\sum_{k=1}^2\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
-    =\gamma_LV\brak{P}_2+\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_jf\brak{p}_j
-    \quad\text{for all $v\in T_h$.}
-\]
-
-For~$v\in V_h$, put
-\[
-V_r=v(\mathsf{n}_r)\quad\text{for $1\le r\le P+1$,}
-\]
-so that $V_r=V\brak{p}_j$ iff $r=t_{jp}$, and hence
-\[
-\sum_{p=1}^{P+1}\sum_{j=1}^2V\brak{p}_jf\brak{p}_j=\sum_{r=1}^PV_rf_r,
-\]
-where
-\[
-f_r=\sum_{j\in\mathcal{I}_r}f\brak{p}_j
-\quad\text{and}\quad
-\mathcal{I}_r=\{\,(p,j):t_{jp}=r\,\}.
-\]
-Similarly, put $U_s=u_h(\mathsf{n}_s)$ so that $U_s=U\brak{p}_k$ iff 
-$s=t_{kp}$, and hence
-\[
-\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_j\sum_{k=1}^2
-\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
-=\sum_{r=1}^{P+1}V_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s
-\]
-where
-\[
-a_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}}a\brak{p}_{jk}
-\qquad\text{and}\qquad
-c_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}} c\brak{p}_{jk},
-\]
-for the index set
-\[
 \mathcal{I}_{rs}=\{\,(p,j,k):\text{$t_{jp}=r$ and $t_{kp}=s$}\,\}.
 \]
-In this way, \eqref{eq: self-adjoint mixed bc FEM} holds iff
+Then, the entries of the global load vector, global stiffness matrix and global 
+mass matrix can be assembled from the corresponding local quantities, via the 
+formulas
 \[
-\sum_{r=1}^PV_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s=\gamma_LV_{P}
-	+\sum_{r=1}^PV_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s,
+f_r=\sum_{(p,j)\in\mathcal{I}_r}f\brak{p}_j,\qquad
+a_{rs}=\sum_{(p,j,k)\in\mathcal{I}_{rs}}a\brak{p}_{jk},\qquad
+c_{rs}=\sum_{(p,j,k)\in\mathcal{I}_{rs}}c\brak{p}_{jk}.
 \]
-remembering that $V_{P+1}=v(\mathsf{n}_{P+1})=v(0)=0$.  Forming the 
-$P\times(P+1)$ matrices $\boldsymbol{A}=[a_{rs}]$~and
+\end{theorem}
+\begin{proof}
+For $x\in[x_{p-1},x_p]$,
+\[
+\chi_r(x)=\begin{cases}
+0,&\text{if $\mathsf{n}_r\notin[x_{p-1},x_p]$,}\\
+\psi\brak{p}_j(x),&\text{if $\mathsf{n}_r=\mathsf{n}\brak{p}_j$,}        
+\end{cases}
+\]
+so
+\[
+f_r=\int_0^Lf\chi_r\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}f\chi_r\,dx
+    =\sum_{(p,j)\in\mathcal{I}_r}\int_{x_{p-1}}^{x_p}f\psi\brak{p}_j\,dx,
+\]
+showing the first formula. Similarly, 
+\[
+a_{rs}=\int_0^La\chi_s'\chi_r'\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}
+a\chi_s'\chi_r'\,dx=\sum_{(p,j,k)\in\mathcal{I}_{rs}}\int_{x_{p-1}}^{x_p}
+a(\psi\brak{p}_k)'(\psi\brak{p}_j)'\,dx,
+\]
+and
+\[
+c_{rs}=\int_0^Lc\chi_s\chi_r\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}
+c\chi_s\chi_r\,dx=\sum_{(p,j,k)\in\mathcal{I}_{rs}}\int_{x_{p-1}}^{x_p}
+c\psi\brak{p}_k\psi\brak{p}_j\,dx,
+\]
+showing the second and third formulas.
+\end{proof}
+
+Arguing as before when we derived \eqref{eq: self-adjoint 1D linear system},
+we use the expansion
+\[
+u_h(x)=\sum_{s=1}^{P+1}U_s\chi_r(x)\quad\text{where}\quad U_s=u_h(\mathsf{n}_s),
+\]
+and choose the test function $v=\chi_r\in V_h$, to find that the finite 
+element equation~\eqref{eq: self-adjoint mixed bc FEM} holds iff
+\[
+\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s=\gamma_L\delta_{rP}+f_r
+\quad\text{for $1\le r\le P$.}
+\]
+Forming the $P\times(P+1)$ matrices $\boldsymbol{A}=[a_{rs}]$~and
 $\boldsymbol{C}=[c_{rs}]$, and the $P$-dimensional
 vector~$\boldsymbol{f}=[f_r]$, we see that
-\begin{equation}\label{eq: VT(A+C)U}
-\boldsymbol{V}^T\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
-    =\gamma_LV_P+\boldsymbol{V}^T\boldsymbol{f}
-    \quad\text{for all $\boldsymbol{V}\in\mathbb{R}^P$,}
-\end{equation}
-and therefore
 \begin{equation}\label{eq: A C f example}
 \bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
     =\gamma_L\boldsymbol{e}_P+\boldsymbol{f}.
