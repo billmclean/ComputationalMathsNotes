@@ -781,8 +781,10 @@ vectors~$\boldsymbol{f}\brak{p}$.  Likewise,
 algorithm~\ref{alg: assemble A piecewise linear} shows how the global 
 stiffness matrix~$\boldsymbol{A}$ can be assembled from the element stiffness 
 matrices~$\boldsymbol{A}\brak{p}$.  The global mass matrix~$\boldsymbol{C}$ is 
-assembled in the same way. In practice, $\boldsymbol{A}$~and $\boldsymbol{C}$ 
-are constructed using an appropriate \emph{sparse matrix} data structure.
+assembled in the same way. Notice that these algorithms do not explicitly
+construct the index sets $\mathcal{I}_r$ and $\mathcal{I}_{rs}$. In practice,
+$\boldsymbol{A}$~and $\boldsymbol{C}$ are assembled using an appropriate
+\emph{sparse matrix} data structure.
 
 \begin{algorithm}
 \caption{Assemble the load vector $\boldsymbol{f}$
@@ -1040,13 +1042,12 @@ element matrices $\boldsymbol{A}\brak{p}$~and $\boldsymbol{C}\brak{p}$ can be
 assembled into the $(2P)\times(2P+1)$ global matrices $\boldsymbol{A}$~and 
 $\boldsymbol{C}$; see exercise~\ref{ex: assemble quadratic 1d}.
 
-By adapting the arguments that led to~\eqref{eq: VT(A+C)U} we find that the 
-vector~$\boldsymbol{U}=[U_j]_{j=1}^{2P+1}$ of nodal values 
+By adapting the arguments that led to~\eqref{eq: A C f example} we find that
+the vector~$\boldsymbol{U}=[U_j]_{j=1}^{2P+1}$ of nodal values
 $U_j=u_h(\mathsf{n}_j)$ satisfies
 \[
-\boldsymbol{V}^T(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
-	=\gamma_LV_{2M}+\boldsymbol{V}^T\boldsymbol{f}
-	\quad\text{for all $\boldsymbol{V}\in\mathbb{R}^{2P}$.}
+(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
+	=\gamma_L\boldsymbol{e}_{2P}+\boldsymbol{f}.
 \]
 We again use the partitionings
 \[
