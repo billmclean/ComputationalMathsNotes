@@ -727,8 +727,8 @@ Since
 	-\mu\|b\|_\infty-\|c\|_\infty\bigr]e^{\mu x_1}
 \end{align*}
 by choosing $\mu$ sufficiently large we can ensure that $\mathcal{L}w<0$
-on~$\Omega$.  By \cref{lem:}, the function~$w$ cannot attain a non-negative
-local maximum in~$\Omega$, implying that 
+on~$\Omega$.  By \cref{lem: Lu<0 Omega}, the function~$w$ cannot attain a
+non-negative local maximum in~$\Omega$, implying that
 \[
 u(\bx)\le w(\bx)\le w^+(\bx)\le\max_{by\in\partial\Omega}w^+(\by)
 	\le\max_{\by\in\partial\Omega}[u^+(y)+\epsilon e^{\mu L}]
@@ -1013,7 +1013,7 @@ existence and uniqueness of~$U_{p,q}$.
 
 \section{An error bound}
 
-We will say that the finite difference scheme used in~\eqref{eq: }
+We will say that the finite difference scheme used in~\eqref{eq: 5-pt Poisson}
 is \emph{stable} if there is a constant~$C$ --- independent of $f$, $g$,
 $\Delta x$~and $\Delta y$ --- such that
 \begin{equation}\label{eq: stability elliptic Omega}
@@ -1029,14 +1029,14 @@ We define the local truncation error in the usual way, as
 	=(\mathcal{L}u)_{p,q}-(\mathcal{L}_{\Delta x,\Delta y}u)_{p,q},
 \]
 and note that
-\begin{equation}\label{eq: tau pq bound}
+\[
 \begin{aligned}
 \tau_{p,q}&=-a_{1,p,q}\biggl(u_{xx}(x_p,y_q)
 	-\frac{u(x_{p+1},y_q)-2u(x_p,y_q)+u(x_{p-1},y_q)}{\Delta x^2}\biggr)\\
 	&\qquad{}-a_{2,p,q}\biggl(u_{yy}(x_p,y_q)
 	-\frac{u(x_p,y_{q+1})-2u(x_p,y_q)+u(x,y_{q-1})}{\Delta y^2}\biggr),
 \end{aligned}
-\end{equation}
+\]
 so, by \cref{thm: 2nd central diff},
 \begin{equation}\label{eq: tau pq bound}
 |\tau_{p,q}|\le\biggl(
