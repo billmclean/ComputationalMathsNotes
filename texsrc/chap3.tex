@@ -936,7 +936,8 @@ is same as in~\eqref{eq: implicit Euler 1d vector}, with
 \]
 for $\boldsymbol{g}(t)$ as in~\eqref{eq: U f g semidiscrete 1d}.
 
-Rearranging \eqref{eq: Crank-Nicolson matrix}, we find that
+Multiplying both sides of~\eqref{eq: Crank-Nicolson matrix} by~$\Delta t$, we 
+find that
 \[
 \boldsymbol{U}^n-\boldsymbol{U}^{n-1}
     +\tfrac12\Delta t\,\boldsymbol{A}(\boldsymbol{U}^n+\boldsymbol{U}^{n-1})
@@ -948,7 +949,7 @@ which yields linear system that must be solved at the $n$th time step,
 \bigl(\boldsymbol{I}-\tfrac12\Delta t\,\boldsymbol{A}\bigr)\boldsymbol{U}^{n-1}
     +\Delta t\,\bigl(\boldsymbol{f}^{n-1/2}+\boldsymbol{g}^{n-1/2}\bigr).
 \]
-The local truncation error for the Crank--Nicolson method is
+The local truncation error for the Crank--Nicolson method is defined by
 \begin{multline*}
 \tau^{n-1/2}_p=f^{n-1/2}_p-\frac{u(x_p,t_n)-u(x_p,t_{n-1})}{\Delta t}
     +\frac{a}{\Delta x^2}\biggl(
@@ -968,7 +969,7 @@ $f^{n-1/2}_p=u_t(x_p,t_{n-1/2})-au_{xx}(x_p,t_{n-1/2)}$ so
     \biggr)\\
     &\qquad{}+\frac{a}{2}\biggl(
     \frac{u(x_{p+1},t_{n-1})-2u(x_p,t_{n-1})+u(x_{p-1},t_{n-1})}{\Delta x^2}
-        -u_{xx}(x_p,t_n)\biggr).
+        -u_{xx}(x_p,t_{n-1})\biggr).
 \end{align*}
 Applying Theorems \ref{thm: first central diff}~and \ref{thm: average} with 
 $h=\tfrac12\Delta t$, and \cref{thm: 2nd central diff} with~$h=\Delta 
@@ -981,7 +982,11 @@ x$, we conclude that
 \]
 and hence $\tau^{n-1/2}_p=O(\Delta t^2+\Delta x^2)$.  It turns out that the 
 Crank--Nicolson method is unconditionally stable, and so 
-$U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.
+$U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.  This higher convergence rate in 
+time makes the scheme much more practical than either of the Euler methods.
+
+\section{Another maximum principle}
+
 
 \section{Another maximum principle}
 
