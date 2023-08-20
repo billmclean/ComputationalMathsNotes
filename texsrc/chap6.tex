@@ -177,30 +177,31 @@ Figure~\ref{fig: bad Th} is not regular: the intersection of triangles 2~and 6
 is an edge of triangle~6 but is not (the whole of) an edge of triangle~2.
 Vertex~7 in Figure~\ref{fig: bad Th} is said to be a \emph{hanging node}.
 
-A simple data structure to store a triangulation consists of two arrays,
-$\boldsymbol{P}$~and $\boldsymbol{T}$.  The first stores the coordinates of the 
-$j$th node in its $j$th column, and the second stores the node numbers of the
-$k$th triangle in its $k$th column. A third matrix~$\boldsymbol{E}$ is required 
-to deal with boundary conditions: the $j$th column stores the node numbers of 
-the $j$th boundary edge.  Thus, the triangulation in 
-Figure~\ref{fig: good Th} may be described by
+A simple data structure to store a triangulation consists of three arrays,
+$\boldsymbol{N}$, $\boldsymbol{T}^{\mathcal{K}}$ and
+$\boldsymbol{T}^{\mathcal{E}}$.  The first stores the coordinates of the
+$r$th node in its $r$th column, the second stores the node numbers of the
+$p$th triangle~$K_p$ in its $p$th column, and the third stores the node numbers
+of the $q$th boundary edge~$E_q$ in its $q$th column.  Thus, the triangulation
+in Figure~\ref{fig: good Th} may be described by
 \[
-\boldsymbol{P}=\begin{bmatrix}
+\boldsymbol{N}=\begin{bmatrix}
 -2& 2& 2& 1&-1&-2& 0\\                
 -2&-2& 0& 2& 2& 0& 0
-\end{bmatrix}
-\quad\text{and}\quad
-\boldsymbol{T}=\begin{bmatrix}
+\end{bmatrix},\qquad
+\boldsymbol{T}^{\mathcal{K}}=\begin{bmatrix}
 0&0&1&2&3&4\\
 6&1&2&3&4&5\\
 5&6&6&6&6&6\end{bmatrix},
 \]
-with
+and
 \[
-\boldsymbol{E}=\begin{bmatrix}
+\boldsymbol{E}^{\mathcal{E}}=\begin{bmatrix}
 1&2&3&4&5&6\\
 2&3&4&5&6&1\end{bmatrix}.
 \]
+We call $\boldsymbol{T}^{\mathcal{K}}$ the \emph{triangle connectivity matrix}
+and call $\boldsymbol{T}^{\mathcal{E}}$ the \emph{edge connectivity matrix}.
 To simplify some geometric computations, it is best to ensure that the node
 numbering within each triangle proceeds counterclockwise, and that the edge
 node numbering follows the induced orientation of~$\partial\Omega$. (Even with 
@@ -243,13 +244,48 @@ $0$ at all other nodes.}\label{fig: tent func}
 \end{center}
 \end{figure}
 
-In fact, suppose that $\mathsf{n}_1$, $\mathsf{n}_2$, \dots, $\mathsf{n}_M$ is 
-an enumeration of the nodes of~$\mathcal{T}$.  For~$1\le r\le M$, we 
-define~$\chi_r\in V_h$ by requiring
+If $K=K_p$ then we write $\mathsf{n}_i\brak{p}=\mathsf{n}_i\brak{K_p}$ and
+$\psi\brak{p}_i=\psi\brak{K_p}_i$.  Given a global enumeration $\mathsf{n}_1$,
+$\mathsf{n}_2$, \dots, $\mathsf{n}_M$ of the nodes of~$\mathcal{T}$, as
+determined by the triangle connectivity
+matrix~$\boldsymbol{T}^{\mathcal{K}}=[t^{\mathcal{K}}_{ip}]$, we have
+\[
+\mathsf{n}_r=\mathsf{n}\brak{p}_i\quad\text{iff}\quad r=t^{\mathcal{K}}_{ip}.
+\]
+Likewise, let $\mathsf{n}^{[q]}_j$ denote the $j$th vertex ($j=1$, $2$) of
+the $q$th edge~$E_q$.  The entries of the $2\times Q$ edge connectivity
+matrix~$\boldsymbol{T}^{\mathcal{E}}=[t^{\mathcal{E}}_{jq}]$ are such that
+\[
+\mathsf{n}_r=\mathsf{n}^{[q]}_j \quad\text{iff}\quad r=t^{\mathcal{E}}_{jq}.
+\]
+In the natural way, we define the linear shape functions for the edge~$E_q$ by
+\[
+\psi^{[q]}_1(x,y)=1-\xi\quad\text{and}\quad
+\psi^{[q]}_2(x,y)=\xi\quad\text{if}\quad
+(x,y)=(1-\xi)\mathsf{n}^{[q]}_1+\xi\mathsf{n}^{[q]}_2,
+\]
+so that
+\begin{equation}\label{eq: psi node edge}
+\psi^{[q]}_j(\mathsf{n}^{[q]}_k)=\delta_{jk}\quad\text{for $j$, $k\in\{1,2\}$,}.
+\end{equation}
+
+For~$1\le r\le M$, we define the nodal basis function~$\chi_r\in V_h$ by
+requiring
 \begin{equation}\label{eq: chi 2d}
 \chi_r(\mathsf{n}_s)=\delta_{rs}\quad\text{for $r$, $s\in\{1, 2, \dots, M\}$.}
 \end{equation}
 Figure~\ref{fig: tent func} shows an example of such a ``tent function''.  
+The properties \eqref{eq: psi node triangle}~and \eqref{eq: chi 2d} imply that
+\begin{equation}\label{eq: chi psi}
+\chi_r(x,y)=\psi\brak{p}_i(x,y)
+\quad\text{for $(x,y)\in K_p$ if $r=t^{\mathcal{K}}_{ip}$.}
+\end{equation}
+and likewise by~\eqref{eq: psi node edge},
+\[
+\chi_r(x,y)=\psi^{[q]}_j(x,y)
+\quad\text{for $(x,y)\in E_q$ if $r=t^{\mathcal{E}}_{jq}$.}
+\]
+
 If $v\in V_h$, then
 \[
 v(x,y)=\sum_{r=1}^M v(\mathsf{n}_r)\chi_r(x,y)
@@ -271,12 +307,53 @@ remaining vertices are called the \emph{free nodes}; these belong
 to~$\Omega\cup\Gamma_{\mathrm{N}}$, but note that the collision points, where
 $\Gamma_{\mathrm{D}}$~and $\Gamma_{\mathrm{N}}$ meet, are among the fixed nodes.
 
-Suppose that there are $M\free$~free nodes and $M\fix$~fixed nodes, giving a 
-total of $M=M\free+M\fix$~nodes. It is convenient to number the nodes so that 
-free ones come first, followed by the fixed ones. That is, $\mathsf{n}_1$, 
-$\mathsf{n}_2$, \dots, $\mathsf{n}_{M\free}$ are free, and 
-$\mathsf{n}_{M\free+1}$, $\mathsf{n}_{M\free+2}$, \dots, $\mathsf{n}_M$ are 
-fixed.  
+We let
+\begin{align*}
+M&=\text{number of vertices in the triangulation},\\
+P&=\text{number of triangles in $\mathcal{K}$,}\\
+Q&=\text{number of edge elements on $\partial\Omega$,}
+\end{align*}
+and denote the sets of vertices (nodes), triangles (elements) and boundary edges
+by
+\begin{align*}
+\mathcal{N}&=\{\mathsf{n}_1,\mathsf{n}_2,\ldots,\mathsf{n}_M\},\\
+\mathcal{K}&=\{K_1,K_2,\ldots,K_P\},\\
+\mathcal{E}&=\{E_1,E_2,\ldots,E_Q\}.
+\end{align*}
+The sets of \emph{free nodes} and \emph{fixed nodes} are denoted by
+\[
+\mathcal{N}\free
+        =\{\,\mathsf{n}\in\mathcal{N}:\mathsf{n}\not\in\GammaD\,\}
+\quad\text{and}\quad
+\mathcal{N}\fix
+        =\{\,\mathsf{n}\in\mathcal{N}:\mathsf{n}\in\GammaD\,\}.
+\]
+The sets of \emph{Dirichlet edges} and \emph{Neumann edges} are denoted by
+\[
+\EdgeD=\{\,E\in\mathcal{E}:E\subseteq\GammaD\,\}
+\quad\text{and}\quad
+\EdgeN=\{\,E\in\mathcal{E}:E\subseteq\GammaN\,\}.
+\]
+We then have the disjoint unions
+\[
+\mathcal{N}=\mathcal{N}\free\cup\mathcal{N}\fix
+\quad\text{and}\quad
+\mathcal{E}=\EdgeD\cup\EdgeN.
+\]
+The nodes are numbered so that the free ones precede the fixed ones:
+\[
+\mathcal{N}\free=\{\,\mathsf{n}_m:1\le m\le M\free\,\}
+\]
+and
+\[
+\mathcal{N}\fix=\{\,\mathsf{n}_m:M\free+1\le m\le M\,\}.
+\]
+Likewise, for the edges,
+\[
+\EdgeN=\{\,E_q:1\le q\le Q\free\,\}
+\quad\text{and}\quad
+\EdgeD=\{\,E_q:Q\free+1\le q\le Q\,\}.
+\]
 
 Let $g_{\mathrm{D},h}:\Gamma_{\mathrm{D}}\to\mathbb{R}$ be a piecewise-linear 
 approximation to~$g_{\mathrm{D}}$.  An obvious choice is the interpolant, so
@@ -360,13 +437,13 @@ a_{M\free,M\free+1}&\cdots&a_{M\free,M}
 \]
 Similarly, $\boldsymbol{C}=[\boldsymbol{C}\free\quad\boldsymbol{C}\fix]$, and 
 we can write the linear system~\eqref{eq: FEM 2D linear system} as
-\[
+\begin{equation}\label{eq: 2D FEM linear system}
 \bigl(\boldsymbol{A}\free+\boldsymbol{C}\free\bigr)\boldsymbol{U}\free
     =\boldsymbol{f}+\boldsymbol{g}_{\mathrm{N}}
 -\bigl(\boldsymbol{A}\fix+\boldsymbol{C}\fix\bigr)\boldsymbol{g}_{\mathrm{D}}
 \quad\text{and}\quad
 \boldsymbol{U}\fix=\boldsymbol{g}_{\mathrm{D}},
-\]
+\end{equation}
 with
 \[
 \boldsymbol{f}=\begin{bmatrix}f_1\\ f_2\\ \vdots\\ f_{M\free}\end{bmatrix},
@@ -581,7 +658,7 @@ giving the desired formula.
 \caption{The vectors $\boldsymbol{b}_1$, $\boldsymbol{b}_2$~and 
 $\boldsymbol{b}_3$ defined in~\eqref{eq: bp vector def}.}\label{fig: b vectors}
 \begin{center}
-\includegraphics[scale=0.8]{../src/chap6/b_vectors.pdf}
+\includegraphics[scale=0.8]{../src/chap6/b_vectors-crop.pdf}
 \end{center}
 \end{figure}
 
@@ -650,8 +727,143 @@ The 3-dimensional element load vector is defined by
 \quad\text{where}\quad
 f\brak{K}_i=\int_K f\psi\brak{K}_i
 	=\int_0^1\int_0^{1-\xi_1}f\bigl(\boldsymbol{x}(\xi_1,\xi_2)\bigr)\xi_i
-	\,d\xi_2 \,d\xi_1
+	\,d\xi_2 \,d\xi_1.
 \]
+Similarly, the 2-dimensional Neumann load vector is defined by
+\[
+\boldsymbol{g}^{[E]}_{\mathrm{N}}=[g^{[E]}_{\mathrm{N},j}]_{j=1}^2
+\quad\text{where}\quad
+g^{[E]}_{\mathrm{N},j}=\int_E g_{\mathrm{N}}\psi^{[E]}_j,
+\]
+that is,
+\[
+g^{[E]}_{\mathrm{N},1}
+    =\int_0^1g_{\mathrm{N}}\bigl(\boldsymbol{x}(\xi)\bigr)(1-\xi)\,d\xi
+\quad\text{and}\quad
+g^{[E]}_{\mathrm{N},2}
+    =\int_0^1g_{\mathrm{N}}\bigl(\boldsymbol{x}(\xi)\bigr)\xi\,d\xi
+\]
+where $\boldsymbol{x}(\xi)=(1-\xi)\mathsf{n}^{[E]}_1+\xi\mathsf{n}^{[E]}_2$
+parameterises~$E$.
+
+
+\section{Assembling the linear system}
+
+The process of assembling the global linear
+system~\eqref{eq: 2D FEM linear system} works the same way as in 1D.  We
+define the index sets
+\[
+\mathcal{J}^{\mathcal{K}}_r=\{\,(p,i):\mathsf{n}_r=\mathsf{n}\brak{p}_i\,\}
+    =\{\,(p,i):r=t^{\mathcal{K}}_{ip}\,\}
+\]
+and
+\[
+\mathcal{J}^{\mathcal{E}}_r=\{\,(q,j):\mathsf{n}_r=\mathsf{n}^{[q]}_j\,\}
+    =\{\,(p,j):r=t^{\mathcal{E}}_{jq}\,\}
+\]
+and find that the components of the load vector are
+\[
+f_r=\int_\Omega f\chi_r=\sum_{p=1}^P\int_{K_p}f\chi_r
+    =\sum_{(p,i)\in\mathcal{J}^{\mathcal{K}}_r}\int_{K_p}f\psi\brak{p}_i
+    =\sum_{(p,i)\in\mathcal{J}^{\mathcal{K}}_r}f\brak{p}_i,
+\]
+resulting in \cref{alg: assemble f piecewise linear 2D}. Similarly for the
+Neumann load vector,
+\[
+g_{\mathrm{N},r}=\int_{\GammaN}g_{\mathrm{N}}\chi_r
+    =\sum_{q=1}^{Q\free}\int_{E_q}g_{\mathrm{N}}\chi_r
+    =\sum_{(q,j)\in\mathcal{J}^{\mathcal{E}}_r}
+        \int_{E_q}g_{\mathrm{N}}\psi^{[q]}_j
+    =\sum_{(q,j)\in\mathcal{J}^{\mathcal{E}}_r}g_{\mathrm{N},j}^{[q]},
+\]
+resulting in \cref{alg: assemble gN piecewise linear 2D}.  Note that
+the usual convention applies regarding an empty sum: $g_{\mathrm{N},r}=0$ if
+$\mathcal{J}^{\mathcal{E}}_r=\emptyset$, which will be the case, for example,
+whenever $\mathsf{n}_r$ is an interior node.
+
+\begin{algorithm}
+\caption{Assemble the load vector $\boldsymbol{f}$ for a piecewise linear FEM in
+2D.}\label{alg: assemble f piecewise linear 2D}
+\begin{algorithmic}
+\State $\boldsymbol{f}=\boldsymbol{0}\in\mathbb{R}^{M\free}$
+\For{$p=1:P$}
+    \State Compute $\boldsymbol{f}\brak{p}$
+    \For{$i=1:3$}
+        \State $r=t^{\mathcal{K}}_{pi}$
+                                  \Comment{$\mathsf{n}_r=\mathsf{n}\brak{p}_i$}
+        \If{$r\le M\free$}
+            \State $f_r\gets f_r+f\brak{p}_i$
+        \EndIf
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Assemble the Neumann load vector $\boldsymbol{g}_{\mathrm{N}}$ for a
+piecewise linear FEM in 2D.}
+\label{alg: assemble gN piecewise linear 2D}
+\begin{algorithmic}
+\State $\boldsymbol{g}_{\mathrm{N}}=\boldsymbol{0}\in\mathbb{R}^{M\free}$
+\For{$q=1:Q$}
+    \State Compute $\boldsymbol{g}_{\mathrm{N}}^{[q]}$
+    \For{$j=1:2$}
+        \State $r=t^{\mathcal{E}}_{pj}$
+                                     \Comment{$\mathsf{n}_r=\mathsf{n}{[q]}_j$}
+        \If{$r\le M\free$}
+            \State $g_{\mathrm{N},r}\gets
+                    q_{\mathrm{N},r}+g^{[q]}_{\mathrm{N},j}$
+        \EndIf
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+
+Turning the stiffness matrix, we define as in 1D
+\[
+\mathcal{J}^{\mathcal{K}}_{rs}=\{\,(p,i,j):
+    \text{$\mathsf{n}_r=\mathsf{n}\brak{p}_{ip}$ and
+    $\mathsf{n}_s=\mathsf{n}\brak{p}_{jp}$}\,\}
+\]
+and find that
+\begin{align*}
+a_{rs}&=\int_\Omega a\nabla\chi_s\cdot\nabla\chi_r
+    =\sum_{p=1}^P\int_{K_p}a\nabla\chi_s\cdot\nabla\chi_r\\
+    &=\sum_{(p,i,j)\in\mathcal{J}^{\mathcal{K}}_{rs}}
+    \int_{K_p}a\nabla\psi\brak{p}_j\cdot\nabla\psi\brak{p}_i
+    =\sum_{(p,i,j)\in\mathcal{J}^{\mathcal{K}}_{rs}}a\brak{p}_{ij},
+\end{align*}
+resulting in \cref{alg: assemble A piecewise linear 2D}. Similarly, for the mass
+matrix
+\[
+c_{rs}=\sum_{(p,i,j)\in\mathcal{J}^{\mathcal{K}}_{rs}}c\brak{p}_{ij}.
+\]
+In practice, we would not store $\boldsymbol{A}$ and $\boldsymbol{C}$ as dense
+$M\free\times M$ arrays, but would instead a sparse matrix format such as CSC.
+
+\begin{algorithm}
+\caption{Assemble the stiffness matrix $\boldsymbol{A}$ for a piecewise linear
+FEM in 2D.}
+\label{alg: assemble A piecewise linear 2D}
+\begin{algorithmic}
+\State $\boldsymbol{A}=\boldsymbol{0}\in\mathbb{R}^{M\free\times M}$
+\For{$p=1:P$}
+    \State Compute $\boldsymbol{A}\brak{p}$
+    \For{$j=1:3$}
+        \State $r=t^{\mathcal{K}}_{jp}$
+        \If{$r\le M\free$}
+            \For{$k=1:3$}
+                \State $s=t^{\mathcal{K}}_{kp}$
+                \State $a_{rs}\gets a_{rs}+a\brak{p}_{jk}$
+            \EndFor
+        \EndIf
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+
 
 \section{Quadratic elements}
 
@@ -742,6 +954,45 @@ Using \cref{thm: int xi}
 
 
 \section{Optimality property}
+
+We assume that the coefficients are continuous on
+$\overline{\Omega}=\Omega\cup\partial\Omega$, and satisfy
+\[
+a(x,y)\ge a_{\min}>0\quad\text{and}\quad c(x,y)\ge c_{\min}\ge0
+    \quad\text{for $(x,y)\in\Omega$.}
+\]
+Define the energy inner product,
+\[
+\iprod{u,v}_{\mathcal{L}}=\int_\Omega\bigl(a\nabla u\cdot\nabla v
+    +cuv\bigr)
+\]
+and the energy norm
+\[
+\|u\|_{\mathcal{L}}=\sqrt{\iprod{u,u}_{\mathcal{L}}}.
+\]
+Thus,
+\[
+\|u\|_{\mathcal{L}}^2=\int_\Omega\bigl(a\|\nabla u\|^2+cu^2\bigr).
+\]
+
+The weak formulation~\eqref{eq: Lu=f weak 2d} can then be written as
+\[
+\iprod{u,v}_{\mathcal{L}}=\iprod{f,v}+\iprod{g_{\mathrm{N}},v}_{\GammaN}
+\quad\text{whenever $v=0$ on $\GammaD$,}
+\]
+and similarly the finite element method~\eqref{eq: FEM 2d} as
+\[
+\iprod{u_h,v}_{\mathcal{L}}=\iprod{f,v}+\iprod{g_{\mathrm{N}},v}_{\GammaN}
+\quad\text{whenever $v\in T_h$.}
+\]
+The Galerkin orthogonality property follows at once:
+\[
+\iprod{u_h-u,v}_{\mathcal{L}}=0\quad\text{for all $v\in T_h$.}
+\]
+
+
+
+
 
 \begin{Exercises}
 

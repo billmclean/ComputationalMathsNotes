@@ -646,8 +646,8 @@ Thus, in the present setting we let
 \mathsf{n}_p=x_p\quad\text{for $1\le p\le P$,}
 \quad\text{and}\quad\mathsf{n}_{P+1}=x_0.
 \]
-The $2\times(P+1)$ \emph{connectivity matrix} $\boldsymbol{T}=[t_{jp}]$ is 
-defined by
+The $2\times P$ \emph{connectivity matrix} $\boldsymbol{T}=[t_{jp}]$ is defined
+by
 \begin{equation}\label{eq: e pm def}
 t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r,
 \end{equation}
@@ -796,7 +796,7 @@ from~\eqref{eq: A C f example}.}
     \State $f_r=0$
 \EndFor
 \For{$p=1:P$}
-    \State Compute $\boldsymbol{f}\brak{r}$
+    \State Compute $\boldsymbol{f}\brak{p}$
     \For{$j=1:2$}
         \State $r=t_{pj}$\Comment{$\mathsf{n}_r=\mathsf{n}\brak{p}_j$}
         \If{$r\le P$}
@@ -822,7 +822,7 @@ $\boldsymbol{A}=[a_{pq}]\in\mathbb{R}^{P\times(P+1)}$
 \For{$p=1:P$}
     \State Compute $\boldsymbol{A}\brak{p}$
     \For{$j=1:2$}
-        \State $r=e_{jp}$
+        \State $r=t_{jp}$
         \If{$r\le P$}
             \For{$k=1:2$}
                 \State $s=t_{kp}$
