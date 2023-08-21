@@ -32,7 +32,7 @@ S_h(t)=\{\,v\in V_h:v(0)=\gamma_0(t)\,\}
 T_h=\{\,v\in V_h:v(0)=0\,\}.
 \]
 We also choose $u_{0h}\in V_h$ such that $u_0\approx u_{0h}$; the simplest 
-choice would be the interpolant $u_{0h}=\mathcal{Q}_1u_0$. The semidiscrete
+choice would be the interpolant $u_{0h}=\mathcal{I}_{1,h}u_0$. The semidiscrete
 finite element solution~$u_h(x,t)$ is then defined for~$0\le t\le T$ by 
 requiring that $u_h(\cdot,t)\in S_h(t)$ and
 \begin{equation}\label{eq: semidiscrete fem 1d}
@@ -156,10 +156,16 @@ Observe that
 \[
 \iprod{w_t,w}=\frac{1}{2}\,\frac{d}{dt}\|w(\cdot,t)\|^2,
 \]
-so after integrating in time to arrive at the estimate
+so after integrating in time have
+\[
+\frac{1}{2}\bigl(\|w(\cdot,t)\|^2-\|w(\cdot,0)\|^2\bigr)
+    +\int_0^t\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds
+    =\int_0^t\iprod{g(\cdot,s),w(\cdot,s)}\,ds.
+\]
+Thus,
 \[
 \|w(\cdot,t)\|^2+2\int_0^t\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds
-\le\|w_0\|^2+2\int_0^t\iprod{g(\cdot,s),w(\cdot,s)}\,ds
+=\|w_0\|^2+2\int_0^t\iprod{g(\cdot,s),w(\cdot,s)}\,ds
 \quad\text{for $0\le t\le T$,}
 \]
 where 
@@ -173,9 +179,10 @@ $t^*\in[0,t]$ such that
 \]
 Therefore, using the Cauchy--Schwarz inequality,
 \begin{multline*}
-\|w(\cdot,t)\|^2\le\|w(\cdot,t)\|^2+2\int_0^t\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds
-\le\|w(\cdot,t^*)\|^2+2\int_0^{t^*}\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds\\
-\le\|w_0\|^2+2\int_0^{t^*}\|g(\cdot,s)\|\|w(\cdot,s)\|\,ds
+\|w(\cdot,t)\|^2\le\|w(\cdot,t^*)\|^2
+    +2\int_0^{t^*}\|w(\cdot,s)\|_{\mathcal{L}}^2\,ds
+=\|w_0\|^2+2\int_0^{t^*}\iprod{g(\cdot,s),w(\cdot,s)}\,ds\\
+\le\|w_0\|^2+2\int_0^t\|g(\cdot,s)\|\|w(\cdot,s)\|\,ds
 \le\|w(\cdot,t^*)\|\biggl(\|w_0\|+2\int_0^t\|g(\cdot,s)\|\,ds\biggr),
 \end{multline*}
 so
@@ -314,11 +321,22 @@ problem~\eqref{eq: semidiscrete fem 1d ODE} simplifies to
 \]
 which has the solution
 \begin{equation}
-\boldsymbol{U}(t)=e^{-\Lambda_kt}\boldsymbol{\Phi}_k,
+\boldsymbol{U}(t)=e^{-\Lambda_kt}\boldsymbol{\Phi}_k.
 \end{equation}
-which again decreases monotonically to zero as~$t\to\infty$.
+To see why, we compute
+\begin{align*}
+\boldsymbol{M}\,\frac{d\boldsymbol{U}}{dt}
++(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
+    &=\boldsymbol{M}(-\Lambda_ke^{-\Lambda_kt}\boldsymbol{\Phi}_k\bigr)
+    +(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{\Phi}_k\\
+&=e^{-\Lambda_kt}\bigl(-\Lambda_k\boldsymbol{M}\boldsymbol{\Phi}_k
+    +(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{\Phi}_k\bigr)=\boldsymbol{0}.
+\end{align*}
+Notice that the exponential factor~$e^{-\Lambda_kt}$ in the semidiscrete 
+solution~$\boldsymbol{U}(t)$ decreases monotonically to zero as~$t\to\infty$,
+consistent with the behaviour of~\eqref{eq: u0 eigenfunction}.
 
-Let us compare theses continuous-time solutions with the discrete-time 
+Let us compare these continuous-time solutions with the discrete-time 
 solutions for the three time-stepping schemes described in 
 section~\ref{sec: time stepping}.  
 
@@ -416,7 +434,7 @@ u(x,t)=e^{-t\mathcal{L}}u_0(x)
 \quad\text{where}\quad
 \widehat{(u_0)}_k=\frac{\langle u_0,\phi_k\rangle}{\|\phi_k\|^2}.
 \]
-Similarly, we claim that for a general discrete
+Similarly, we claim that for a general discrete initial
 data~$\boldsymbol{U}_0$, the semidiscrete finite element solution has the form
 \begin{equation}\label{eq: semidiscrete FEM Fourier}
 \boldsymbol{U}(t)=e^{-t\boldsymbol{M}^{-1}(\boldsymbol{A}+\boldsymbol{C})}
@@ -472,8 +490,7 @@ it follows that
 \[
 \|\boldsymbol{U}^n\|_{\boldsymbol{M}}
     \le\Bigl(\max_{1\le k\le P}|1-\Delta t\,\Lambda_k|^n\Bigr)
-    \|\boldsymbol{U}_0\|_{\boldsymbol{M}}
-	=(|1-\Delta t\,\Lambda_P)^n\|\boldsymbol{U}_0\|_{\boldsymbol{M}}.
+    \|\boldsymbol{U}_0\|_{\boldsymbol{M}}.
 \]
 Hence, if $\Delta t\le 1/\Lambda_P$ then $\|\boldsymbol{U}^n\|_{\boldsymbol{M}}
 \le\|\boldsymbol{U}_0\|_{\boldsymbol{M}}$ and the forward Euler method is 
@@ -486,7 +503,8 @@ A similar argument shows that the backward Euler method gives
 \|\boldsymbol{U}^n\|_{\boldsymbol{M}}
     \le\Bigl(\max_{1\le k\le P}(1+\Delta t\,\Lambda_k)^{-n}\Bigr)
     \|\boldsymbol{U}_0\|_{\boldsymbol{M}}
-	=(1+\Delta t\,\Lambda_1)^{-n}\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
+	=(1+\Delta t\,\Lambda_1)^{-n}\|\boldsymbol{U}_0\|_{\boldsymbol{M}}
+	\le\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
 \]
 and hence we have stability in the $\boldsymbol{M}$-norm for any~$\Delta t$.
 \end{example}
@@ -498,8 +516,7 @@ For the Crank--Nicolson method,
     \le\biggl(\max_{1\le k\le P}\biggl|
     \frac{1-\tfrac12\Delta t\,\Lambda_k}{1+\tfrac12\Delta t\,\Lambda_k}
     \biggr|^n\biggr)\|\boldsymbol{U}_0\|_{\boldsymbol{M}}
-=\biggl|\frac{1-\tfrac12\Delta t\,\Lambda_1}{1+\tfrac12\Delta t\,\Lambda_1}
-	\biggr|^n\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
+    \le\|\boldsymbol{U}_0\|_{\boldsymbol{M}},
 \]
 and we again have stability in the $\boldsymbol{M}$-norm for any~$\Delta t$.
 \end{example}

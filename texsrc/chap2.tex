@@ -303,10 +303,10 @@ Equivalently, since $\{\chi_p\}_{p=1}^P$ is a basis for~$T_h$, we require
 \]
 Inserting the representation~\eqref{eq: uh U 1d} yields the system of linear 
 equations
-\[
+\begin{equation}\label{eq: self-adjoint 1D linear system}
 \sum_{q=0}^P\bigl(a_{pq}U_q+c_{pq}U_q\bigr)=\gamma_L\chi_p(L)+f_p
     \quad\text{for $1\le p\le P$,}
-\]
+\end{equation}
 where
 \[
 a_{pq}=\int_0^La(x)\chi_q'(x)\chi_p'(x)\,dx,\quad
@@ -641,8 +641,7 @@ our mixed boundary-value problem~\eqref{eq: self-adjoint mixed}, the only
 fixed node is $\mathsf{n}_0\brak{1}=x_0$.  A \emph{free node} is one that is
 not fixed.  When choosing a global enumeration of all the nodes in the mesh, we
 will use the convention that the \emph{free nodes precede the fixed nodes}.
-solution is fixed by a Dirichlet boundary condition.  Thus, in the present
-setting we let
+Thus, in the present setting we let
 \[
 \mathsf{n}_p=x_p\quad\text{for $1\le p\le P$,}
 \quad\text{and}\quad\mathsf{n}_{P+1}=x_0.
@@ -650,8 +649,13 @@ setting we let
 The $2\times(P+1)$ \emph{connectivity matrix} $\boldsymbol{T}=[t_{jp}]$ is 
 defined by
 \begin{equation}\label{eq: e pm def}
-t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r;
+t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r,
 \end{equation}
+and we label the nodal basis functions $\chi_r\in V_h$ according to the global 
+node numbering, so that
+\[
+\chi_r(\mathsf{n}_s)=\delta_{rs}\quad\text{for $r$, $s\in\{1,2,\ldots,P+1\}$.}
+\]
 
 \begin{figure}
 \caption{Node numbering from \cref{example: node numbers 1d} with~$P=4$.}
@@ -685,90 +689,64 @@ t_{jp}=r\quad\text{iff}\quad\mathsf{n}\brak{p}_j=\mathsf{n}_r;
 \]
 \end{example}
 
-Writing $U\brak{p}_k=u_h(\mathsf{n}\brak{p}_k)$~and
-$V\brak{p}_j=v(\mathsf{n}\brak{p}_j)$, we see that
+\begin{theorem}
+For a given connectivity matrix~$\boldsymbol{T}=[t_{jp}]$, define the index sets
 \[
-u_h(x)=\sum_{k=1}^2U\brak{p}_k\psi\brak{p}_k(x)
+\mathcal{I}_r=\{\,(p,j):t_{jp}=r\,\}
 \quad\text{and}\quad
-v(x)=\sum_{j=1}^2V\brak{p}_j\psi\brak{p}_j(x)
-\quad\text{for $x\in[x_{p-1},x_p]$.}
-\]
-Thus,
-\[
-\int_0^Lf(x)v(x)\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}f(x)\sum_{j=1}^2
-    V\brak{p}_j\psi\brak{p}_j(x)\,dx
-    =\sum_{p=1}^P\sum_{j=1}^2 f\brak{p}_jV_j\brak{p}
-\]
-and
-\begin{align*}
-\int_0^La(x)u_h'(x)v'(x)\,dx
-    &=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}a(x)
-    \biggl(\sum_{k=1}^2 U\brak{p}_k(\psi_k\brak{p})'(x)\biggr)
-    \biggl(\sum_{j=1}^2 V\brak{p}_j(\psi_j\brak{p})'(x)\biggr)\,dx\\
-    &=\sum_{p=1}^P\sum_{k=1}^2\sum_{j=1}^2
-    U\brak{p}_ka\brak{p}_{jk}V\brak{p}_j;
-\end{align*}
-likewise
-\[
-\int_0^Lc(x)u_h(x)v(x)\,dx=\sum_{p=1}^P\sum_{k=1}^2\sum_{j=1}^2
-    U\brak{p}_kc\brak{p}_{jk}V\brak{p}_j
-\quad\text{and}\quad
-v(L)=V\brak{P}_2.
-\]
-Therefore, \eqref{eq: self-adjoint mixed bc FEM} holds iff
-\[
-\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_j
-\sum_{k=1}^2\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
-    =\gamma_LV\brak{P}_2+\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_jf\brak{p}_j
-    \quad\text{for all $v\in T_h$.}
-\]
-
-For~$v\in V_h$, put
-\[
-V_r=v(\mathsf{n}_r)\quad\text{for $1\le r\le P+1$,}
-\]
-so that $V_r=V\brak{p}_j$ iff $r=t_{jp}$, and hence
-\[
-\sum_{p=1}^{P+1}\sum_{j=1}^2V\brak{p}_jf\brak{p}_j=\sum_{r=1}^PV_rf_r,
-\]
-where
-\[
-f_r=\sum_{j\in\mathcal{I}_r}f\brak{p}_j
-\quad\text{and}\quad
-\mathcal{I}_r=\{\,(p,j):t_{jp}=r\,\}.
-\]
-Similarly, put $U_s=u_h(\mathsf{n}_s)$ so that $U_s=U\brak{p}_k$ iff 
-$s=t_{kp}$, and hence
-\[
-\sum_{p=1}^P\sum_{j=1}^2V\brak{p}_j\sum_{k=1}^2
-\bigl(a\brak{p}_{jk}+c\brak{p}_{jk}\bigr)U\brak{p}_k
-=\sum_{r=1}^{P+1}V_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s
-\]
-where
-\[
-a_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}}a\brak{p}_{jk}
-\qquad\text{and}\qquad
-c_{rs}=\sum_{(p,j,k)\in\mathfrak{I}_{rs}} c\brak{p}_{jk},
-\]
-for the index set
-\[
 \mathcal{I}_{rs}=\{\,(p,j,k):\text{$t_{jp}=r$ and $t_{kp}=s$}\,\}.
 \]
-In this way, \eqref{eq: self-adjoint mixed bc FEM} holds iff
+Then, the entries of the global load vector, global stiffness matrix and global 
+mass matrix can be assembled from the corresponding local quantities, via the 
+formulas
 \[
-\sum_{r=1}^PV_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s=\gamma_LV_{P}
-	+\sum_{r=1}^PV_r\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s,
+f_r=\sum_{(p,j)\in\mathcal{I}_r}f\brak{p}_j,\qquad
+a_{rs}=\sum_{(p,j,k)\in\mathcal{I}_{rs}}a\brak{p}_{jk},\qquad
+c_{rs}=\sum_{(p,j,k)\in\mathcal{I}_{rs}}c\brak{p}_{jk}.
 \]
-remembering that $V_{P+1}=v(\mathsf{n}_{P+1})=v(0)=0$.  Forming the 
-$P\times(P+1)$ matrices $\boldsymbol{A}=[a_{rs}]$~and
+\end{theorem}
+\begin{proof}
+For $x\in[x_{p-1},x_p]$,
+\[
+\chi_r(x)=\begin{cases}
+0,&\text{if $\mathsf{n}_r\notin[x_{p-1},x_p]$,}\\
+\psi\brak{p}_j(x),&\text{if $\mathsf{n}_r=\mathsf{n}\brak{p}_j$,}        
+\end{cases}
+\]
+so
+\[
+f_r=\int_0^Lf\chi_r\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}f\chi_r\,dx
+    =\sum_{(p,j)\in\mathcal{I}_r}\int_{x_{p-1}}^{x_p}f\psi\brak{p}_j\,dx,
+\]
+showing the first formula. Similarly, 
+\[
+a_{rs}=\int_0^La\chi_s'\chi_r'\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}
+a\chi_s'\chi_r'\,dx=\sum_{(p,j,k)\in\mathcal{I}_{rs}}\int_{x_{p-1}}^{x_p}
+a(\psi\brak{p}_k)'(\psi\brak{p}_j)'\,dx,
+\]
+and
+\[
+c_{rs}=\int_0^Lc\chi_s\chi_r\,dx=\sum_{p=1}^P\int_{x_{p-1}}^{x_p}
+c\chi_s\chi_r\,dx=\sum_{(p,j,k)\in\mathcal{I}_{rs}}\int_{x_{p-1}}^{x_p}
+c\psi\brak{p}_k\psi\brak{p}_j\,dx,
+\]
+showing the second and third formulas.
+\end{proof}
+
+Arguing as before when we derived \eqref{eq: self-adjoint 1D linear system},
+we use the expansion
+\[
+u_h(x)=\sum_{s=1}^{P+1}U_s\chi_r(x)\quad\text{where}\quad U_s=u_h(\mathsf{n}_s),
+\]
+and choose the test function $v=\chi_r\in V_h$, to find that the finite 
+element equation~\eqref{eq: self-adjoint mixed bc FEM} holds iff
+\[
+\sum_{s=1}^{P+1}(a_{rs}+c_{rs})U_s=\gamma_L\delta_{rP}+f_r
+\quad\text{for $1\le r\le P$.}
+\]
+Forming the $P\times(P+1)$ matrices $\boldsymbol{A}=[a_{rs}]$~and
 $\boldsymbol{C}=[c_{rs}]$, and the $P$-dimensional
 vector~$\boldsymbol{f}=[f_r]$, we see that
-\begin{equation}\label{eq: VT(A+C)U}
-\boldsymbol{V}^T\bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
-    =\gamma_LV_P+\boldsymbol{V}^T\boldsymbol{f}
-    \quad\text{for all $\boldsymbol{V}\in\mathbb{R}^P$,}
-\end{equation}
-and therefore
 \begin{equation}\label{eq: A C f example}
 \bigl(\boldsymbol{A}+\boldsymbol{C}\bigr)\boldsymbol{U}
     =\gamma_L\boldsymbol{e}_P+\boldsymbol{f}.
@@ -803,8 +781,10 @@ vectors~$\boldsymbol{f}\brak{p}$.  Likewise,
 algorithm~\ref{alg: assemble A piecewise linear} shows how the global 
 stiffness matrix~$\boldsymbol{A}$ can be assembled from the element stiffness 
 matrices~$\boldsymbol{A}\brak{p}$.  The global mass matrix~$\boldsymbol{C}$ is 
-assembled in the same way. In practice, $\boldsymbol{A}$~and $\boldsymbol{C}$ 
-are constructed using an appropriate \emph{sparse matrix} data structure.
+assembled in the same way. Notice that these algorithms do not explicitly
+construct the index sets $\mathcal{I}_r$ and $\mathcal{I}_{rs}$. In practice,
+$\boldsymbol{A}$~and $\boldsymbol{C}$ are assembled using an appropriate
+\emph{sparse matrix} data structure.
 
 \begin{algorithm}
 \caption{Assemble the load vector $\boldsymbol{f}$
@@ -1062,13 +1042,12 @@ element matrices $\boldsymbol{A}\brak{p}$~and $\boldsymbol{C}\brak{p}$ can be
 assembled into the $(2P)\times(2P+1)$ global matrices $\boldsymbol{A}$~and 
 $\boldsymbol{C}$; see exercise~\ref{ex: assemble quadratic 1d}.
 
-By adapting the arguments that led to~\eqref{eq: VT(A+C)U} we find that the 
-vector~$\boldsymbol{U}=[U_j]_{j=1}^{2P+1}$ of nodal values 
+By adapting the arguments that led to~\eqref{eq: A C f example} we find that
+the vector~$\boldsymbol{U}=[U_j]_{j=1}^{2P+1}$ of nodal values
 $U_j=u_h(\mathsf{n}_j)$ satisfies
 \[
-\boldsymbol{V}^T(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
-	=\gamma_LV_{2M}+\boldsymbol{V}^T\boldsymbol{f}
-	\quad\text{for all $\boldsymbol{V}\in\mathbb{R}^{2P}$.}
+(\boldsymbol{A}+\boldsymbol{C})\boldsymbol{U}
+	=\gamma_L\boldsymbol{e}_{2P}+\boldsymbol{f}.
 \]
 We again use the partitionings
 \[
@@ -1099,9 +1078,9 @@ interpolation polynomials} $\ell_1$, $\ell_2$, \dots, $\ell_{r+1}$ by
 \ell_j(x)=\prod_{1\le k\le r+1, k\ne j}
 	\frac{x-x_k}{x_j-x_k}\quad\text{for $1\le j\le r+1$,}
 \end{equation}
-and then define the \emph{linear interpolation operator}~$\mathcal{Q}_r$ by
+and then define the \emph{linear interpolation operator}~$\mathcal{I}_r$ by
 \[
-(\mathcal{Q}_rf)(x)=\sum_{j=1}^{r+1}f(x_j)\ell_j(x).
+(\mathcal{I}_rf)(x)=\sum_{j=1}^{r+1}f(x_j)\ell_j(x).
 \]
 Observe that $\ell_j\in\mathbb{P}_r$ because it is the product of~$r$ linear 
 factors.  Moreover, if $x=x_j$ then each factor in the 
@@ -1111,24 +1090,24 @@ In other words,
 \[
 \ell_j(x_k)=\delta_{jk}\quad\text{for $j$, $k\in\{1,2,\ldots,r+1\}$.}
 \]
-It follows that $\mathcal{Q}_rf\in\mathbb{P}_r$ interpolates~$f$, that is,
+It follows that $\mathcal{I}_rf\in\mathbb{P}_r$ interpolates~$f$, that is,
 \[
-(\mathcal{Q}_rf)(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
+(\mathcal{I}_rf)(x_j)=f(x_j)\quad\text{for $1\le j\le r+1$.}
 \]
-Furthermore, $\mathcal{Q}_rf$ is the only such interpolant, because if 
+Furthermore, $\mathcal{I}_rf$ is the only such interpolant, because if 
 $g\in\mathbb{P}_r$ satisfies \eqref{eq: g interpolates f} then the difference
-$g-\mathcal{Q}_rf$ is a polynomial satisfying
+$g-\mathcal{I}_rf$ is a polynomial satisfying
 \[
-(g-\mathcal{Q}_rf)(x_j)=g(x_j)-(\mathcal{Q}_rf)(x_j)=f(x_j)-f(x_j)=0
+(g-\mathcal{I}_rf)(x_j)=g(x_j)-(\mathcal{I}_rf)(x_j)=f(x_j)-f(x_j)=0
 	\quad\text{for $1\le j\le r+1$.}
 \]
-Since $g-\mathcal{Q}_rf$ has degree at most~$r$, it must vanish identically and
-so $g(x)=(\mathcal{Q}_rf)(x)$ for all~$x$. In particular, since any element
+Since $g-\mathcal{I}_rf$ has degree at most~$r$, it must vanish identically and
+so $g(x)=(\mathcal{I}_rf)(x)$ for all~$x$. In particular, since any element
 of~$\mathbb{P}_r$ interpolates itself, it follows that
 \[
-\mathcal{Q}_rf=f\quad\text{for every $f\in\mathbb{P}_r$,}
+\mathcal{I}_rf=f\quad\text{for every $f\in\mathbb{P}_r$,}
 \]
-and thus $\mathcal{Q}_r^2=\mathcal{Q}_r$.  Hence, $\mathcal{Q}_r$ is a 
+and thus $\mathcal{I}_r^2=\mathcal{I}_r$.  Hence, $\mathcal{I}_r$ is a 
 \emph{projection} onto~$\mathbb{P}_r$.
 
 Let 
@@ -1144,30 +1123,30 @@ f(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
 	+\int_a^b\pi_{r,y}(x)f^{(r+1)}(y)\,dy\quad\text{for $a\le x\le b$.}
 \]
 Since the sum on the right defines a function in~$\mathbb{P}_r$,
-applying $\mathcal{Q}_r$ to both sides gives
+applying $\mathcal{I}_r$ to both sides gives
 \[
-(\mathcal{Q}_rf)(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
-	+\int_a^b(\mathcal{Q}_r\pi_{r,y})(x)f^{(r+1)}(y)\,dy
+(\mathcal{I}_rf)(x)=\sum_{k=0}^r\frac{f^{(k)}(a)}{k!}\,(x-a)^k
+	+\int_a^b(\mathcal{I}_r\pi_{r,y})(x)f^{(r+1)}(y)\,dy
 \quad\text{for $a\le x\le b$.}
 \]
 Hence, the \emph{interpolation error} has the integral representation
 \begin{equation}\label{eq: Qr f error}
-(\mathcal{Q}_rf)(x)-f(x)=\int_a^b K_r(x,y)f^{(r+1)}(y)\,dy
+(\mathcal{I}_rf)(x)-f(x)=\int_a^b K_r(x,y)f^{(r+1)}(y)\,dy
 \quad\text{for $a\le x\le b$,}
 \end{equation}
 where the \emph{Peano kernel} is defined by
 \[
-K_r(x,y)=(\mathcal{Q}_r\pi_{r,y})(x)-\pi_{r,y}(x)
+K_r(x,y)=(\mathcal{I}_r\pi_{r,y})(x)-\pi_{r,y}(x)
 	\quad\text{for $x$, $y\in[a,b]$.}
 \]
 Since the $j$th derivative~$\pi_{r,y}^{(j)}(x)=\pi_{r-j,y}(x)$, we see that
 \[
-\partial_x^jK_r(x,y)=(\mathcal{Q}_r\pi_{r,y})^{(j)}(x)-\pi_{r-j,y}(x)
+\partial_x^jK_r(x,y)=(\mathcal{I}_r\pi_{r,y})^{(j)}(x)-\pi_{r-j,y}(x)
 \quad\text{for $0\le j\le r$,}
 \]
 and that the $j$th derivative of the interpolation error has the representation
 \begin{equation}\label{eq: Qr f error deriv}
-(\mathcal{Q}_rf-f)^{(j)}(x)=\int_a^b\partial_x^j K_r(x,y)f^{(r+1)}(y)\,dy
+(\mathcal{I}_rf-f)^{(j)}(x)=\int_a^b\partial_x^j K_r(x,y)f^{(r+1)}(y)\,dy
 \quad\text{for $a\le x\le b$.}
 \end{equation}
 
@@ -1192,12 +1171,12 @@ $x_1=a$~and $x_2=b$.  In this case, the Lagrange polynomials are
 \]
 and
 \[
-(\mathcal{Q}_1f)(x)=f(a)\ell_1(x)+f(b)\ell_2(x)
+(\mathcal{I}_1f)(x)=f(a)\ell_1(x)+f(b)\ell_2(x)
 	=f(a)\,\frac{b-x}{b-a}+f(b)\,\frac{x-a}{b-a}.
 \]
 In particular, since $\pi_{1,y}(a)=0$~and $\pi_{1,y}(b)=b-y$ for~$a\le y\le b$,
 \[
-(\mathcal{Q}_1\pi_{1,y})(x)=\pi_{1,y}(a)\ell_1(x)+\pi_{1,y}(b)\ell_2(x)
+(\mathcal{I}_1\pi_{1,y})(x)=\pi_{1,y}(a)\ell_1(x)+\pi_{1,y}(b)\ell_2(x)
 	=\frac{(b-y)(x-a)}{b-a}\quad\text{for $x$, $y\in[a,b]$,}
 \]
 so
@@ -1252,7 +1231,7 @@ and thus
 K_2(x,y)+K_2(-x,-y)=\tfrac12y^2\ell_2(x)+\tfrac12(1-y)^2\ell_3(x)
 	+\tfrac12(1+y)^2\ell_1(x)-\tfrac12(x-y)^2.
 \]
-We use the identity $\ell_1(x)+\ell_2(x)+\ell_3(x)=(\mathcal{Q}_21)(x)=1$ to
+We use the identity $\ell_1(x)+\ell_2(x)+\ell_3(x)=(\mathcal{I}_21)(x)=1$ to
 replace $\ell_2(x)$ with~$1-\ell_1(x)-\ell_3(x)$ and deduce that
 \begin{align*}
 K_2(x,y)+K_2(-x,-y)&=\tfrac12\bigl[y^2-(x-y)^2\bigr]
@@ -1292,36 +1271,36 @@ Given a function $f(x)$, we define $\hat f$ on the reference element by
 \[
 \hat f(\xi)=f(x)\quad\text{where $x=x_{p-1}+\xi h_p$,}
 \]
-and let $\mathcal{Q}_r\brak{p}$~and $\widehat{\mathcal{Q}}_r$ denote 
+and let $\mathcal{I}_r\brak{p}$~and $\widehat{\mathcal{I}}_r$ denote 
 polynomial interpolation operators for $[x_{p-1},x_p]$~and $[0,1]$, 
 respectively, so that
 \[
-\mathcal{Q}_r\brak{p}f\in\mathbb{P}_{r+1}\quad\text{and}\quad
-(\mathcal{Q}_r\brak{p}f)(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
+\mathcal{I}_r\brak{p}f\in\mathbb{P}_{r+1}\quad\text{and}\quad
+(\mathcal{I}_r\brak{p}f)(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
 \quad\text{for $1\le j\le r+1$,}
 \]
 whereas
 \[
-\widehat{\mathcal{Q}}_r\hat f\in\mathbb{P}_{r+1}\quad\text{and}\quad
-\bigl(\widehat{\mathcal{Q}}_r\hat f\bigr)(\hat{\mathsf{n}}_j)
+\widehat{\mathcal{I}}_r\hat f\in\mathbb{P}_{r+1}\quad\text{and}\quad
+\bigl(\widehat{\mathcal{I}}_r\hat f\bigr)(\hat{\mathsf{n}}_j)
     =\hat f(\hat{\mathsf{n}}_j)\quad\text{for $1\le j\le r+1$.}
 \]
-Notice that if we let $g(x)=(\mathcal{Q}_r\brak{p}f)(x)$, then 
-$\hat g(\xi)=\widehat{\mathcal{Q}}_r\hat f(\xi)$ because 
+Notice that if we let $g(x)=(\mathcal{I}_r\brak{p}f)(x)$, then 
+$\hat g(\xi)=\widehat{\mathcal{I}}_r\hat f(\xi)$ because 
 $\hat g\in\mathbb{P}_r$~and 
 \[
 \hat g(\hat{\mathsf{n}}_j)=g(\mathsf{n}_j\brak{p})=f(\mathsf{n}_j\brak{p})
     =\hat f(\hat{\mathsf{n}}_j)\quad\text{for $1\le j\le r+1$.}
 \]
 In other words, 
-$\widehat{\mathcal{Q}_r\brak{p}f}=\widehat{\mathcal{Q}}_r\hat f$.
+$\widehat{\mathcal{I}_r\brak{p}f}=\widehat{\mathcal{I}}_r\hat f$.
 
 \begin{theorem}
 Assume that $f$ is $C^{r+1}$ on~$[x_{p-1},x_p]$, and let $K_r$ denote the Peano 
 kernel for polynomial interpolation at the $r+1$~nodes of the reference 
 element~$[0,1]$.  Then,
 \[
-\int_{x_{p-1}}^{x_p}|(f-\mathcal{Q}_r\brak{p}f)^{(k)}(x)|^2\,dx
+\int_{x_{p-1}}^{x_p}|(f-\mathcal{I}_r\brak{p}f)^{(k)}(x)|^2\,dx
     \le C_{r,k}h_p^{2(r+1-k)}\int_{x_{p-1}}^{x_p}|\hat f^{(r+1)}(x)|^2\,dx
     \quad\text{for $0\le k\le r$,}
 \]
@@ -1338,7 +1317,7 @@ Since $dx/d\xi=h_p$ we see that
 \]
 so using \eqref{eq: Qr f error deriv} and the Cauchy--Schwarz inequality,
 \begin{align*}
-\bigl|(f-\mathcal{Q}_r\brak{p}f)^{(k)}(x)\bigr|^2
+\bigl|(f-\mathcal{I}_r\brak{p}f)^{(k)}(x)\bigr|^2
     &=h_p^{-2k}\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)^{(k)}(\xi)\bigr|^2
     =h_p^{-2k}\biggl|\int_0^1\partial_\xi^k K_r(\xi,\eta)
         \hat f^{(r+1)}(\eta)\, d\eta\biggr|^2\\
@@ -1348,7 +1327,7 @@ so using \eqref{eq: Qr f error deriv} and the Cauchy--Schwarz inequality,
 for $0\le\xi\le1$.  Integrating with respect to~$x$, and noting that 
 $dx=h_p\,d\xi$, we have
 \begin{align*}
-\int_{x_{p-1}}^{x_p}\bigl|(f-\mathcal{Q}_rf)^{(k)}(x)\bigr|^2\,dx
+\int_{x_{p-1}}^{x_p}\bigl|(f-\mathcal{I}_rf)^{(k)}(x)\bigr|^2\,dx
 &=h_p^{1-2k}\int_0^1\bigl|\bigl(\hat f-\widehat{Q}_r\hat f)(\xi)\bigr|^2\,d\xi\\
 &\le h_p^{1-2k}\biggl(
     \int_0^1\int_0^1|\partial_\xi^kK_r(\xi,\eta)|^2\,d\eta\,d\xi\biggr)
@@ -1363,38 +1342,38 @@ and
 which implies the desired estimate.
 \end{proof}
 
-For any continuous~$v:[0,L]\to\mathbb{R}$ we define $\mathcal{Q}_{r,h}v$, the 
+For any continuous~$v:[0,L]\to\mathbb{R}$ we define $\mathcal{I}_{r,h}v$, the 
 \emph{piecewise-polynomial interpolant} of degree at most~$r$, by
 \[
-(\mathcal{Q}_{r,h}v)(x)
-    =(\mathcal{Q}_r\brak{p}v)(x)\quad\text{for $x\in[x_{p-1},x_p]$;}
+(\mathcal{I}_{r,h}v)(x)
+    =(\mathcal{I}_r\brak{p}v)(x)\quad\text{for $x\in[x_{p-1},x_p]$;}
 \]
 since $\mathsf{n}\brak{p-1}_{r+1}=x_{p-1}=\mathsf{n}\brak{p}_1$ we see 
 that
 \[
-(\mathcal{Q}_r\brak{p-1}v)(x_{p-1})=v(x_{p-1})
-    =(\mathcal{Q}_r\brak{p}v)(x_{p-1})\quad\text{for~$2\le p\le P-1$,}
+(\mathcal{I}_r\brak{p-1}v)(x_{p-1})=v(x_{p-1})
+    =(\mathcal{I}_r\brak{p}v)(x_{p-1})\quad\text{for~$2\le p\le P-1$,}
 \]
-and hence the function~$\mathcal{Q}_{r,h}v$ is continuous on~$[0,L]$.
+and hence the function~$\mathcal{I}_{r,h}v$ is continuous on~$[0,L]$.
 
 \begin{theorem}\label{thm: Q r h}
 If $v$ is $C^{r+1}$ on~$[0,L]$, then
 \[
-\|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}
+\|v-\mathcal{I}_{r,h}v\|_{L_2(0,L)}
     \le\sqrt{C_{r,0}}\,h^{r+1}\|v^{(r+1)}\|_{L_2(0,L)}
 \]
 and
 \[
-\|v'-(\mathcal{Q}_{r,h}v)'\|_{L_2(0,L)}
+\|v'-(\mathcal{I}_{r,h}v)'\|_{L_2(0,L)}
     \le\sqrt{C_{r,1}}\,h^r\|v^{(r+1)}\|_{L_2(0,L)}.
 \]
 \end{theorem}
 \begin{proof}
 We have
 \begin{align*}
-\|v-\mathcal{Q}_{r,h}v\|_{L_2(0,L)}^2
-    &=\int_0^L|(v-\mathcal{Q}_{r,h}v)(x)|^2\,dx=\sum_{p=1}^P
-    \int_{x_{p-1}}^{x_p}|(v-\mathcal{Q}_r\brak{p}v)(x)|^2\,dx\\
+\|v-\mathcal{I}_{r,h}v\|_{L_2(0,L)}^2
+    &=\int_0^L|(v-\mathcal{I}_{r,h}v)(x)|^2\,dx=\sum_{p=1}^P
+    \int_{x_{p-1}}^{x_p}|(v-\mathcal{I}_r\brak{p}v)(x)|^2\,dx\\
     &\le\sum_{p=1}^P C_{r,0}h_p^{2(r+1)}\int_{x_{p-1}}^{x_p}
         |\hat v^{(r+1)}(x)|^2\,dx\\
     &\le C_{r,0}h^{2(r+1)}\sum_{p=1}^M\int_{x_{p-1}}^{x_p} 
@@ -1442,7 +1421,7 @@ which implies the desired inequality.
 \end{proof}
 
 By combining \cref{thm: optimality} with the approximation property of the 
-interpolant~$\mathcal{Q}_{r,h}u$ proved in \cref{thm: Q r h}, we can show
+interpolant~$\mathcal{I}_{r,h}u$ proved in \cref{thm: Q r h}, we can show
 that the finite element error, measured in the energy norm, is $O(h^r)$.
 
 \begin{theorem}\label{thm: uh-u L}
@@ -1454,7 +1433,7 @@ there is a constant~$C>0$, independent of~$h$, such that
 \]
 \end{theorem}
 \begin{proof}
-Let $w=\mathcal{Q}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
+Let $w=\mathcal{I}_{r,h}u$.  Since $w(0)=u(0)=\gamma_0$ we see that $w\in S_h$,
 so we may apply \cref{thm: optimality} and deduce that
 \begin{align*}
 \|u_h-u\|_{\mathcal{L}}^2\le\|w-u\|_{\mathcal{L}}^2
@@ -1522,9 +1501,9 @@ inequality,
 \]
 Since
 \begin{align*}
-\|\theta-\mathcal{Q}_{k+1,h}\theta\|_{\mathcal{L}}^2
-	&\le a_{\max}\|\theta'-(\mathcal{Q}_{k+1,h}\theta)'\|^2
-	+c_{\max}\|\theta-\mathcal{Q}_{k+1,h}\theta\|^2\\
+\|\theta-\mathcal{I}_{k+1,h}\theta\|_{\mathcal{L}}^2
+	&\le a_{\max}\|\theta'-(\mathcal{I}_{k+1,h}\theta)'\|^2
+	+c_{\max}\|\theta-\mathcal{I}_{k+1,h}\theta\|^2\\
 	&\le C\bigl(h^{2(k+1)}+h^{2(k+2)})\|\theta^{(k+2)}\|^2,
 \end{align*}
 it suffices to note that, by \cref{thm: regularity 1d}, we have
@@ -1544,7 +1523,7 @@ which implies the result.
 \end{proof}
 
 Thus, measured in the norm of~$L^2(0,L)$, the errors in both the finite element
-solution~$u_h$ and the interpolant~$\mathcal{Q}_{r,h}u$ are $O(h^{r+1})$.
+solution~$u_h$ and the interpolant~$\mathcal{I}_{r,h}u$ are $O(h^{r+1})$.
 
 \section{Sturm--Liouville problems}\label{sec: Sturm-Liouville}
 
@@ -1855,7 +1834,7 @@ Figure~\ref{fig: quadrature kernel}.
 \item{(vi)}
 By considering the function~$f(x)=x^6$, show that 
 \[
-\int_{-1}^1K(y)\,dy=\frac{-32}{525}.
+6!\int_{-1}^1K(y)\,dy=\frac{-32}{525}.
 \]
 \item{(vii)}
 Hence determine the constant~$c$ such that, given a $C^6$ function~$f$,
@@ -1959,7 +1938,7 @@ Example~\ref{example: linear interp}, satisfies
 Hence use the integral mean value theorem to show that if~$f$ is $C^2$ 
 on~$[a,b]$, then 
 \[
-(\mathcal{Q}_1f)(x)-f(x)=\frac{f''(\xi)}{2}\,(x-a)(b-x)
+(\mathcal{I}_1f)(x)-f(x)=\frac{f''(\xi)}{2}\,(x-a)(b-x)
 \]
 for some~$\xi\in[a,b]$ (depending on~$x$).
 
@@ -1968,7 +1947,7 @@ Let $x_1=-1$, $x_2=0$~and $x_3=+1$ as in
 Example~\ref{example: quadratic interp}.  
 \begin{description}
 \item{(i)} Show that if $g(x)=f(-x)$, then 
-$(\mathcal{Q}_2g)(x)=(\mathcal{Q}_2f)(-x)$.
+$(\mathcal{I}_2g)(x)=(\mathcal{I}_2f)(-x)$.
 \item{(ii)} Deduce that if $f$ is $C^3$ on~$[-1,1]$, then
 \[
 \int_{-1}^1K_2(-x,y)f'''(y)\,dy=\int_{-1}^1K_2(x,y)g'''(y)\,dy

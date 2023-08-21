@@ -936,7 +936,8 @@ is same as in~\eqref{eq: implicit Euler 1d vector}, with
 \]
 for $\boldsymbol{g}(t)$ as in~\eqref{eq: U f g semidiscrete 1d}.
 
-Rearranging \eqref{eq: Crank-Nicolson matrix}, we find that
+Multiplying both sides of~\eqref{eq: Crank-Nicolson matrix} by~$\Delta t$, we 
+find that
 \[
 \boldsymbol{U}^n-\boldsymbol{U}^{n-1}
     +\tfrac12\Delta t\,\boldsymbol{A}(\boldsymbol{U}^n+\boldsymbol{U}^{n-1})
@@ -948,7 +949,7 @@ which yields linear system that must be solved at the $n$th time step,
 \bigl(\boldsymbol{I}-\tfrac12\Delta t\,\boldsymbol{A}\bigr)\boldsymbol{U}^{n-1}
     +\Delta t\,\bigl(\boldsymbol{f}^{n-1/2}+\boldsymbol{g}^{n-1/2}\bigr).
 \]
-The local truncation error for the Crank--Nicolson method is
+The local truncation error for the Crank--Nicolson method is defined by
 \begin{multline*}
 \tau^{n-1/2}_p=f^{n-1/2}_p-\frac{u(x_p,t_n)-u(x_p,t_{n-1})}{\Delta t}
     +\frac{a}{\Delta x^2}\biggl(
@@ -968,7 +969,7 @@ $f^{n-1/2}_p=u_t(x_p,t_{n-1/2})-au_{xx}(x_p,t_{n-1/2)}$ so
     \biggr)\\
     &\qquad{}+\frac{a}{2}\biggl(
     \frac{u(x_{p+1},t_{n-1})-2u(x_p,t_{n-1})+u(x_{p-1},t_{n-1})}{\Delta x^2}
-        -u_{xx}(x_p,t_n)\biggr).
+        -u_{xx}(x_p,t_{n-1})\biggr).
 \end{align*}
 Applying Theorems \ref{thm: first central diff}~and \ref{thm: average} with 
 $h=\tfrac12\Delta t$, and \cref{thm: 2nd central diff} with~$h=\Delta 
@@ -981,7 +982,61 @@ x$, we conclude that
 \]
 and hence $\tau^{n-1/2}_p=O(\Delta t^2+\Delta x^2)$.  It turns out that the 
 Crank--Nicolson method is unconditionally stable, and so 
-$U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.
+$U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.  This higher convergence rate in 
+time makes the scheme much more practical than either of the Euler methods.
+
+\section{Another maximum principle}
+
+
+\section{Another maximum principle}
+
+Let $D=(0,L)\times(0,T)$ and
+$\Sigma=\bigl([0,L]\times\{0\})\cup\bigl(\{0\}\times[0,T]\bigr)\cup
+\bigl(\{L\}\times[0,T]\bigr)$.
+
+\begin{theorem}
+Assume that $u$ is $C^2$ on~$D$ and continuous
+on~$\overline{D}=[0,L]\times[0,T]$.
+\begin{enumerate}
+\item If $u_t-au_{xx}\le0$ on~$D$, then $\max_{\overline{D}}u=\max_\Sigma u$.
+\item If $u_t-au_{xx}\ge0$ on~$D$, then $\min_{\overline{D}}u=\min_\Sigma u$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Let $\epsilon>0$ and define $v(x,t)=u(x,t)-e^{\epsilon t}$.  The condition
+$u_t-au_{xx}\le0$ implies that
+$v_t-av_{xx}=(u_t-au_{xx})-\epsilon e^{\epsilon t}<0$.  Since $v$ is continuous
+on~$\overline{D}$, it attains its maximum value at a
+point~$(x^*,t^*)\in\overline{D}$.  If $(x^*,t^*)\in\Sigma$ then there is
+nothing to prove.
+
+Suppose $(x^*,t^*)\in D$.  Then $v_t(x^*,t^*)=0=v_x(x^*,t^*)=0$~and
+$v_{xx}(x^*,t^*)\le0$, so $(v_t-av_{xx})(x^*,t^*)\ge0$, a contradiction.
+
+Similarly, suppose $(x^*,t^*)\in\overline{D}\setminus D=(0,L)\times\{T\}$.
+Then $v_t(x^*,t^*)\ge0$, $v_x(x^*,t^*)=0$ and $v_{xx}(x^*,t^*)\ge0$, so
+$(v_t-av_{xx})(x^*,t^*)\ge0$, which is again a contradiction.  We conclude that
+$(x^*,t^*)$ must belong to~$\Sigma$.
+
+Thus, for each~$\epsilon>0$ there exists $(x^*_\epsilon,t^*_\epsilon)\in\Sigma$
+such that
+\[
+u(x^*_\epsilon,t^*_\epsilon)+e^{\epsilon t^*_\epsilon}
+	\ge u(x,t)+e^{\epsilon t}\quad\text{for all $(x,t)\in\overline{D}$.}
+\]
+Since $\Sigma$ is compact, there is a sequence $\epsilon_n\to0$ and a
+point~$(x^*,t^*)\in\Sigma$ such that
+$(x^*_{\epsilon_n},t^*_{\epsilon_n})\to(x^*,t^*)$.  Hence, because $u$ is
+continuous on~$\overline{D}$, we have $u(x^*,t^*)\ge u(x,t)$ for all
+$(x,t)\in\overline{D}$, completing the proof of part~1.
+
+Part~2 follows by applying part~1 to the function~$-u$.
+\end{proof}
+
+\begin{corollary}
+If $u_t-au_{xx}=0$ on~$D$, then the function~$u:\overline{D}\to\mathbb{R}$
+attains both its maximum and minimum values on~$\Sigma$.
+\end{corollary}
 
 \section{Another maximum principle}
 
@@ -1046,7 +1101,7 @@ at $(x,t)=(0,0)$ and $(L,0)$, then we must have
 u_0(0)=u(0,0)=\gamma_0(0)\quad\text{and}\quad
 u_0(L)=u(L,t)=\gamma_L(0).
 \]
-Show that if $u_t$ and $u_{xx}$ are continuous at~$(x,t)=(L,0)$ and $(L,0)$,
+Show that if $u_t$ and $u_{xx}$ are continuous at~$(x,t)=(0,0)$ and $(L,0)$,
 then
 \[
 \gamma_0'(0)-au_0''(0)=f(0,0)
@@ -1081,12 +1136,12 @@ Let $\phi_k(x)=\sin(k\pi x/L)$.
 \begin{description}
 \item{(i)} Show that 
 \[
-\phi_k(x_{p+1})+\phi_k(x_{p-1})=\biggl(2\cos\frac{k\pi\,\Delta x}{2}\biggr)\,
+\phi_k(x_{p+1})+\phi_k(x_{p-1})=\biggl(2\cos\frac{k\pi\,\Delta x}{L}\biggr)\,
 	\phi_k(x_p).
 \]
 \item{(ii)} Deduce that
 \[
--\frac{\phi_k(x_{p+1}-2\phi_k(x_p)+\phi_k(x_{p-1})}{\Delta x^2}
+-\frac{\phi_k(x_{p+1})-2\phi_k(x_p)+\phi_k(x_{p-1})}{\Delta x^2}
 	=\Lambda_k\phi_k(x_p)\quad\text{where}\quad
 \Lambda_k=\frac{2}{\Delta x^2}\biggl(1-\cos\frac{k\pi\,\Delta x}{L}\biggr).
 \]
