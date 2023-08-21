@@ -39,7 +39,7 @@ with
 Thus, the difference $v=u-\gamma$ satisfies 
 \begin{equation}\label{eq: heat ivp homog 1d}
 \begin{aligned}
-v_t-av_{xx}&=g(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
+v_t-av_{xx}&=\theta(x,t)&&\text{for $0<x<L$ and $0<t<T$,}\\
 v&=0&&\text{at $x=0$, for $0<t<T$,}\\
 v&=0&&\text{at $x=L$, for $0<t<T$,}\\
 v&=v_0(x)&&\text{for $0<x<L$ when $t=0$,}
@@ -47,7 +47,7 @@ v&=v_0(x)&&\text{for $0<x<L$ when $t=0$,}
 \end{equation}
 where 
 \[
-g(x,t)=f(x,t)-\gamma_t(x,t)
+\theta(x,t)=f(x,t)-\gamma_t(x,t)
 \quad\text{and}\quad
 v_0(x)=u_0(x)-\gamma(x,0).
 \]
@@ -123,31 +123,31 @@ v_t-av_{xx}=\sum_{n=1}^\infty
 which equals $g(x,t)$ if and only if all of the Fourier coefficients match, 
 that is,
 \[
-\frac{d\hat v_n}{dt}+\lambda_n\hat v_n=\hat g_n(t)
+\frac{d\hat v_n}{dt}+\lambda_n\hat v_n=\hat \theta_n(t)
     \quad\text{for $0<t<T$ and $n\in\{1,2,3,\ldots\}$.}
 \]
 Multiplying both sides of this linear, first-order ODE by the 
 \emph{integrating factor}~$e^{\lambda_n t}$ we obtain
 \[
 e^{\lambda_nt}\,\frac{d\hat v_n}{dt}+\lambda_ne^{\lambda_nt}\hat v_n
-	=e^{\lambda_nt}\hat g_n(t),
+	=e^{\lambda_nt}\hat\theta_n(t),
 \]
 and since the left-hand side equals $(d/dt)(e^{\lambda_nt}\hat v_n)$ it 
 follows that
 \[
-e^{\lambda_nt}\hat v_n(t)-\hat v_n(0)=\int_0^te^{\lambda_ns}\hat g_n(s)\,ds.
+e^{\lambda_nt}\hat v_n(t)-\hat v_n(0)=\int_0^te^{\lambda_ns}\hat\theta_n(s)\,ds.
 \]
 Thus,
 \begin{equation}\label{eq: Duhamel n}
 \hat v_n(t)=\hat v_n(0)e^{-\lambda_nt}
-	+\int_0^te^{-\lambda_n(t-s)}\hat g_n(s)\,ds\quad\text{for $t\ge0$,}
+	+\int_0^te^{-\lambda_n(t-s)}\hat\theta_n(s)\,ds\quad\text{for $t\ge0$,}
 \end{equation}
 and multiplying both sides by~$\phi_n(x)$ and summing over~$n$, we obtain the
 series representation
 \[
 v(x,t)=\sum_{n=1}^\infty\hat v_n(t)\phi_n(x)
 	=\sum_{n=1}^\infty e^{-\lambda_nt}\hat v_n(0)\phi_n(x)
-	+\int_0^t\sum_{n=1}^\infty e^{-\lambda_n(t-s)}\hat g_n(s)\phi_n(x)\,ds.
+	+\int_0^t\sum_{n=1}^\infty e^{-\lambda_n(t-s)}\hat\theta_n(s)\phi_n(x)\,ds.
 \]
 
 Define the differential operator~$\mathcal{A}v=-v''$ so that 
@@ -167,12 +167,12 @@ and
 \]
 with
 \[
-\sum_{n=1}^\infty e^{-\lambda_n(t-s)}\hat g_n(s)\phi_n(x)
-	=e^{-(t-s)\mathcal{A}}g(x,s),
+\sum_{n=1}^\infty e^{-\lambda_n(t-s)}\hat\theta_n(s)\phi_n(x)
+	=e^{-(t-s)\mathcal{A}}\theta(x,s),
 \]
 so \eqref{eq: Duhamel n} can be written more succinctly as
 \[
-v(x,t)=e^{-t\mathcal{A}}v_0(x)+\int_0^te^{-(t-s)\mathcal{A}}g(x,s)\,ds.
+v(x,t)=e^{-t\mathcal{A}}v_0(x)+\int_0^te^{-(t-s)\mathcal{A}}\theta(x,s)\,ds.
 \]
 This representation of~$v$ is known as the \emph{Duhamel formula}, and the 
 solution of our original problem~\eqref{eq: heat ivp 1d} is then given by
@@ -716,9 +716,9 @@ $\gamma(x,t)$ is linear in~$x$, it follows that
 $\gamma^n_{p+1}-2\gamma^n_p+\gamma^n_{p-1}=0$ and so
 \[
 \frac{V^n_p-V^{n-1}_p}{\Delta t}
-	-a\,\frac{V^n_{p+1}-2V^n_p+V^n_{p-1}}{\Delta x^2}=g^n_p
+	-a\,\frac{V^n_{p+1}-2V^n_p+V^n_{p-1}}{\Delta x^2}=\theta^n_p
 	\quad\text{where}\quad
-	g^n_p=f^n_p-\frac{\gamma^n_p-\gamma^{n-1}_p}{\Delta t},
+	\theta^n_p=f^n_p-\frac{\gamma^n_p-\gamma^{n-1}_p}{\Delta t},
 \]
 for $1\le p\le P-1$ and $1\le n\le N$, with
 \[
@@ -729,19 +729,20 @@ for $1\le p\le P-1$ and $1\le n\le N$, with
 We use finite induction on~$n$ to show that
 \[
 \|\boldsymbol{V}^n_{1:P-1}\|_\infty\le\|\boldsymbol{V}^0_{1:P-1}\|_\infty
-	+\sum_{j=1}^n\|\boldsymbol{g}^j_{1:P-1}\|_\infty\,\Delta t
+	+\sum_{j=1}^n\|\boldsymbol{\theta}^j_{1:P-1}\|_\infty\,\Delta t
 		\quad\text{for $0\le n\le N$.}
 \]
 The case~$n=0$ is trivial since the empty sum vanishes.  Thus, let
 $1\le n\le N$ and make the induction hypothesis that
 \[
 \|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty\le\|\boldsymbol{V}^0_{1:P-1}\|_\infty
-	+\sum_{j=1}^{n-1}\|\boldsymbol{g}^j_{1:P-1}\|_\infty\,\Delta t.
+	+\sum_{j=1}^{n-1}\|\boldsymbol{\theta}^j_{1:P-1}\|_\infty\,\Delta t.
 \]
 As in~\eqref{eq: implicit Euler stencil}, we find that
-$-\rho V^n_{p-1}+(1+2\rho)V^n_p-\rho V^n_{p+1}=V^{n-1}_p+g^n_p\,\Delta t$ so
+$-\rho V^n_{p-1}+(1+2\rho)V^n_p-\rho V^n_{p+1}=V^{n-1}_p+\theta^n_p\,\Delta t$
+so
 \[
-(1+2\rho)V^n_p=\rho V^n_{p-1}+\rho V^n_{p+1}+V^{n-1}_p+g^n_p\,\Delta t
+(1+2\rho)V^n_p=\rho V^n_{p-1}+\rho V^n_{p+1}+V^{n-1}_p+\theta^n_p\,\Delta t
 \quad\text{for $1\le p\le P-1$.}
 \]
 Therefore,
@@ -749,34 +750,34 @@ Therefore,
 (1+2\rho)|V^n_p|\le\rho\|\boldsymbol{V}^n_{0:P-1}\|_\infty
 	+\rho\|\boldsymbol{V}^n_{1:P}\|_\infty
 	+\|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty
-	+\|\boldsymbol{g}^n_{1:P-1}\|_\infty\,\Delta t
+	+\|\boldsymbol{\theta}^n_{1:P-1}\|_\infty\,\Delta t
 \]
 which implies, because $V^n_0=0=V^n_P$,
 \[
 (1+2\rho)\|\boldsymbol{V}^n_{1:P-1}\|_\infty
 	\le2\rho\|\boldsymbol{V}^n_{1:P-1}\|_\infty
 	+\|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty
-	+\|\boldsymbol{g}^n_{1:P-1}\|_\infty\,\Delta t.
+	+\|\boldsymbol{\theta}^n_{1:P-1}\|_\infty\,\Delta t.
 \]
 After canceling $2\rho\|\boldsymbol{V}^n_{0:P}\|_\infty$ from both sides, and
 using the induction hypothesis, we have
 \[
 \|\boldsymbol{V}^n_{1:P-1}\|_\infty\le\|\boldsymbol{V}^{n-1}_{1:P-1}\|_\infty
-	+\|\boldsymbol{g}^n_{1:P-1}\|_\infty\,\Delta t
+	+\|\boldsymbol{\theta}^n_{1:P-1}\|_\infty\,\Delta t
 	=\|\boldsymbol{V}^0_{1:P-1}\|_\infty
-	+\sum_{j=1}^n\|\boldsymbol{g}^j_{1:P-1}\|_\infty\,\Delta t,
+	+\sum_{j=1}^n\|\boldsymbol{\theta}^j_{1:P-1}\|_\infty\,\Delta t,
 \]
 completing the induction.
 
 Since
 \[
-g^n_p\,\Delta t=f^n_p\,\Delta t
+\theta^n_p\,\Delta t=f^n_p\,\Delta t
 -\frac{1}{L}\Bigl((L-x_p)(\gamma_0^n-\gamma_0^{n-1})
 	+x_p(\gamma_L^n-\gamma_L^{n-1})\Bigr),
 \]
 it follows that
 \[
-|g^n_p|\,\Delta t\le|f^n_p|\,\Delta t
+|\theta^n_p|\,\Delta t\le|f^n_p|\,\Delta t
 +\max\bigl\{|\Delta\gamma_0^{n-1}|,|\Delta\gamma_L^{n-1}|\bigr\}.
 \]
 Moreover, since $U^n_p=V^n_p+\gamma^n_p$ and $V^n_0=0=V^n_P$,
@@ -981,6 +982,60 @@ x$, we conclude that
 and hence $\tau^{n-1/2}_p=O(\Delta t^2+\Delta x^2)$.  It turns out that the 
 Crank--Nicolson method is unconditionally stable, and so 
 $U^n_p=u(x_p,t_n)+O(\Delta t^2+\Delta x^2)$.
+
+\section{Another maximum principle}
+
+Let $D=(0,L)\times(0,T)$ and
+$\Sigma=\bigl([0,L]\times\{0\})\cup\bigl(\{0\}\times[0,T]\bigr)\cup
+\bigl(\{L\}\times[0,T]\bigr)$.
+
+\begin{theorem}
+Assume that $u$ is $C^2$ on~$D$ and continuous
+on~$\overline{D}=[0,L]\times[0,T]$.
+\begin{enumerate}
+\item If $u_t-au_{xx}\le0$ on~$D$, then $\max_{\overline{D}}u=\max_\Sigma u$.
+\item If $u_t-au_{xx}\ge0$ on~$D$, then $\min_{\overline{D}}u=\min_\Sigma u$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Let $\epsilon>0$ and define $v(x,t)=u(x,t)-e^{\epsilon t}$.  The condition
+$u_t-au_{xx}\le0$ implies that
+$v_t-av_{xx}=(u_t-au_{xx})-\epsilon e^{\epsilon t}<0$.  Since $v$ is continuous
+on~$\overline{D}$, it attains its maximum value at a
+point~$(x^*,t^*)\in\overline{D}$.  If $(x^*,t^*)\in\Sigma$ then there is
+nothing to prove.
+
+Suppose $(x^*,t^*)\in D$.  Then $v_t(x^*,t^*)=0=v_x(x^*,t^*)=0$~and
+$v_{xx}(x^*,t^*)\le0$, so $(v_t-av_{xx})(x^*,t^*)\ge0$, a contradiction.
+
+Similarly, suppose $(x^*,t^*)\in\overline{D}\setminus D=(0,L)\times\{T\}$.
+Then $v_t(x^*,t^*)\ge0$, $v_x(x^*,t^*)=0$ and $v_{xx}(x^*,t^*)\ge0$, so
+$(v_t-av_{xx})(x^*,t^*)\ge0$, which is again a contradiction.  We conclude that
+$(x^*,t^*)$ must belong to~$\Sigma$.
+
+Thus, for each~$\epsilon>0$ there exists $(x^*_\epsilon,t^*_\epsilon)\in\Sigma$
+such that
+\[
+u(x^*_\epsilon,t^*_\epsilon)+e^{\epsilon t^*_\epsilon}
+	\ge u(x,t)+e^{\epsilon t}\quad\text{for all $(x,t)\in\overline{D}$.}
+\]
+Since $\Sigma$ is compact, there is a sequence $\epsilon_n\to0$ and a
+point~$(x^*,t^*)\in\Sigma$ such that
+$(x^*_{\epsilon_n},t^*_{\epsilon_n})\to(x^*,t^*)$.  Hence, because $u$ is
+continuous on~$\overline{D}$, we have $u(x^*,t^*)\ge u(x,t)$ for all
+$(x,t)\in\overline{D}$, completing the proof of part~1.
+
+Part~2 follows by applying part~1 to the function~$-u$.
+\end{proof}
+
+\begin{corollary}
+If $u_t-au_{xx}=0$ on~$D$, then the function~$u:\overline{D}\to\mathbb{R}$
+attains both its maximum and minimum values on~$\Sigma$.
+\end{corollary}
+
+
+
+
 
 \begin{Exercises}
 
