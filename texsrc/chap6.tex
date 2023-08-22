@@ -961,12 +961,12 @@ $\overline{\Omega}=\Omega\cup\partial\Omega$, and satisfy
 a(x,y)\ge a_{\min}>0\quad\text{and}\quad c(x,y)\ge c_{\min}\ge0
     \quad\text{for $(x,y)\in\Omega$.}
 \]
-Define the energy inner product,
+Generalising the definition of the energy inner product in 1D, we let
 \[
 \iprod{u,v}_{\mathcal{L}}=\int_\Omega\bigl(a\nabla u\cdot\nabla v
     +cuv\bigr)
 \]
-and the energy norm
+and denote the associated energy norm by
 \[
 \|u\|_{\mathcal{L}}=\sqrt{\iprod{u,u}_{\mathcal{L}}}.
 \]
@@ -975,22 +975,54 @@ Thus,
 \|u\|_{\mathcal{L}}^2=\int_\Omega\bigl(a\|\nabla u\|^2+cu^2\bigr).
 \]
 
-The weak formulation~\eqref{eq: Lu=f weak 2d} can then be written as
+The weak solution of the mixed boundary-value 
+problem~\eqref{eq: self-adjoint bvp 2} satisfies the 
+essential boundary condition~$u=g_{\mathrm{D}}$ on~$\GammaD$ together with the
+property~\eqref{eq: Lu=f weak 2d} which can be written as
 \[
 \iprod{u,v}_{\mathcal{L}}=\iprod{f,v}+\iprod{g_{\mathrm{N}},v}_{\GammaN}
-\quad\text{whenever $v=0$ on $\GammaD$,}
+\quad\text{whenever $v=0$ on $\GammaD$.}
 \]
-and similarly the finite element method~\eqref{eq: FEM 2d} as
+Similarly the finite element solution~$u_h\in S_h$ satisfies~\eqref{eq: FEM 2d} 
+which can be written as
 \[
 \iprod{u_h,v}_{\mathcal{L}}=\iprod{f,v}+\iprod{g_{\mathrm{N}},v}_{\GammaN}
 \quad\text{whenever $v\in T_h$.}
 \]
-The Galerkin orthogonality property follows at once:
+The Galerkin orthogonality property follows at once,
 \[
-\iprod{u_h-u,v}_{\mathcal{L}}=0\quad\text{for all $v\in T_h$.}
+\iprod{u_h-u,v}_{\mathcal{L}}=0\quad\text{for all $v\in T_h$,}
 \]
+and we deduce the optimality property of~$u_h$ using the same argument as in 
+1D; see \cref{thm: optimality}.
 
-
+\begin{theorem}\label{thm: optimality 2D}
+The finite element solution~$u_h\in S_h$ of the mixed boundary-value 
+problem~\eqref{eq: self-adjoint bvp 2} satisfies
+\[
+\|u_h-u\|_{\mathcal{L}}\le\|w-u\|_{\mathcal{L}}
+	\quad\text{for all $w\in S_h$.}
+\]
+\end{theorem}
+\begin{proof}
+Let $w\in S_h$ and observe that the error~$e_h=u_h-u$ satisfies
+\begin{align*}
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,e_h}_{\mathcal{L}}
+	&=\iprod{e_h,u_h-u}_{\mathcal{L}}
+	=\iprod{e_h,u_h-w+w-u}_{\mathcal{L}}\\
+	&=\iprod{e_h,u_h-w}_{\mathcal{L}}+\iprod{e_h,w-u}_{\mathcal{L}}.
+\end{align*}
+Since both $u_h$ and $w$ belong to~$S_h$, 
+their difference $u_h-w=g_{\mathrm{D}}-g_{\mathrm{D}}=0$ on~$\GammaD$, showing
+that $u_h-w\in T_h$.  Hence, the Galerkin orthogonality 
+property~\eqref{eq: energy orthog} implies
+that $\iprod{e_h,u_h-w}_{\mathcal{L}}=0$ so, by the Cauchy--Schwarz inequality,
+\[
+\|e_h\|_{\mathcal{L}}^2=\iprod{e_h,w-u}_{\mathcal{L}}
+	\le\|e_h\|_{\mathcal{L}}\|w-u\|_{\mathcal{L}},
+\]
+which implies the desired inequality.
+\end{proof}
 
 
 
