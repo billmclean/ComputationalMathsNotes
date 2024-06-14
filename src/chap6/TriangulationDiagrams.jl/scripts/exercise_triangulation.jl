@@ -1,5 +1,5 @@
 using PyPlot
-using Triangulation_diagrams
+using TriangulationDiagrams
 
 N = Float64[ 1  0  1  0  -1   0  -1
              1  1  0  0   0  -1  -1 ]

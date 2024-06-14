@@ -1,0 +1,8 @@
+name = "TriangulationDiagrams"
+uuid = "d94a8bda-219f-4df3-bf24-b771472132a8"
+authors = ["William McLean <w.mclean@unsw.edu.au>"]
+version = "0.1.0"
+
+[deps]
+ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
+PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"

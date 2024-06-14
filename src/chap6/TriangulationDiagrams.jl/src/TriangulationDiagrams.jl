@@ -1,4 +1,4 @@
-module Triangulation_diagrams
+module TriangulationDiagrams
 
 using PyPlot
 using ArgCheck
@@ -170,4 +170,4 @@ function enumerate_bdry_edges(tri::Triangulation, offset)
     end
 end
 
-end # module
+end # module TriangulationDiagrams
