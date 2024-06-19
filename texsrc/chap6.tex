@@ -147,14 +147,14 @@ Compare this property with its 1D equivalent~\eqref{eq: Lu=f weak 1d}.
 \begin{figure}
 \caption{A regular triangulation.}\label{fig: good Th}
 \begin{center}
-\includegraphics[scale=0.7]{../src/chap6/good_triangulation.pdf} 
+\includegraphics[scale=0.8]{../src/chap6/good_triangulation.pdf}
 \end{center}
 \end{figure}
 
 \begin{figure}
 \caption{A triangulation that fails to be regular.}\label{fig: bad Th}
 \begin{center}
-\includegraphics[scale=0.7]{../src/chap6/bad_triangulation.pdf} 
+\includegraphics[scale=0.8]{../src/chap6/bad_triangulation.pdf}
 \end{center}
 \end{figure}
 
@@ -186,19 +186,20 @@ of the $q$th boundary edge~$E_q$ in its $q$th column.  Thus, the triangulation
 in Figure~\ref{fig: good Th} may be described by
 \[
 \boldsymbol{N}=\begin{bmatrix}
--2& 2& 2& 1&-1&-2& 0\\                
--2&-2& 0& 2& 2& 0& 0
+ 0&-2& 2& 2& 1&-1&-2\\
+ 0&-2&-2& 0& 2& 2& 0
 \end{bmatrix},\qquad
 \boldsymbol{T}^{\mathcal{K}}=\begin{bmatrix}
-0&0&1&2&3&4\\
-6&1&2&3&4&5\\
-5&6&6&6&6&6\end{bmatrix},
+7&2&3&4&5&6\\
+2&3&4&5&6&7\\
+1&1&1&1&1&1
+\end{bmatrix},
 \]
 and
 \[
-\boldsymbol{E}^{\mathcal{E}}=\begin{bmatrix}
-1&2&3&4&5&6\\
-2&3&4&5&6&1\end{bmatrix}.
+\boldsymbol{T}^{\mathcal{E}}=\begin{bmatrix}
+7&2&3&4&5&6\\
+2&3&4&5&6&7 \end{bmatrix}.
 \]
 We call $\boldsymbol{T}^{\mathcal{K}}$ the \emph{triangle connectivity matrix}
 and call $\boldsymbol{T}^{\mathcal{E}}$ the \emph{edge connectivity matrix}.
