@@ -132,7 +132,7 @@ u_h(x)=\sum_{q=0}^P U_q\chi_q(x)\quad\text{for $0\le x\le L$,}\quad
 so
 \[
 \int_0^Lu_h'(x)\chi_p'(x)\,dx
-    =\int_0^L\biggl(\sum_{k=0}^PU_q\chi_q'(x)\biggr)\chi_p'(x)\,dx
+    =\int_0^L\biggl(\sum_{q=0}^PU_q\chi_q'(x)\biggr)\chi_p'(x)\,dx
     =\sum_{q=0}^P\biggl(\int_0^L\chi_q'(x)\chi_p'(x)\,dx\biggr)U_q.
 \]
 Therefore, by letting
@@ -1976,5 +1976,28 @@ $\ell_3(x)=-\tfrac12(x+1)x(x-2)$, $\ell_4(x)=\tfrac16(x+1)x(x-1)$.\quad
 (ii) $(\mathcal{I}_3f)(x)=\ell_1(x)+\ell_3(x)+2\ell_4(x)$
 \end{ans}
 
+\exercise
+Let
+\[
+S=\{\,v\in H^1(0,L):v(0)=\gamma_0\,\}
+\quad\text{and}\quad
+T=\{\,v\in H^1(0,L):v(0)=0\,\},
+\]
+and define the quadratic functional~$\Phi:S\to\mathbb{R}$ by
+\[
+\Phi(v)=\tfrac12\|v\|_{\mathcal{L}}^2-\iprod{f,v}-\gamma_L v(L).
+\]
+\begin{description}
+\item{(i)}
+Derive the identity
+\[
+\Phi(u+w)=\Phi(u)+\bigl[\iprod{u,w}_{\mathcal{L}}
+    -\iprod{f,w}-\gamma_Lw(L)\bigr]+\tfrac12\|w\|_{\mathcal{L}}^2
+\quad\text{for $u\in S$ and $w\in T$.}
+\]
+\item{(ii)}
+Deduce that $u\in S$ is the weak solution of \eqref{eq: self-adjoint mixed}
+iff $\Phi(u)\le\Phi(v)$ for all $v\in S$.
+\end{description}
 
 \end{Exercises}
