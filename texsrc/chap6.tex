@@ -175,7 +175,7 @@ For example, Figure~\ref{fig: good Th} shows a regular triangulation with
 numbered in green.) However, the triangulation in 
 Figure~\ref{fig: bad Th} is not regular: the intersection of triangles 2~and 6 
 is an edge of triangle~6 but is not (the whole of) an edge of triangle~2.
-Vertex~7 in Figure~\ref{fig: bad Th} is said to be a \emph{hanging node}.
+Vertex~1 in Figure~\ref{fig: bad Th} is said to be a \emph{hanging node}.
 
 A simple data structure to store a triangulation consists of three arrays,
 $\boldsymbol{N}$, $\boldsymbol{T}^{\mathcal{K}}$ and
@@ -223,7 +223,7 @@ denote the vertices of the triangle~$K$, and let $\psi\brak{K}_1$,
 $\psi\brak{K}_2$, $\psi\brak{K}_3$ denote the unique linear functions 
 satisfying
 \begin{equation}\label{eq: psi node triangle}
-\psi\brak{K}_j(\mathsf{n}\brak{K}_i)=\delta_{jk}
+\psi\brak{K}_j(\mathsf{n}\brak{K}_i)=\delta_{ij}
 	\quad\text{for $i$, $j\in\{1,2,3\}$.}
 \end{equation}
 In Section~\ref{sec: barycentric}, we will derive explicit representations of 
@@ -493,11 +493,11 @@ $(\xi_1,\xi_2,\xi_3)$, and the centroid~$\boldsymbol{c}$.}
 
 Let $\boldsymbol{B}$ denote the inverse transpose 
 (Exercise~\ref{ex: inv transpose}) of the matrix with columns 
-$\boldsymbol{a}_1-\boldsymbol{a}_3$~and $\boldsymbol{a}_1-\boldsymbol{a}_3$, 
+$\boldsymbol{a}_1-\boldsymbol{a}_2$~and $\boldsymbol{a}_1-\boldsymbol{a}_3$,
 that is,
 \[
-\boldsymbol{B}=[\,(\boldsymbol{a}_1-\boldsymbol{a}_3)\quad
-    (\boldsymbol{a}_1-\boldsymbol{a}_3)\,]^{-T},
+\boldsymbol{B}=[\,(\boldsymbol{a}_1-\boldsymbol{a}_2)\quad
+    (\boldsymbol{a}_2-\boldsymbol{a}_3)\,]^{-T},
 \]
 and write
 \begin{equation}\label{eq: bp vector def}
@@ -579,10 +579,10 @@ and hence
 \]
 Finally,
 \[
-\xi_3=1-\xi_2-\xi_3=(1-\tfrac13-\tfrac13)
+\xi_3=1-\xi_1-\xi_2=(1-\tfrac13-\tfrac13)
     -(\boldsymbol{b}_1+\boldsymbol{b}_2)\cdot
-    (\boldsymbol{x}-\boldsymbol{a}_3)
-    =\tfrac13+\boldsymbol{b}_3\cdot(\boldsymbol{x}-\boldsymbol{a}_3).
+    (\boldsymbol{x}-\boldsymbol{c})
+    =\tfrac13+\boldsymbol{b}_3\cdot(\boldsymbol{x}-\boldsymbol{c}).
 \]
 \end{proof}
 
@@ -600,7 +600,7 @@ and observe that the affine transformation $K_{\mathrm{ref}}\to K$ defined by
 \]
 is one-one and onto, with Jacobian determinant
 \[
-\frac{\partial(x_1,x_2)}{\xi_1,\xi_2})
+\frac{\partial(x_1,x_2)}{\partial(\xi_1,\xi_2)}
     =\det[\,(\boldsymbol{a}_1-\boldsymbol{a}_3)\quad
             (\boldsymbol{a}_2-\boldsymbol{a}_3)\,].
 \]
@@ -646,7 +646,7 @@ so
         \,d\xi_2\,d\xi_1
     =n_2!\,n_3!\int_0^1\xi_1^{n_1}\int_0^{1-\xi_1}
     \frac{\xi_2^{n_2}}{n_2!}\,\frac{(1-\xi_1-\xi_2)^{n_3}}{n_3!}
-        \,d\xi_1\,d\xi_1\\
+        \,d\xi_2\,d\xi_1\\
     =n_1!\,n_2!\,n_3!\int_0^1\frac{\xi_1^{n_1}}{n_1!}\,
         \frac{(1-\xi_1)^{n_2+n_3+1}}{(n_2+n_3+1)!}\,d\xi_1
     =\frac{n_1!\,n_2!\,n_3!}{(n_1+n_2+n_3+2)!},
@@ -789,7 +789,7 @@ whenever $\mathsf{n}_r$ is an interior node.
 \For{$p=1:P$}
     \State Compute $\boldsymbol{f}\brak{p}$
     \For{$i=1:3$}
-        \State $r=t^{\mathcal{K}}_{pi}$
+        \State $r=t^{\mathcal{K}}_{ip}$
                                   \Comment{$\mathsf{n}_r=\mathsf{n}\brak{p}_i$}
         \If{$r\le M\free$}
             \State $f_r\gets f_r+f\brak{p}_i$
@@ -808,11 +808,11 @@ piecewise linear FEM in 2D.}
 \For{$q=1:Q$}
     \State Compute $\boldsymbol{g}_{\mathrm{N}}^{[q]}$
     \For{$j=1:2$}
-        \State $r=t^{\mathcal{E}}_{pj}$
+        \State $r=t^{\mathcal{E}}_{jq}$
                                      \Comment{$\mathsf{n}_r=\mathsf{n}{[q]}_j$}
         \If{$r\le M\free$}
             \State $g_{\mathrm{N},r}\gets
-                    q_{\mathrm{N},r}+g^{[q]}_{\mathrm{N},j}$
+                    g_{\mathrm{N},r}+g^{[q]}_{\mathrm{N},j}$
         \EndIf
     \EndFor
 \EndFor

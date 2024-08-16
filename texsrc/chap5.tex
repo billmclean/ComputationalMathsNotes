@@ -44,7 +44,7 @@ operators in the $x$- and $y$-directions, respectively; that is,
 \]
 and
 \[
-\delta_y^2u(x,y)=\frac{u(x,y+\Delta y)-2u(x,y)+u(x,y-\Delta y)}{\Delta x^2}
+\delta_y^2u(x,y)=\frac{u(x,y+\Delta y)-2u(x,y)+u(x,y-\Delta y)}{\Delta y^2}
     =\frac{\partial^2u}{\partial y^2}+O(\Delta y^2).
 \]
 We also write
@@ -624,7 +624,7 @@ Consider the general, second-order, linear partial differential operator,
 \end{equation}
 where $\partial_j=\partial/\partial x_j$ and where $\Omega$ is a bounded,
 open, connected subset of~$\mathbb{R}^n$.  Since 
-$\partial_k\partial_ju=\partial_k\partial_ju$ if $u$ is $C^2$, we assume
+$\partial_k\partial_ju=\partial_j\partial_ku$ if $u$ is $C^2$, we assume
 without loss of generality that the coefficient matrix is symmetric, that is,
 \[
 a_{jk}(\bx)=a_{kj}(\bx)\quad\text{for $\bx\in\Omega$.}

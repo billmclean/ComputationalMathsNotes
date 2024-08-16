@@ -337,7 +337,7 @@ $\boldsymbol{C}$ is called the \emph{mass matrix}.  On the right-hand side,
 $\boldsymbol{f}$ is called the \emph{load vector}.  This terminology reflects 
 the historical origins of finite element methods in structural engineering.
 
-We equip the vector space~$L^2(0,T)$ of square-integrable 
+We equip the vector space~$L^2(0,L)$ of square-integrable
 functions~$v:[0,L]\to\mathbb{R}$ with its usual inner product
 \[
 \iprod{v,w}=\int_0^Lv(x)w(x)\,dx,
@@ -798,7 +798,7 @@ from~\eqref{eq: A C f example}.}
 \For{$p=1:P$}
     \State Compute $\boldsymbol{f}\brak{p}$
     \For{$j=1:2$}
-        \State $r=t_{pj}$\Comment{$\mathsf{n}_r=\mathsf{n}\brak{p}_j$}
+        \State $r=t_{jp}$\Comment{$\mathsf{n}_r=\mathsf{n}\brak{p}_j$}
         \If{$r\le P$}
             \State $f_r\gets f_r+f\brak{p}_j$
         \EndIf
@@ -1239,7 +1239,7 @@ K_2(x,y)+K_2(-x,-y)&=\tfrac12\bigl[y^2-(x-y)^2\bigr]
 	+\tfrac12\bigl[(1-y)^2-y^2\bigr]\ell_3(x)\\
 	&=\tfrac12x(2y-x)+\tfrac12(1+2y)\ell_1(x)+\tfrac12(1-2y)\ell_3(x)\\
 	&=\tfrac12\bigl[\ell_1(x)+\ell_3(x)-x^2\bigr]
-	+y\bigl[x+\ell_3(x)-\ell_1(x)\bigr]=0.
+	+y\bigl[x-\ell_3(x)+\ell_1(x)\bigr]=0.
 \end{align*}
 Hence, $K_2$ possesses the symmetry property (Figure~\ref{fig: quadratic Peano})
 \begin{equation}\label{eq: K2 symmetry}
