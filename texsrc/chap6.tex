@@ -1030,6 +1030,43 @@ which implies the desired inequality.
 \begin{Exercises}
 
 \exercise
+Suppose that $\Omega=\Omega_1\cup\Gamma_{\mathrm{i}}\cup\Omega_2$ where the
+\emph{interface}~$\Gamma_{\mathrm{i}}$ is a piecewise smooth curve, and that
+\[
+a(x,y)=\begin{cases}
+a_1(x,y)&\text{for $(x,y)\in\Omega_1$,}\\
+a_2(x,y)&\text{for $(x,y)\in\Omega_2$.}
+\end{cases}
+\]
+Define corresponding partial differential operators
+$\mathcal{L}_ku=-\nabla\cdot(a_k\nabla u)$ on $\Omega_k$ for~$k\in\{1,2\}$.
+Suppose that
+\[
+\mathcal{L}_ku_k=f_k\quad\text{on $\Omega_k$ for $k\in\{1,2\}$,}
+\]
+and define
+\[
+u(x,y)=\begin{cases}
+u_1(x,y)&\text{for $(x,y)\in\Omega_1$,}\\
+u_2(x,y)&\text{for $(x,y)\in\Omega_2$,}
+\end{cases}
+\qquad\text{and}\qquad
+f(x,y)=\begin{cases}
+f_1(x,y)&\text{for $(x,y)\in\Omega_1$,}\\
+f_2(x,y)&\text{for $(x,y)\in\Omega_2$.}
+\end{cases}
+\]
+Under what condition(s) on $u_1$~and $u_2$ do $u$~and $f$ satisfy
+\[
+\int_\Omega a\nabla u\cdot\nabla v
+    =\int_{\partial\Omega}a\,\frac{\partial u}{\partial n}\,v
+    +\int_\Omega fv
+\]
+for any test function~$v$?  Hint: let $\boldsymbol{n}_{\mathrm{i}}$ denote the
+unit normal along~$\Gamma_{\mathrm{i}}$, outward to~$\Omega_1$ and inward
+to~$\Omega_2$.
+
+\exercise
 Derive the weak formulation of the boundary-value 
 problem \eqref{eq: self-adjoint bvp 2d} if we replace the Neumann boundary
 condition with the, more general, Robin boundary condition,

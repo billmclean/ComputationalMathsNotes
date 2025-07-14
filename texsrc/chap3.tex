@@ -987,9 +987,6 @@ time makes the scheme much more practical than either of the Euler methods.
 
 \section{Another maximum principle}
 
-
-\section{Another maximum principle}
-
 Let $D=(0,L)\times(0,T)$ and
 $\Sigma=\bigl([0,L]\times\{0\})\cup\bigl(\{0\}\times[0,T]\bigr)\cup
 \bigl(\{L\}\times[0,T]\bigr)$.
@@ -1037,60 +1034,6 @@ Part~2 follows by applying part~1 to the function~$-u$.
 If $u_t-au_{xx}=0$ on~$D$, then the function~$u:\overline{D}\to\mathbb{R}$
 attains both its maximum and minimum values on~$\Sigma$.
 \end{corollary}
-
-\section{Another maximum principle}
-
-Let $D=(0,L)\times(0,T)$ and
-$\Sigma=\bigl([0,L]\times\{0\})\cup\bigl(\{0\}\times[0,T]\bigr)\cup
-\bigl(\{L\}\times[0,T]\bigr)$.
-
-\begin{theorem}
-Assume that $u$ is $C^2$ on~$D$ and continuous
-on~$\overline{D}=[0,L]\times[0,T]$.
-\begin{enumerate}
-\item If $u_t-au_{xx}\le0$ on~$D$, then $\max_{\overline{D}}u=\max_\Sigma u$.
-\item If $u_t-au_{xx}\ge0$ on~$D$, then $\min_{\overline{D}}u=\min_\Sigma u$.
-\end{enumerate}
-\end{theorem}
-\begin{proof}
-Let $\epsilon>0$ and define $v(x,t)=u(x,t)-e^{\epsilon t}$.  The condition
-$u_t-au_{xx}\le0$ implies that
-$v_t-av_{xx}=(u_t-au_{xx})-\epsilon e^{\epsilon t}<0$.  Since $v$ is continuous
-on~$\overline{D}$, it attains its maximum value at a
-point~$(x^*,t^*)\in\overline{D}$.  If $(x^*,t^*)\in\Sigma$ then there is
-nothing to prove.
-
-Suppose $(x^*,t^*)\in D$.  Then $v_t(x^*,t^*)=0=v_x(x^*,t^*)=0$~and
-$v_{xx}(x^*,t^*)\le0$, so $(v_t-av_{xx})(x^*,t^*)\ge0$, a contradiction.
-
-Similarly, suppose $(x^*,t^*)\in\overline{D}\setminus D=(0,L)\times\{T\}$.
-Then $v_t(x^*,t^*)\ge0$, $v_x(x^*,t^*)=0$ and $v_{xx}(x^*,t^*)\ge0$, so
-$(v_t-av_{xx})(x^*,t^*)\ge0$, which is again a contradiction.  We conclude that
-$(x^*,t^*)$ must belong to~$\Sigma$.
-
-Thus, for each~$\epsilon>0$ there exists $(x^*_\epsilon,t^*_\epsilon)\in\Sigma$
-such that
-\[
-u(x^*_\epsilon,t^*_\epsilon)+e^{\epsilon t^*_\epsilon}
-	\ge u(x,t)+e^{\epsilon t}\quad\text{for all $(x,t)\in\overline{D}$.}
-\]
-Since $\Sigma$ is compact, there is a sequence $\epsilon_n\to0$ and a
-point~$(x^*,t^*)\in\Sigma$ such that
-$(x^*_{\epsilon_n},t^*_{\epsilon_n})\to(x^*,t^*)$.  Hence, because $u$ is
-continuous on~$\overline{D}$, we have $u(x^*,t^*)\ge u(x,t)$ for all
-$(x,t)\in\overline{D}$, completing the proof of part~1.
-
-Part~2 follows by applying part~1 to the function~$-u$.
-\end{proof}
-
-\begin{corollary}
-If $u_t-au_{xx}=0$ on~$D$, then the function~$u:\overline{D}\to\mathbb{R}$
-attains both its maximum and minimum values on~$\Sigma$.
-\end{corollary}
-
-
-
-
 
 \begin{Exercises}
 
